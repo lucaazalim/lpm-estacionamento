@@ -16,8 +16,6 @@ public class Cliente {
 		if (contadorVeiculos < veiculos.length) {
 			veiculos[contadorVeiculos] = veiculo;
 			contadorVeiculos++;
-		}else {
-			System.out.println("O vetor veiculos está cheio.");
 		}
 	}
 
