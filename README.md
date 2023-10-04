@@ -4,12 +4,12 @@ Parar algum veículo na cidade grande é, certamente, um desafio, por isso, a or
 
 ## Alunos integrantes da equipe
 
-* Ana Carolina Caldas de Mello  @AnaCarolinaMello
-* Gabriel Henrique Silva Pereira @Gab-HSP
-* Guilherme Leroy Teixeira Capanema @ggleroy
-* João Pedro Queiroz Rocha @JoaoPedroQueirozRocha
-* Leandra Costa Ramos @leeramss
-* Luca Ferrari Azalim @lucaazalim
+* Ana Carolina Caldas de Mello **__@AnaCarolinaMello__**
+* Gabriel Henrique Silva Pereira **__@Gab-HSP__**
+* Guilherme Leroy Teixeira Capanema **__@ggleroy__**
+* João Pedro Queiroz Rocha **__@JoaoPedroQueirozRocha__**
+* Leandra Costa Ramos **__@leeramss__**
+* Luca Ferrari Azalim **__@lucaazalim__**
 
 ## Professores responsáveis
 
