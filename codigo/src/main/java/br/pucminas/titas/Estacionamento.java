@@ -9,7 +9,9 @@ public class Estacionamento {
 	private int vagasPorFileira;
 
 	public Estacionamento(String nome, int fileiras, int vagasPorFila) {
-		
+		this.nome = nome;
+		this.quantFileiras = fileiras;
+		this.vagasPorFileira = vagasPorFila;
 	}
 
 	public void addVeiculo(Veiculo veiculo, String idCli) {
@@ -25,11 +27,19 @@ public class Estacionamento {
 	}
 
 	public void estacionar(String placa) {
-		
+		for(int i = 0; i<Vaga.lenght(); i++) {
+			if(Vaga[i] == "") {
+				Vaga[i] = placa;
+			}
+		}
 	}
 
 	public double sair(String placa) {
-		
+		for(int i = 0; Vaga.lenght(); i++) {
+			iv(Vaga[i] == placa) {
+				Vaga[i] = "";
+			}
+		}
 	}
 
 	public double totalArrecadado() {
