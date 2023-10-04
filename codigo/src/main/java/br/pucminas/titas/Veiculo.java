@@ -2,6 +2,8 @@ package br.pucminas.titas;
 
 public class Veiculo {
 
+	private static final int MAX_USOS = 1000;
+
 	private final String placa;
 	private final UsoDeVaga[] usos;
 
@@ -12,7 +14,7 @@ public class Veiculo {
 	 */
 	public Veiculo(String placa) {
 		this.placa = placa;
-		this.usos = new UsoDeVaga[1000];
+		this.usos = new UsoDeVaga[MAX_USOS];
 	}
 
 	/**
