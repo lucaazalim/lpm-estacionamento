@@ -87,7 +87,16 @@ public class Veiculo {
 	 * @return total de usos do veículo.
 	 */
 	public int totalDeUsos() {
-		return this.usos.length;
+
+		int totalDeUsos = 0;
+
+		for(UsoDeVaga usoDeVaga : this.usos) {
+			if(usoDeVaga != null) {
+				totalDeUsos++;
+			}
+		}
+
+		return totalDeUsos;
 	}
 
 }
