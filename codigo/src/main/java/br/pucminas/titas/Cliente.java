@@ -39,8 +39,9 @@ public class Cliente {
      * @return O veículo com a placa correspondente, ou null se não encontrado.
      */
     public Veiculo possuiVeiculo(String placa) {
+        Veiculo qual = new Veiculo(placa);
         for (Veiculo veiculo : veiculos) {
-            if (veiculo != null && veiculo.getPlaca().equals(placa)) {
+            if (veiculo != null && veiculo.equals(qual)) {
                 return veiculo;
             }
         }
