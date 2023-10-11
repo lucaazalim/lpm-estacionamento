@@ -44,9 +44,31 @@ public class Estacionamento {
             vagas[i] = new Vaga("Y" + (i / vagasPorFileira) + (i % vagasPorFileira));
         }
     }
+
+    //Parte responsável pelo aluno Gabriel.
+
+    public void estacionar(String placa) {
+	
+	}
+
+	public double sair(String placa) {
+	
+	}
+
+	public double totalArrecadado() {
+		
+	}
+
+	public double arrecadacaoNoMes(int mes) {
+		
+	}
+
+	public double valorMedioPorUso() {
+		
+	}
+
+	public String top5Clientes(int mes) {
+		
+	}
+
 }
-
-    
-
-   
-
