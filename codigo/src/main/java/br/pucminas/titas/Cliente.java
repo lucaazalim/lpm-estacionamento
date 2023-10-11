@@ -48,11 +48,24 @@ public class Cliente {
 	}
 
 	public double arrecadadoTotal() {
-		
+		double total = 0;
+		for (Veiculo veiculo : veiculos) {
+			if (veiculo != null) {
+				total += veiculo.getArrecadacao();
+			}
+		}
+		return total;
 	}
 
 	public double arrecadadoNoMes(int mes) {
-		
+		double total = 0;
+		for (Veiculo veiculo : veiculos) {
+			if (veiculo != null) {
+				total += veiculo.getArrecadacaoNoMes(mes); //classe veiculo implementar getArrecadacaoNoMes
+			}
+		}
+		return total;
 	}
+
 
 }
