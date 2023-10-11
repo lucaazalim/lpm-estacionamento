@@ -11,11 +11,19 @@ public class Vaga {
 	}
 
 	public boolean estacionar() {
-		disponivel = false;
+		if (disponivel) {
+			disponivel = false;
+			return true;
+		}
+		return false;
 	}
 
 	public boolean sair() {
-		disponivel = true;
+		if (!disponivel) {
+			disponivel = true;
+			return true;
+		}
+		return false;
 	}
 
 	public boolean disponivel() {
