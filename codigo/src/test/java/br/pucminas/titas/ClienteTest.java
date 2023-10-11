@@ -17,8 +17,8 @@ public class ClienteTest {
         cliente = new Cliente("João", "1");
         veiculo1 = new Veiculo("ABC-1234");
 
-        veiculo1.setArrecadacao(100.0);
-        veiculo1.setUsoTotal(5);
+        veiculo1.setArrecadacao(100.0); //implementar setArrecadacao Classe Veiculo
+        veiculo1.setUsoTotal(5); //implementar setUsoTotal Classe Veiculo
 
         veiculo2 = new Veiculo("PUZ-5654");
         veiculo2.setArrecadacao(200.0);
