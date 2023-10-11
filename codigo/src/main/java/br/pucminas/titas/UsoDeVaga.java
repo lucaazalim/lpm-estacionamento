@@ -13,7 +13,7 @@ public class UsoDeVaga {
 	private LocalDateTime saida;
 	private double valorPago;
 
-	public LocalDateTime entrada(){
+	public LocalDateTime getEntrada(){
 		return this.entrada;
 	}
 
