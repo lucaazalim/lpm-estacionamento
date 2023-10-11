@@ -17,6 +17,10 @@ public class Veiculo {
 		this.usos = new UsoDeVaga[MAX_USOS];
 	}
 
+	public String getPlaca() {
+		return this.placa;
+	}
+
 	/**
 	 * Estaciona o veículo na vaga informada.
 	 *
