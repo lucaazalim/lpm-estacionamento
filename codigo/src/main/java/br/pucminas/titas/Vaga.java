@@ -5,8 +5,8 @@ public class Vaga {
 	private String id;
 	private boolean disponivel;
 
-	public Vaga(int fila, int numero) {
-		this.id = String.valueOf(fila) + String.format("%02d", String.valueOf(numero));
+	public Vaga(String fila, int numero) {
+		this.id = fila + numero;
 		this.disponivel = true;
 	}
 
