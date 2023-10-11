@@ -12,20 +12,26 @@ public class UsoDeVaga {
 	private LocalDateTime entrada;
 	private LocalDateTime saida;
 	private double valorPago;
+	private Servico[] servicos;
 
 	public LocalDateTime getEntrada(){
-		return this.entrada;
+		return LocalDateTime.from(this.entrada);
 	}
 
 	public UsoDeVaga(Vaga vaga) {
 		if(!vaga.disponivel()){
 			throw new IllegalArgumentException("Vaga não disponivel");
 		}
+		this.vaga = vaga;
+		servicos = new Servico[2];
 		entrada = LocalDateTime.now();
 	}
 
 
 	public double sair() {
+		if (!podeSair()) {
+			throw new IllegalArgumentException("Os serviços solicitados ainda não foram concluídos");
+		}
 		saida = LocalDateTime.now();	
 		vaga.sair();
 		return valorPago();
@@ -39,6 +45,29 @@ public class UsoDeVaga {
 		if(valorPago > VALOR_MAXIMO){
 			valorPago = VALOR_MAXIMO;
 		}
-		return valorPago;
+		return valorPago + getServicoPrecoTotal();
+	}
+
+	public void addServico(Servico servico) throws IllegalArgumentException {
+		int cont = 0;
+		for (Servico s: servicos) {
+			if ((s.getNome() == "Lavagem" && servico.getNome() == "Polimento") || (s.getNome() == "Polimento" && servico.getNome() == "Lavagem")) {
+				throw new IllegalArgumentException("Vaga não disponivel");
+			}
+			cont++;
+		}
+		servicos[cont] = servico;
+	}
+
+	public double getServicoPrecoTotal() {
+		double precoTotal = 0d;
+		for (Servico servico: servicos) {
+			precoTotal += servico.getPreco();
+		}
+		return precoTotal;
+	}
+
+	public boolean podeSair() {
+		return true;
 	}
 }
