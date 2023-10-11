@@ -41,12 +41,4 @@ public class UsoDeVaga {
 		}
 		return valorPago;
 	}
-
-	public static void main(String[] args) {
-		Vaga vaga = new Vaga(1, 1);
-		UsoDeVaga usoDeVaga = new UsoDeVaga(vaga);
-		usoDeVaga.entrada = LocalDateTime.of(2023, 10, 4, 10, 47, 0);
-		double valorPago = usoDeVaga.sair();
-		System.out.println(valorPago);
-	}
 }
