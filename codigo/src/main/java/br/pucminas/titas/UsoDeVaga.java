@@ -12,21 +12,28 @@ public class UsoDeVaga {
 	private LocalDateTime entrada;
 	private LocalDateTime saida;
 	private double valorPago;
-	private Servico[] servicos;
+	private Servico servico;
 
 	public LocalDateTime getEntrada(){
 		return LocalDateTime.from(this.entrada);
 	}
 
 	public UsoDeVaga(Vaga vaga) {
+		init(vaga, null);
+	}
+
+	public UsoDeVaga(Vaga vaga, Servico servico) {
+		init(vaga, servico);
+	}
+
+	private void init(Vaga vaga, Servico servico) throws IllegalArgumentException {
 		if(!vaga.disponivel()){
 			throw new IllegalArgumentException("Vaga não disponivel");
 		}
 		this.vaga = vaga;
-		servicos = new Servico[2];
+		this.servico = servico;
 		entrada = LocalDateTime.now();
 	}
-
 
 	public double sair() {
 		if (!podeSair()) {
@@ -48,26 +55,16 @@ public class UsoDeVaga {
 		return valorPago + getServicoPrecoTotal();
 	}
 
-	public void addServico(Servico servico) throws IllegalArgumentException {
-		int cont = 0;
-		for (Servico s: servicos) {
-			if ((s.getNome() == "Lavagem" && servico.getNome() == "Polimento") || (s.getNome() == "Polimento" && servico.getNome() == "Lavagem")) {
-				throw new IllegalArgumentException("Vaga não disponivel");
-			}
-			cont++;
-		}
-		servicos[cont] = servico;
+	public void adicionaServico(Servico servico) {
+		this.servico = servico;
 	}
 
 	public double getServicoPrecoTotal() {
-		double precoTotal = 0d;
-		for (Servico servico: servicos) {
-			precoTotal += servico.getPreco();
-		}
-		return precoTotal;
+		return servico.getPreco();
 	}
 
 	public boolean podeSair() {
-		return true;
+		Duration duration = Duration.between(entrada, saida);
+		return duration.toHours() >= servico.getHoraMinimas();
 	}
 }
