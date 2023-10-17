@@ -78,7 +78,7 @@ public class Estacionamento {
         		}
     		}
 		if (!vagaEncontrada) {
-        		throw new EstacionamentoLotadoException("Não há vagas disponíveis para estacionar o veículo com placa " + placa);
+        		throw new EstacionamentoLotadoException("Não há vagas disponíveis para estacionar o veículo");
     		}
 
 	}
@@ -114,3 +114,10 @@ public class Estacionamento {
 	public String top5Clientes(int mes) {
 
 	}
+	
+	public class EstacionamentoLotadoException extends Exception {
+	    public EstacionamentoLotadoException(String message) {
+	        super(message);
+	    }
+	}
+}
