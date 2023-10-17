@@ -17,7 +17,7 @@ public class ClienteTest {
 
         cliente = new Cliente("João", "1");
         veiculo = new Veiculo("ABC-1234");
-        vaga = new Vaga(1, 1);
+        vaga = new Vaga("Y", 1);
 
         veiculo.estacionar(vaga);
 
