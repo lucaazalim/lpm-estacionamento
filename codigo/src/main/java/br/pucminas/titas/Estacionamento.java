@@ -14,9 +14,9 @@ public class Estacionamento {
 	public Estacionamento(String nome, int fileiras, int vagasPorFila) {
 	        this.nome = nome;
 	        this.id = new Cliente[100];
-	        this.vagas = new Vaga[fileiras * vagasPorFila];
 	        this.quantFileiras = fileiras;
 	        this.vagasPorFileira = vagasPorFila;
+			gerarVagas();
 		}
 
     /**
@@ -59,7 +59,7 @@ public class Estacionamento {
      */
     private void gerarVagas() {
         int totalVagas = quantFileiras * vagasPorFileira;
-        vagas = new Vaga[totalVagas];
+        this.vagas = new Vaga[totalVagas];
         for (int i = 0; i < totalVagas; i++) {
             vagas[i] = new Vaga("Y" + (i / vagasPorFileira) + (i % vagasPorFileira));
         }
