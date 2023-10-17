@@ -19,6 +19,12 @@ public class Estacionamento {
 	        this.vagasPorFileira = vagasPorFila;
 		}
 
+    /**
+     * Adiciona um veículo para um cliente especificado no estacionamento.
+     *
+     * @param veiculo O veículo a ser adicionado.
+     * @param idCli O ID do cliente proprietário do veículo.
+     */
     public void addVeiculo(Veiculo veiculo, String idCli) {
         Cliente cliente = encontrarCliente(idCli);
         if (cliente != null) {
@@ -26,17 +32,31 @@ public class Estacionamento {
         }
     }
 
+    /**
+     * Localiza um cliente no estacionamento usando o ID do cliente fornecido.
+     *
+     * @param idCli O ID do cliente a ser localizado.
+     * @return O objeto cliente, se encontrado, caso contrário, retorna null.
+     */
     private Cliente encontrarCliente(String idCli) {
 		return null;
 	}
 
-	public void addCliente(Cliente cliente) {
+    /**
+     * Adiciona um cliente ao estacionamento.
+     *
+     * @param cliente O cliente a ser adicionado.
+     */
+    public void addCliente(Cliente cliente) {
         Cliente[] novosClientes = new Cliente[id.length + 1];
         System.arraycopy(id, 0, novosClientes, 0, id.length);
         novosClientes[id.length] = cliente;
         id = novosClientes;
     }
 
+    /**
+     * Gera vagas de estacionamento com base no número de fileiras e vagas por fileira.
+     */
     private void gerarVagas() {
         int totalVagas = quantFileiras * vagasPorFileira;
         vagas = new Vaga[totalVagas];
@@ -88,11 +108,9 @@ public class Estacionamento {
 	}
 
 	public double valorMedioPorUso() {
-		
+
 	}
 
 	public String top5Clientes(int mes) {
-		
-	}
 
-}
+	}
