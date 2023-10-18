@@ -4,7 +4,7 @@ import br.pucminas.titas.entidades.Estacionamento;
 
 import java.io.*;
 
-public class Serialization {ß
+public class Serialization {
 
     private static final String NOME_DO_ARQUIVO = "estacionamentos.dat";
 
