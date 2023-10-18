@@ -41,7 +41,7 @@ public class VagaTest {
         assertTrue(vaga.disponivel());
         vaga.estacionar(); 
         assertFalse(vaga.disponivel());
-        vaga.sair(); // Libera a vaga
+        vaga.sair(); 
         assertTrue(vaga.disponivel());
     }
 }
