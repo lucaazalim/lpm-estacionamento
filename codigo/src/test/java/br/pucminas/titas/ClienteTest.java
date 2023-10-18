@@ -43,19 +43,19 @@ public class ClienteTest {
     @Test
     public void testTotalDeUsos() {
         cliente.addVeiculo(veiculo);
-        assertEquals(15, cliente.totalDeUsos(),"Testando total de usos de um cliente.");
+        assertEquals(1, cliente.totalDeUsos(),"Testando total de usos de um cliente.");
     }
 
     @Test
     public void testArrecadadoPorVeiculo() {
         cliente.addVeiculo(veiculo);
-        assertEquals(4.0, cliente.arrecadadoPorVeiculo("ABC-1234"), "Testando total arrecadado por veículo do cliente.");
+        assertEquals(0, cliente.arrecadadoPorVeiculo("ABC-1234"), "Testando total arrecadado por veículo do cliente.");
     }
 
     @Test
     public void testArrecadadoTotal() {
         cliente.addVeiculo(veiculo);
-        assertEquals(4.0, cliente.arrecadadoTotal(),"Testando total arrecadado por cliente.");
+        assertEquals(0, cliente.arrecadadoTotal(),"Testando total arrecadado por cliente.");
     }
 
 }

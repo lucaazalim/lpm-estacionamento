@@ -45,18 +45,18 @@ public class Veiculo {
      * Dispara {@see UsoDeVaga#sair()} no último uso de vaga do veículo.
      *
      * @return valor pago pelo veículo.
-     * @throws VeiculoJaSaiuException
      * @throws ServicoNaoTerminadoException
+     * @throws VeiculoNaoEstaEstacionadoException
      */
     public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
-        UsoDeVaga ultimoUsoDeVaga = this.usos[this.usos.length - 1];
-
-        if (ultimoUsoDeVaga == null) {
-            throw new VeiculoNaoEstaEstacionadoException();
+        for (int i = MAX_USOS - 1; i >= 0; i--) {
+            if (this.usos[i] != null) {
+                return this.usos[i].sair();
+            }
         }
 
-        return ultimoUsoDeVaga.sair();
+        throw new VeiculoNaoEstaEstacionadoException();
 
     }
 
@@ -119,4 +119,14 @@ public class Veiculo {
         return totalDeUsos;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj instanceof Veiculo outro) {
+            return this.placa.equals(outro.placa);
+        }
+
+        return false;
+
+    }
 }

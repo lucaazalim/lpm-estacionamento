@@ -61,7 +61,7 @@ public class UsoDeVaga {
 	public double sair() throws ServicoNaoTerminadoException, VeiculoJaSaiuException {
 
 		if (this.saida != null) {
-			throw new VeiculoJaSaiuException("Este uso de vaga já foi concluído porque o veículo já saiu.");
+			throw new VeiculoJaSaiuException();
 		}
 
 		if (!podeSair(LocalDateTime.now())) {
@@ -95,7 +95,10 @@ public class UsoDeVaga {
 			this.valorPago = VALOR_MAXIMO;
 		}
 
-		this.valorPago += getServicoPrecoTotal();
+		if(this.servico != null) {
+			this.valorPago += this.getServicoPrecoTotal();
+		}
+
 		return this.valorPago;
 
 	}
@@ -122,7 +125,13 @@ public class UsoDeVaga {
 	 * @return
 	 */
 	public boolean podeSair(LocalDateTime saida) {
-		Duration duration = Duration.between(entrada, saida);
-		return duration.toHours() >= servico.getHorasMinimas();
+
+		if(this.servico == null) {
+			return true;
+		}
+
+		Duration duration = Duration.between(this.entrada, saida);
+		return duration.toHours() >= this.servico.getHorasMinimas();
+
 	}
 }
