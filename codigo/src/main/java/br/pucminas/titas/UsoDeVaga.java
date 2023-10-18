@@ -18,29 +18,29 @@ public class UsoDeVaga {
 		return LocalDateTime.from(this.entrada);
 	}
 
-	public UsoDeVaga(Vaga vaga) {
+	public UsoDeVaga(Vaga vaga) throws VagaNaoDisponivelException {
 		init(vaga, null);
 	}
 
-	public UsoDeVaga(Vaga vaga, Servico servico) {
+	public UsoDeVaga(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
 		init(vaga, servico);
 	}
 
-	private void init(Vaga vaga, Servico servico) throws IllegalArgumentException {
+	private void init(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
 		if(!vaga.disponivel()){
-			throw new IllegalArgumentException("Vaga não disponivel");
+			throw new VagaNaoDisponivelException("Vaga não disponivel");
 		}
 		this.vaga = vaga;
 		this.servico = servico;
 		entrada = LocalDateTime.now();
 	}
 
-	public double sair() {
+	public double sair() throws ServicoNaoTerminadoException, SairDeVagaDisponivelException {
 		if (vaga.disponivel()) {
-			throw new IllegalArgumentException("Essa vaga não está em uso");
+			throw new SairDeVagaDisponivelException("Essa vaga não está em uso");
 		}
-		else if (!podeSair()) {
-			throw new IllegalArgumentException("Os serviços solicitados ainda não foram concluídos");
+		else if (!podeSair(LocalDateTime.now())) {
+			throw new ServicoNaoTerminadoException("Os serviços solicitados ainda não foram concluídos");
 		}
 		saida = LocalDateTime.now();	
 		vaga.sair();
@@ -67,7 +67,7 @@ public class UsoDeVaga {
 		return servico.getPreco();
 	}
 
-	public boolean podeSair() {
+	public boolean podeSair(LocalDateTime saida) {
 		Duration duration = Duration.between(entrada, saida);
 		return duration.toHours() >= servico.getHoraMinimas();
 	}

@@ -27,7 +27,7 @@ public class UsoDeVagaTest {
     private UsoDeVaga u;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws VagaNaoDisponivelException {
         vaga = new Vaga("Y", 2);
         servico = Servico.POLIMENTO;
         u = new UsoDeVaga(vaga, servico);
@@ -36,7 +36,7 @@ public class UsoDeVagaTest {
     @Test
     public void tentarUsarUmaVagaEmUso() {
         vaga.estacionar();
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
+        VagaNaoDisponivelException e = assertThrows(VagaNaoDisponivelException.class, () -> {
             new UsoDeVaga(vaga);
         }, "Vaga não disponivel");
         
@@ -45,11 +45,21 @@ public class UsoDeVagaTest {
 
     @Test
     public void tentarSairDeUmaVagaLivre() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
+        SairDeVagaDisponivelException e = assertThrows(SairDeVagaDisponivelException.class, () -> {
             u.sair();
         }, "Essa vaga não está em uso");
         
         assertEquals("Essa vaga não está em uso", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não está em uso");
+    }
+
+    @Test
+    public void tentarSairSemServicoTerminado() {
+        vaga.estacionar();
+        ServicoNaoTerminadoException e = assertThrows(ServicoNaoTerminadoException.class, () -> {
+            u.sair();
+        }, "Os serviços solicitados ainda não foram concluídos");
+        
+        assertEquals("Os serviços solicitados ainda não foram concluídos", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não o serviço solicitado ainda não foi concluído");
     }
 
     @Test
