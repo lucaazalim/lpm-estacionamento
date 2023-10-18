@@ -61,7 +61,9 @@ public class Veiculo {
 		double totalArrecadado = 0;
 
 		for(UsoDeVaga usoDeVaga : this.usos) {
-			totalArrecadado += usoDeVaga.valorPago();
+			if(usoDeVaga != null) {
+				totalArrecadado += usoDeVaga.valorPago();
+			}
 		}
 
 		return totalArrecadado;
@@ -80,7 +82,7 @@ public class Veiculo {
 
 		for(UsoDeVaga usoDeVaga : this.usos) {
 
-			if(usoDeVaga.getEntrada().getMonthValue() == mes) {
+			if(usoDeVaga != null && usoDeVaga.getEntrada().getMonthValue() == mes) {
 				arrecadadoNoMes += usoDeVaga.valorPago();
 			}
 

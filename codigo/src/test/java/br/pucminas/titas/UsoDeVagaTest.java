@@ -83,7 +83,7 @@ public class UsoDeVagaTest {
 
 	public boolean podeSairMock(LocalDateTime saida) {
 		Duration duration = Duration.between(u.getEntrada(), saida);
-		return duration.toHours() >= servico.getHoraMinimas();
+		return duration.toHours() >= servico.getHorasMinimas();
 	}
 
     public double valorPagoMock(LocalDateTime saida) {

@@ -1,16 +1,16 @@
 package br.pucminas.titas;
 
-import static org.junit.Assert.*;
-
 import br.pucminas.titas.entidades.Vaga;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VagaTest {
-    private Vaga vaga;
+    private static Vaga vaga;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         vaga = new Vaga("A", 1);
     }
 

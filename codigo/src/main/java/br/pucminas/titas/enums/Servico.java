@@ -1,27 +1,29 @@
 package br.pucminas.titas.enums;
 
 public enum Servico {
-   MANOBRISTA(5d, "Manobrista", 0), LAVAGEM(20d, "Lavagem", 1), POLIMENTO(45d, "Polimento", 2);
+    MANOBRISTA("Manobrista", 5, 0),
+    LAVAGEM("Lavagem", 20, 1),
+    POLIMENTO("Polimento", 45, 2);
 
-   private String nome;
-   private double preco;
-   private int horaMinimas;
+    private String nome;
+    private double preco;
+    private int horaMinimas;
 
-   Servico(double preco, String nome, int horaMinimas) {
-        this.preco = preco;
+    Servico(String nome, double preco, int horasMinimas) {
         this.nome = nome;
-        this.horaMinimas = horaMinimas;
-   }
+        this.preco = preco;
+        this.horaMinimas = horasMinimas;
+    }
 
-   public double getPreco() {
+    public double getPreco() {
         return preco;
-   }
+    }
 
-   public String getNome() {
+    public String getNome() {
         return nome;
-   }
+    }
 
-   public int getHoraMinimas() {
+    public int getHorasMinimas() {
         return horaMinimas;
-   }
+    }
 }

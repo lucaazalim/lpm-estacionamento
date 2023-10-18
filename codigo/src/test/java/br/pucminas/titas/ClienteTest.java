@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Vaga;
 import br.pucminas.titas.entidades.Veiculo;
+import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ public class ClienteTest {
     private Vaga vaga;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws VagaNaoDisponivelException {
 
         cliente = new Cliente("João", "1");
         veiculo = new Veiculo("ABC-1234");

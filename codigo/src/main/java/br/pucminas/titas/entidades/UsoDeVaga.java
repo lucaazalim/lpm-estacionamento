@@ -73,15 +73,25 @@ public class UsoDeVaga {
 	 * @return retorna o valor total a ser pago
 	 */
 	public double valorPago() {
-		Duration duration = Duration.between(entrada, saida);
+
+		if(this.saida == null) {
+			return 0;
+		}
+
+		Duration duration = Duration.between(this.entrada, this.saida);
+
 		double minutos = duration.toMinutes();
 		double fracaoMinutos = Math.floor(minutos / 15);
-		valorPago = fracaoMinutos * VALOR_FRACAO;
-		if(valorPago > VALOR_MAXIMO){
-			valorPago = VALOR_MAXIMO;
+
+		this.valorPago = fracaoMinutos * VALOR_FRACAO;
+
+		if(this.valorPago > VALOR_MAXIMO){
+			this.valorPago = VALOR_MAXIMO;
 		}
-		valorPago += getServicoPrecoTotal();
-		return valorPago;
+
+		this.valorPago += getServicoPrecoTotal();
+		return this.valorPago;
+
 	}
 
 	/**
@@ -107,6 +117,6 @@ public class UsoDeVaga {
 	 */
 	public boolean podeSair(LocalDateTime saida) {
 		Duration duration = Duration.between(entrada, saida);
-		return duration.toHours() >= servico.getHoraMinimas();
+		return duration.toHours() >= servico.getHorasMinimas();
 	}
 }
