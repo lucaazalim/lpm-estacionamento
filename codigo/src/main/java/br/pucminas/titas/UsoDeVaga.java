@@ -14,10 +14,6 @@ public class UsoDeVaga {
 	private double valorPago;
 	private Servico servico;
 
-	public LocalDateTime getEntrada(){
-		return LocalDateTime.from(this.entrada);
-	}
-
 	public UsoDeVaga(Vaga vaga) throws VagaNaoDisponivelException {
 		init(vaga, null);
 	}
@@ -26,6 +22,12 @@ public class UsoDeVaga {
 		init(vaga, servico);
 	}
 
+	/**
+	 * Um construtor padrão
+	 * @param vaga
+	 * @param servico
+	 * @throws VagaNaoDisponivelException
+	 */
 	private void init(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
 		if(!vaga.disponivel()){
 			throw new VagaNaoDisponivelException("Vaga não disponivel");
@@ -35,6 +37,20 @@ public class UsoDeVaga {
 		entrada = LocalDateTime.now();
 	}
 
+	/**
+	 * Pega o data e hora da entrada do cliente
+	 * @return
+	 */
+	public LocalDateTime getEntrada(){
+		return LocalDateTime.from(this.entrada);
+	}
+
+	/**
+	 * Tenta liberar a vaga
+	 * @return retorna o preço a ser pago pelo cliente
+	 * @throws ServicoNaoTerminadoException
+	 * @throws SairDeVagaDisponivelException
+	 */
 	public double sair() throws ServicoNaoTerminadoException, SairDeVagaDisponivelException {
 		if (vaga.disponivel()) {
 			throw new SairDeVagaDisponivelException("Essa vaga não está em uso");
@@ -47,6 +63,10 @@ public class UsoDeVaga {
 		return valorPago();
 	}
 
+	/**
+	 * Calcula o valor total a ser pago
+	 * @return retorna o valor total a ser pago
+	 */
 	public double valorPago() {
 		Duration duration = Duration.between(entrada, saida);
 		double minutos = duration.toMinutes();
@@ -59,14 +79,27 @@ public class UsoDeVaga {
 		return valorPago;
 	}
 
+	/**
+	 * Adiciona um serviço ou troca o serviço atual por um novo
+	 * @param servico Serviço ser escolhido
+	 */
 	public void adicionaServico(Servico servico) {
 		this.servico = servico;
 	}
 
+	/**
+	 * Pega o preço do serviço solicitado
+	 * @return retorna o preço do serviço solicitado
+	 */
 	public double getServicoPrecoTotal() {
 		return servico.getPreco();
 	}
 
+	/**
+	 * Confere se o tempo mínimo for passado
+	 * @param saida horário da saída
+	 * @return
+	 */
 	public boolean podeSair(LocalDateTime saida) {
 		Duration duration = Duration.between(entrada, saida);
 		return duration.toHours() >= servico.getHoraMinimas();
