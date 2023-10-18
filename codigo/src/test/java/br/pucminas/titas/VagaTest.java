@@ -1,6 +1,8 @@
 package br.pucminas.titas;
 
 import static org.junit.Assert.*;
+
+import br.pucminas.titas.entidades.Vaga;
 import org.junit.Before;
 import org.junit.Test;
 

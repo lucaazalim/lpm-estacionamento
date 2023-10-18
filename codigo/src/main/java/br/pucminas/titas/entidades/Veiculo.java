@@ -1,4 +1,8 @@
-package br.pucminas.titas;
+package br.pucminas.titas.entidades;
+
+import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
+import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 
 public class Veiculo {
 

@@ -6,12 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import br.pucminas.titas.enums.Servico;
+import br.pucminas.titas.entidades.UsoDeVaga;
+import br.pucminas.titas.entidades.Vaga;
+import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
+import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

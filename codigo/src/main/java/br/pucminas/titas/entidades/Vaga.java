@@ -1,4 +1,4 @@
-package br.pucminas.titas;
+package br.pucminas.titas.entidades;
 
 public class Vaga {
 

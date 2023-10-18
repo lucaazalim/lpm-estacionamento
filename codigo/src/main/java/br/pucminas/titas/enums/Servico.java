@@ -1,4 +1,4 @@
-package br.pucminas.titas;
+package br.pucminas.titas.enums;
 
 public enum Servico {
    MANOBRISTA(5d, "Manobrista", 0), LAVAGEM(20d, "Lavagem", 1), POLIMENTO(45d, "Polimento", 2);

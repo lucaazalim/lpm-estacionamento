@@ -1,5 +1,8 @@
 package br.pucminas.titas;
 
+import br.pucminas.titas.entidades.Cliente;
+import br.pucminas.titas.entidades.Estacionamento;
+import br.pucminas.titas.entidades.Veiculo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

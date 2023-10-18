@@ -4,6 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
+import br.pucminas.titas.entidades.Vaga;
+import br.pucminas.titas.entidades.Veiculo;
+import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
+import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -25,7 +30,7 @@ public class VeiculoTest {
     }
 
     @Test
-    public void testSair() throws VagaNaoDisponivelException, ServicoNaoTerminadoException, SairDeVagaDisponivelException{
+    public void testSair() throws VagaNaoDisponivelException, ServicoNaoTerminadoException, SairDeVagaDisponivelException {
         veiculo.estacionar(vaga);
         double valorPago = veiculo.sair();
         assertEquals(1, veiculo.totalDeUsos());

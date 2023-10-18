@@ -1,4 +1,9 @@
-package br.pucminas.titas;
+package br.pucminas.titas.entidades;
+
+import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
+import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
+import br.pucminas.titas.enums.Servico;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

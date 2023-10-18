@@ -1,4 +1,4 @@
-package br.pucminas.titas;
+package br.pucminas.titas.excecoes;
 
 public class VagaNaoDisponivelException extends Exception {
     private String message;
