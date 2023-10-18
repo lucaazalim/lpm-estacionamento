@@ -2,7 +2,9 @@ package br.pucminas.titas.entidades;
 
 import br.pucminas.titas.excecoes.*;
 
-public class Estacionamento {
+import java.io.Serializable;
+
+public class Estacionamento implements Serializable {
 
     private final String nome;
     private Cliente[] clientes;
@@ -22,10 +24,10 @@ public class Estacionamento {
      * Adiciona um veículo para um cliente especificado no estacionamento.
      *
      * @param veiculo O veículo a ser adicionado.
-     * @param idCli   O ID do cliente proprietário do veículo.
+     * @param idCliente   O ID do cliente proprietário do veículo.
      */
-    public void addVeiculo(Veiculo veiculo, String idCli) {
-        Cliente cliente = this.encontrarCliente(idCli);
+    public void addVeiculo(Veiculo veiculo, String idCliente) {
+        Cliente cliente = this.encontrarCliente(idCliente);
         if (cliente != null) {
             cliente.addVeiculo(veiculo);
         }
@@ -34,10 +36,15 @@ public class Estacionamento {
     /**
      * Localiza um cliente no estacionamento usando o ID do cliente fornecido.
      *
-     * @param idCli O ID do cliente a ser localizado.
+     * @param idCliente O ID do cliente a ser localizado.
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
-    private Cliente encontrarCliente(String idCli) {
+    private Cliente encontrarCliente(String idCliente) {
+        for (Cliente cliente : clientes) {
+            if (cliente != null && cliente.getId().equals(idCliente)) {
+                return cliente;
+            }
+        }
         return null;
     }
 

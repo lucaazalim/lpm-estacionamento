@@ -5,7 +5,7 @@ public class Cliente {
     private final String nome;
     private final String id;
     private final Veiculo[] veiculos;
-
+    
     /**
      * Constrói um novo objeto Cliente com o nome e id fornecidos.
      * Inicializa um array vazio de veículos com um tamanho de 100.
@@ -17,6 +17,15 @@ public class Cliente {
         this.nome = nome;
         this.id = id;
         this.veiculos = new Veiculo[100]; // limite de 100 veículos
+    }
+
+    /**
+     * Recupera o ID do cliente.
+     *
+     * @return O ID do cliente.
+     */
+    public String getId() {
+        return this.id;
     }
 
     /**
