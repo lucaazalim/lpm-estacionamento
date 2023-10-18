@@ -1,16 +1,13 @@
-package br.pucminas.titas;
-
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
 public class VagaTest {
-
     private Vaga vaga;
 
     @Before
     public void setUp() {
-        vaga = new Vaga(1, 5);
+        vaga = new Vaga("A", 1);
     }
 
     @Test
@@ -20,18 +17,31 @@ public class VagaTest {
     }
 
     @Test
+    public void testEstacionarVagaJaOcupada() {
+        vaga.estacionar(); 
+        assertFalse(vaga.estacionar()); 
+        assertFalse(vaga.disponivel());
+    }
+
+    @Test
     public void testSair() {
-        vaga.estacionar();
-        assertTrue(vaga.sair());
+        vaga.estacionar(); 
+        assertTrue(vaga.sair()); 
+        assertTrue(vaga.disponivel());
+    }
+
+    @Test
+    public void testSairVagaJaLivre() {
+        assertTrue(vaga.sair()); 
         assertTrue(vaga.disponivel());
     }
 
     @Test
     public void testDisponivel() {
         assertTrue(vaga.disponivel());
-        vaga.estacionar();
+        vaga.estacionar(); 
         assertFalse(vaga.disponivel());
-        vaga.sair();
+        vaga.sair(); // Libera a vaga
         assertTrue(vaga.disponivel());
     }
 }
