@@ -1,6 +1,8 @@
 package br.pucminas.titas;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Estacionamento {
 
@@ -61,7 +63,7 @@ public class Estacionamento {
         int totalVagas = quantFileiras * vagasPorFileira;
         this.vagas = new Vaga[totalVagas];
         for (int i = 0; i < totalVagas; i++) {
-            vagas[i] = new Vaga("Y" + (i / vagasPorFileira) + (i % vagasPorFileira));
+            vagas[i] = new Vaga("Y" , (i / vagasPorFileira) + (i % vagasPorFileira));
         }
     }
 
