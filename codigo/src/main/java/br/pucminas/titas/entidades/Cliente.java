@@ -2,10 +2,9 @@ package br.pucminas.titas.entidades;
 
 public class Cliente {
 
-    private String nome;
-    private String id;
-    private Veiculo[] veiculos;
-    private int contadorVeiculos = 0;
+    private final String nome;
+    private final String id;
+    private final Veiculo[] veiculos;
 
     /**
      * Constrói um novo objeto Cliente com o nome e id fornecidos.
@@ -26,9 +25,11 @@ public class Cliente {
      * @param veiculo O veículo a ser adicionado.
      */
     public void addVeiculo(Veiculo veiculo) {
-        if (contadorVeiculos < veiculos.length) {
-            veiculos[contadorVeiculos] = veiculo;
-            contadorVeiculos++;
+        for(int i = 0; i < this.veiculos.length; i++) {
+            if(this.veiculos[i] == null) {
+                this.veiculos[i] = veiculo;
+                break;
+            }
         }
     }
 
