@@ -25,7 +25,7 @@ public class Estacionamento {
      * Adiciona um veículo para um cliente especificado no estacionamento.
      *
      * @param veiculo O veículo a ser adicionado.
-     * @param idCli O ID do cliente proprietário do veículo.
+     * @param idCli   O ID do cliente proprietário do veículo.
      */
     public void addVeiculo(Veiculo veiculo, String idCli) {
         Cliente cliente = encontrarCliente(idCli);
@@ -63,7 +63,7 @@ public class Estacionamento {
         int totalVagas = quantFileiras * vagasPorFileira;
         this.vagas = new Vaga[totalVagas];
         for (int i = 0; i < totalVagas; i++) {
-            vagas[i] = new Vaga("Y" , (i / vagasPorFileira) + (i % vagasPorFileira));
+            vagas[i] = new Vaga("Y", (i / vagasPorFileira) + (i % vagasPorFileira));
         }
     }
 
@@ -72,27 +72,27 @@ public class Estacionamento {
     public void estacionar(String placa) {
         Vaga livre = encontrarVaga();
         Veiculo qual = procurarVeiculo(placa);
-        if(livre!=null && qual!=null)
+        if (livre != null && qual != null)
             qual.estacionar(livre);
     }
 
-    private Vaga encontrarVaga(){
-        for(Vaga v : this.vagas)
-            if(v.disponivel())
+    private Vaga encontrarVaga() {
+        for (Vaga v : this.vagas)
+            if (v.disponivel())
                 return v;
         return null;
     }
 
-    private Veiculo procurarVeiculo(String placa){
-        for(Cliente cli : id){
+    private Veiculo procurarVeiculo(String placa) {
+        for (Cliente cli : id) {
             Veiculo v = cli.possuiVeiculo(placa);
-            if(v!=null) return v;
+            if (v != null) return v;
         }
         return null;
     }
 
     public double sair(String placa) {
-
+        return 0; // TODO
     }
 
     public double totalArrecadado() {
@@ -112,10 +112,10 @@ public class Estacionamento {
     }
 
     public double valorMedioPorUso() {
-
+        return 0; // TODO
     }
 
     public String top5Clientes(int mes) {
-
+        return null; // TODO
     }
 }
