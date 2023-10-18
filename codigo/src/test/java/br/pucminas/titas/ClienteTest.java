@@ -1,8 +1,10 @@
 package br.pucminas.titas;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ClienteTest {
 
@@ -10,51 +12,46 @@ public class ClienteTest {
     private Veiculo veiculo;
     private Vaga vaga;
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
 
-        this.cliente = new Cliente("Luca Ferrari Azalim", "1");
-        this.veiculo = new Veiculo("ABC-1234");
-        this.vaga = new Vaga(1, 1);
+        cliente = new Cliente("João", "1");
+        veiculo = new Veiculo("ABC-1234");
+        vaga = new Vaga("Y", 1);
 
-        veiculo.estacionar(this.vaga);
+        veiculo.estacionar(vaga);
 
+    }
+
+    @Test
+    public void testAddVeiculo() {
+        cliente.addVeiculo(veiculo);
+        assertNotNull(cliente.possuiVeiculo("ABC-1234"),"Testando adição de veículos ao cliente.");
     }
 
     @Test
     public void testPossuiVeiculo() {
-
-        this.cliente.addVeiculo(veiculo);
-        assertEquals(veiculo, this.cliente.possuiVeiculo("ABC-1234"));
-
+        cliente.addVeiculo(veiculo);
+        assertNotNull(cliente.possuiVeiculo("ABC-1234"),"Testando posse de veículo do cliente.");
+        assertNull(cliente.possuiVeiculo("PUZ-5654"),"Testando que cliente não possui veículo que não foi adicionado.");
     }
 
     @Test
     public void testTotalDeUsos() {
-
-        assertEquals(1, this.cliente.totalDeUsos());
-
+        cliente.addVeiculo(veiculo);
+        assertEquals(15, cliente.totalDeUsos(),"Testando total de usos de um cliente.");
     }
 
     @Test
     public void testArrecadadoPorVeiculo() {
-
-        // TODO assertEquals(0.0, this.cliente.arrecadadoPorVeiculo("ABC-1234"));
-
+        cliente.addVeiculo(veiculo);
+        assertEquals(4.0, cliente.arrecadadoPorVeiculo("ABC-1234"), "Testando total arrecadado por veículo do cliente.");
     }
 
     @Test
     public void testArrecadadoTotal() {
-
-        // TODO assertEquals(0.0, this.cliente.arrecadadoTotal());
-
-    }
-
-    @Test
-    public void testArrecadadoNoMes() {
-
-        // TODO assertEquals(0.0, this.cliente.arrecadadoNoMes(1));
-
+        cliente.addVeiculo(veiculo);
+        assertEquals(4.0, cliente.arrecadadoTotal(),"Testando total arrecadado por cliente.");
     }
 
 }
