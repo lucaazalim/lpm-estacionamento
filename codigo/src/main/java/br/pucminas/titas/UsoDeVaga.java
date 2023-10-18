@@ -36,7 +36,10 @@ public class UsoDeVaga {
 	}
 
 	public double sair() {
-		if (!podeSair()) {
+		if (vaga.disponivel()) {
+			throw new IllegalArgumentException("Essa vaga não está em uso");
+		}
+		else if (!podeSair()) {
 			throw new IllegalArgumentException("Os serviços solicitados ainda não foram concluídos");
 		}
 		saida = LocalDateTime.now();	
@@ -52,7 +55,8 @@ public class UsoDeVaga {
 		if(valorPago > VALOR_MAXIMO){
 			valorPago = VALOR_MAXIMO;
 		}
-		return valorPago + getServicoPrecoTotal();
+		valorPago += getServicoPrecoTotal();
+		return valorPago;
 	}
 
 	public void adicionaServico(Servico servico) {
