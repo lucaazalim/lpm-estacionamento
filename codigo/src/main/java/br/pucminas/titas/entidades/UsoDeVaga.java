@@ -5,12 +5,12 @@ import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.enums.Servico;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class UsoDeVaga {
+public class UsoDeVaga implements Serializable {
 
-	private static final double FRACAO_USO = 0.25;
 	private static final double VALOR_FRACAO = 4.0;
 	private static final double VALOR_MAXIMO = 50.0;
 	private Vaga vaga;

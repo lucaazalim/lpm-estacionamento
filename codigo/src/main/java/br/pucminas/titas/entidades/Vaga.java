@@ -1,6 +1,8 @@
 package br.pucminas.titas.entidades;
 
-public class Vaga {
+import java.io.Serializable;
+
+public class Vaga implements Serializable {
 
 	private String id;
 	private boolean disponivel;

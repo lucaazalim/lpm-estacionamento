@@ -5,7 +5,9 @@ import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
-public class Veiculo {
+import java.io.Serializable;
+
+public class Veiculo implements Serializable {
 
     private static final int MAX_USOS = 1000;
 
