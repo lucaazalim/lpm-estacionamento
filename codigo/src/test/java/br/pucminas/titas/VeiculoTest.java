@@ -19,21 +19,21 @@ public class VeiculoTest {
     }
 
     @Test
-    public void testEstacionar(){
+    public void testEstacionar() throws VagaNaoDisponivelException {
         veiculo.estacionar(vaga);
         assertEquals(1,veiculo.totalDeUsos());
     }
 
     @Test
-    public void testSair(){
+    public void testSair() throws VagaNaoDisponivelException, ServicoNaoTerminadoException, SairDeVagaDisponivelException{
         veiculo.estacionar(vaga);
-        // double valorPago = veiculo.sair();
+        double valorPago = veiculo.sair();
         assertEquals(1, veiculo.totalDeUsos());
-        // assertTrue(valorPago >= 0);
+        assertTrue(valorPago >= 0);
     }
 
     @Test
-    public void testTotalArrecadado(){
+    public void testTotalArrecadado() throws VagaNaoDisponivelException {
         veiculo.estacionar(vaga);
         veiculo.estacionar(vaga);
         double totalArrecadado = veiculo.totalArrecadado();
@@ -42,7 +42,7 @@ public class VeiculoTest {
     }
 
     @Test
-    public void testArrecadadoNoMes(){
+    public void testArrecadadoNoMes() throws VagaNaoDisponivelException{
         veiculo.estacionar(vaga);
         veiculo.estacionar(vaga);
         double arrecadacaoNoMes = veiculo.arrecadadoNoMes(LocalDate.now().getMonthValue());

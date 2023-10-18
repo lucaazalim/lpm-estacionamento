@@ -21,8 +21,9 @@ public class Veiculo {
 	 * Estaciona o veículo na vaga informada.
 	 *
 	 * @param vaga Vaga onde o veículo será estacionado
+	 * @throws VagaNaoDisponivelException
 	 */
-	public void estacionar(Vaga vaga) {
+	public void estacionar(Vaga vaga) throws VagaNaoDisponivelException {
 
 		for(int i = 0; i < this.usos.length; i++) {
 
@@ -39,8 +40,10 @@ public class Veiculo {
 	 * Dispara {@see UsoDeVaga#sair()} no último uso de vaga do veículo.
 	 *
 	 * @return valor pago pelo veículo.
+	 * @throws SairDeVagaDisponivelException
+	 * @throws ServicoNaoTerminadoException
 	 */
-	public double sair() {
+	public double sair() throws ServicoNaoTerminadoException, SairDeVagaDisponivelException {
 		return this.usos[this.usos.length - 1].sair();
 	}
 
