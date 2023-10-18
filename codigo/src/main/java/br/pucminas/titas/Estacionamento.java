@@ -69,29 +69,30 @@ public class Estacionamento {
 
     //Parte responsável pelo aluno Gabriel.
 
-	public void estacionar(String placa) throws EstacionamentoLotadoException {
-		boolean vagaEncontrada = false;
-		for (Vaga vaga : vagas) {
-        		if (vaga != null && vaga.disponivel()) {
-            			vaga.estacionar();
-            			veiculoVagaMap.put(placa, vaga);
-				vagaEncontrada = true;
-            			break;
-        		}
-    		}
-		if (!vagaEncontrada) {
-        		throw new EstacionamentoLotadoException("Não há vagas disponíveis para estacionar o veículo");
-    		}
-
+	public void estacionar(String placa) {
+		Vaga livre = encontrarVaga();
+		Veiculo qual = procurarVeiculo(placa);
+		if(livre!=null && qual!=null)
+			qual.estacionar(livre);
 	}
 
-	public double sair(String placa) {
-		Vaga vaga = veiculoVagaMap.get(placa);
-    		if (vaga != null) {
-        		vaga.sair();
-        		veiculoVagaMap.remove(placa);
-			return cliente.arrecadadoPorVeiculo(placa);
+	private Vaga encontrarVaga(){
+		for(Vaga v : this.vagas)
+			if(v.disponivel())
+				return v;
+		return null;
+	}
+
+	private Veiculo procurarVeiculo(String placa){
+		for(Cliente cli : clientes){
+			Veiculo v = cli.possuiVeiculo(placa);
+			if(v!=null) return v;
 		}
+		return null;
+	}
+	
+	public double sair(String placa) {
+		
 	}
 
 	public double totalArrecadado() {
@@ -116,11 +117,5 @@ public class Estacionamento {
 
 	public String top5Clientes(int mes) {
 
-	}
-	
-	public class EstacionamentoLotadoException extends Exception {
-	    public EstacionamentoLotadoException(String message) {
-	        super(message);
-	    }
 	}
 }
