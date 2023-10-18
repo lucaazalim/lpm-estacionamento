@@ -1,6 +1,6 @@
 package br.pucminas.titas.entidades;
 
-import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.enums.Servico;
@@ -34,9 +34,11 @@ public class UsoDeVaga {
 	 * @throws VagaNaoDisponivelException
 	 */
 	private void init(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
+
 		if(!vaga.disponivel()){
 			throw new VagaNaoDisponivelException("Vaga não disponivel");
 		}
+
 		this.vaga = vaga;
 		this.servico = servico;
 		entrada = LocalDateTime.now();
@@ -54,18 +56,22 @@ public class UsoDeVaga {
 	 * Tenta liberar a vaga
 	 * @return retorna o preço a ser pago pelo cliente
 	 * @throws ServicoNaoTerminadoException
-	 * @throws SairDeVagaDisponivelException
+	 * @throws VeiculoJaSaiuException
 	 */
-	public double sair() throws ServicoNaoTerminadoException, SairDeVagaDisponivelException {
-		if (vaga.disponivel()) {
-			throw new SairDeVagaDisponivelException("Essa vaga não está em uso");
+	public double sair() throws ServicoNaoTerminadoException, VeiculoJaSaiuException {
+
+		if (this.saida != null) {
+			throw new VeiculoJaSaiuException("Este uso de vaga já foi concluído porque o veículo já saiu.");
 		}
-		else if (!podeSair(LocalDateTime.now())) {
+
+		if (!podeSair(LocalDateTime.now())) {
 			throw new ServicoNaoTerminadoException("Os serviços solicitados ainda não foram concluídos");
 		}
+
 		saida = LocalDateTime.now();	
 		vaga.sair();
 		return valorPago();
+
 	}
 
 	/**

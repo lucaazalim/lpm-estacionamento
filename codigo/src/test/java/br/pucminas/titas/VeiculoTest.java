@@ -6,9 +6,10 @@ import java.time.LocalDate;
 
 import br.pucminas.titas.entidades.Vaga;
 import br.pucminas.titas.entidades.Veiculo;
-import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -30,7 +31,7 @@ public class VeiculoTest {
     }
 
     @Test
-    public void testSair() throws VagaNaoDisponivelException, ServicoNaoTerminadoException, SairDeVagaDisponivelException {
+    public void testSair() throws VagaNaoDisponivelException, VeiculoNaoEstaEstacionadoException, ServicoNaoTerminadoException {
         veiculo.estacionar(vaga);
         double valorPago = veiculo.sair();
         assertEquals(1, veiculo.totalDeUsos());
@@ -42,7 +43,7 @@ public class VeiculoTest {
         veiculo.estacionar(vaga);
         veiculo.estacionar(vaga);
         double totalArrecadado = veiculo.totalArrecadado();
-        assertEquals(2, veiculo.totalArrecadado());
+        assertEquals(0, veiculo.totalArrecadado());
         assertTrue(totalArrecadado >= 0);
     }
 

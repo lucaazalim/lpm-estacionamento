@@ -3,6 +3,7 @@ package br.pucminas.titas;
 import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Estacionamento;
 import br.pucminas.titas.entidades.Veiculo;
+import br.pucminas.titas.excecoes.EstacionamentoLotadoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,18 +34,18 @@ public class EstacionamentoTest {
         for (int i = 0; i < 100; i++) {
             try {
                 estacionamento.estacionar("ABC-" + i);
-            } catch (Estacionamento.EstacionamentoLotadoException e) {
+            } catch (EstacionamentoLotadoException e) {
                 fail("Estacionamento lotado antes do previsto.");
             }
         }
-        assertThrows(Estacionamento.EstacionamentoLotadoException.class, () -> estacionamento.estacionar(PLACA),"Confere se estacionar quando lotado lança exceção.");
+        assertThrows(EstacionamentoLotadoException.class, () -> estacionamento.estacionar(PLACA),"Confere se estacionar quando lotado lança exceção.");
     }
 
     @Test
     public void testSair() {
         try {
             estacionamento.estacionar(PLACA);
-        } catch (Estacionamento.EstacionamentoLotadoException e) {
+        } catch (EstacionamentoLotadoException e) {
             fail("Estacionamento lotado, teste incompleto.");
         }
         assertDoesNotThrow(() -> estacionamento.sair(PLACA),"confere se sair não lança exceções");

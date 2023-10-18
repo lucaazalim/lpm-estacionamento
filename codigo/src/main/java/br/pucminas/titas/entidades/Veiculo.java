@@ -1,113 +1,122 @@
 package br.pucminas.titas.entidades;
 
-import br.pucminas.titas.excecoes.SairDeVagaDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 public class Veiculo {
 
-	private static final int MAX_USOS = 1000;
+    private static final int MAX_USOS = 1000;
 
-	private final String placa;
-	private final UsoDeVaga[] usos;
+    private final String placa;
+    private final UsoDeVaga[] usos;
 
-	/**
-	 * Cria um novo veículo com a placa informada.
-	 *
-	 * @param placa Placa do veículo
-	 */
-	public Veiculo(String placa) {
-		this.placa = placa;
-		this.usos = new UsoDeVaga[MAX_USOS];
-	}
+    /**
+     * Cria um novo veículo com a placa informada.
+     *
+     * @param placa Placa do veículo
+     */
+    public Veiculo(String placa) {
+        this.placa = placa;
+        this.usos = new UsoDeVaga[MAX_USOS];
+    }
 
-	/**
-	 * Estaciona o veículo na vaga informada.
-	 *
-	 * @param vaga Vaga onde o veículo será estacionado
-	 * @throws VagaNaoDisponivelException
-	 */
-	public void estacionar(Vaga vaga) throws VagaNaoDisponivelException {
+    /**
+     * Estaciona o veículo na vaga informada.
+     *
+     * @param vaga Vaga onde o veículo será estacionado
+     * @throws VagaNaoDisponivelException
+     */
+    public void estacionar(Vaga vaga) throws VagaNaoDisponivelException {
 
-		for(int i = 0; i < this.usos.length; i++) {
+        for (int i = 0; i < this.usos.length; i++) {
 
-			if(this.usos[i] == null) {
-				this.usos[i] = new UsoDeVaga(vaga);
-				break;
-			}
+            if (this.usos[i] == null) {
+                this.usos[i] = new UsoDeVaga(vaga);
+                break;
+            }
 
-		}
+        }
 
-	}
+    }
 
-	/**
-	 * Dispara {@see UsoDeVaga#sair()} no último uso de vaga do veículo.
-	 *
-	 * @return valor pago pelo veículo.
-	 * @throws SairDeVagaDisponivelException
-	 * @throws ServicoNaoTerminadoException
-	 */
-	public double sair() throws ServicoNaoTerminadoException, SairDeVagaDisponivelException {
-		return this.usos[this.usos.length - 1].sair();
-	}
+    /**
+     * Dispara {@see UsoDeVaga#sair()} no último uso de vaga do veículo.
+     *
+     * @return valor pago pelo veículo.
+     * @throws VeiculoJaSaiuException
+     * @throws ServicoNaoTerminadoException
+     */
+    public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
-	/**
-	 * Retorna o total arrecadado com o veículo.
-	 *
-	 * @return total arrecadado com o veículo.
-	 */
-	public double totalArrecadado() {
+        UsoDeVaga ultimoUsoDeVaga = this.usos[this.usos.length - 1];
 
-		double totalArrecadado = 0;
+        if (ultimoUsoDeVaga == null) {
+            throw new VeiculoNaoEstaEstacionadoException();
+        }
 
-		for(UsoDeVaga usoDeVaga : this.usos) {
-			if(usoDeVaga != null) {
-				totalArrecadado += usoDeVaga.valorPago();
-			}
-		}
+        return ultimoUsoDeVaga.sair();
 
-		return totalArrecadado;
+    }
 
-	}
+    /**
+     * Retorna o total arrecadado com o veículo.
+     *
+     * @return total arrecadado com o veículo.
+     */
+    public double totalArrecadado() {
 
-	/**
-	 * Retorna o total arrecadado com o veículo no mês informado.
-	 *
-	 * @param mes Mês a ser consultado
-	 * @return total arrecadado com o veículo no mês informado.
-	 */
-	public double arrecadadoNoMes(int mes) {
+        double totalArrecadado = 0;
 
-		double arrecadadoNoMes = 0;
+        for (UsoDeVaga usoDeVaga : this.usos) {
+            if (usoDeVaga != null) {
+                totalArrecadado += usoDeVaga.valorPago();
+            }
+        }
 
-		for(UsoDeVaga usoDeVaga : this.usos) {
+        return totalArrecadado;
 
-			if(usoDeVaga != null && usoDeVaga.getEntrada().getMonthValue() == mes) {
-				arrecadadoNoMes += usoDeVaga.valorPago();
-			}
+    }
 
-		}
+    /**
+     * Retorna o total arrecadado com o veículo no mês informado.
+     *
+     * @param mes Mês a ser consultado
+     * @return total arrecadado com o veículo no mês informado.
+     */
+    public double arrecadadoNoMes(int mes) {
 
-		return arrecadadoNoMes;
+        double arrecadadoNoMes = 0;
 
-	}
+        for (UsoDeVaga usoDeVaga : this.usos) {
 
-	/**
-	 * Retorna o total de usos do veículo.
-	 *
-	 * @return total de usos do veículo.
-	 */
-	public int totalDeUsos() {
+            if (usoDeVaga != null && usoDeVaga.getEntrada().getMonthValue() == mes) {
+                arrecadadoNoMes += usoDeVaga.valorPago();
+            }
 
-		int totalDeUsos = 0;
+        }
 
-		for(UsoDeVaga usoDeVaga : this.usos) {
-			if(usoDeVaga != null) {
-				totalDeUsos++;
-			}
-		}
+        return arrecadadoNoMes;
 
-		return totalDeUsos;
-	}
+    }
+
+    /**
+     * Retorna o total de usos do veículo.
+     *
+     * @return total de usos do veículo.
+     */
+    public int totalDeUsos() {
+
+        int totalDeUsos = 0;
+
+        for (UsoDeVaga usoDeVaga : this.usos) {
+            if (usoDeVaga != null) {
+                totalDeUsos++;
+            }
+        }
+
+        return totalDeUsos;
+    }
 
 }

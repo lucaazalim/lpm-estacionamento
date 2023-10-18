@@ -1,21 +1,18 @@
 package br.pucminas.titas.entidades;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import br.pucminas.titas.excecoes.*;
 
 public class Estacionamento {
 
-    private String nome;
-    private Cliente[] id;
+    private final String nome;
+    private Cliente[] clientes;
     private Vaga[] vagas;
-    private int quantFileiras;
-    private int vagasPorFileira;
-    private Map<String, Vaga> veiculoVagaMap = new HashMap<>();
+    private final int quantFileiras;
+    private final int vagasPorFileira;
 
     public Estacionamento(String nome, int fileiras, int vagasPorFila) {
         this.nome = nome;
-        this.id = new Cliente[100];
+        this.clientes = new Cliente[100];
         this.quantFileiras = fileiras;
         this.vagasPorFileira = vagasPorFila;
         gerarVagas();
@@ -28,7 +25,7 @@ public class Estacionamento {
      * @param idCli   O ID do cliente proprietário do veículo.
      */
     public void addVeiculo(Veiculo veiculo, String idCli) {
-        Cliente cliente = encontrarCliente(idCli);
+        Cliente cliente = this.encontrarCliente(idCli);
         if (cliente != null) {
             cliente.addVeiculo(veiculo);
         }
@@ -50,10 +47,12 @@ public class Estacionamento {
      * @param cliente O cliente a ser adicionado.
      */
     public void addCliente(Cliente cliente) {
-        Cliente[] novosClientes = new Cliente[id.length + 1];
-        System.arraycopy(id, 0, novosClientes, 0, id.length);
-        novosClientes[id.length] = cliente;
-        id = novosClientes;
+        for(int i = 0; i < this.clientes.length; i++) {
+            if(this.clientes[i] == null) {
+                this.clientes[i] = cliente;
+                break;
+            }
+        }
     }
 
     /**
@@ -69,35 +68,59 @@ public class Estacionamento {
 
     //Parte responsável pelo aluno Gabriel.
 
-    public void estacionar(String placa) {
-        Vaga livre = encontrarVaga();
-        Veiculo qual = procurarVeiculo(placa);
-        if (livre != null && qual != null)
-            qual.estacionar(livre);
+    public void estacionar(String placa) throws EstacionamentoLotadoException {
+
+        Vaga vagaDisponivel = this.encontrarVagaDisponivel();
+        Veiculo veiculo = this.procurarVeiculo(placa);
+
+        if (vagaDisponivel == null) {
+            throw new EstacionamentoLotadoException();
+        } else {
+            try {
+                veiculo.estacionar(vagaDisponivel);
+            } catch (VagaNaoDisponivelException ignored) {
+                // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
+            }
+        }
     }
 
-    private Vaga encontrarVaga() {
-        for (Vaga v : this.vagas)
-            if (v.disponivel())
-                return v;
-        return null;
-    }
-
-    private Veiculo procurarVeiculo(String placa) {
-        for (Cliente cli : id) {
-            Veiculo v = cli.possuiVeiculo(placa);
-            if (v != null) return v;
+    private Vaga encontrarVagaDisponivel() {
+        for (Vaga vaga : this.vagas) {
+            if (vaga.disponivel()) {
+                return vaga;
+            }
         }
         return null;
     }
 
-    public double sair(String placa) {
-        return 0; // TODO
+    private Veiculo procurarVeiculo(String placa) {
+
+        Veiculo veiculo;
+
+        for (Cliente cliente : clientes) {
+
+            veiculo = cliente.possuiVeiculo(placa);
+
+            if (veiculo != null) {
+                return veiculo;
+            }
+
+        }
+
+        throw new VeiculoNaoEncontradoException(placa);
+
+    }
+
+    public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
+
+        Veiculo veiculo = this.procurarVeiculo(placa);
+        return veiculo.sair();
+
     }
 
     public double totalArrecadado() {
         double total = 0;
-        for (Cliente cliente : id) {
+        for (Cliente cliente : clientes) {
             total += cliente.arrecadadoTotal();
         }
         return total;
@@ -105,7 +128,7 @@ public class Estacionamento {
 
     public double arrecadacaoNoMes(int mes) {
         double total = 0;
-        for (Cliente cliente : id) {
+        for (Cliente cliente : clientes) {
             total += cliente.arrecadadoNoMes(mes);
         }
         return total;
