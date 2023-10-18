@@ -88,6 +88,7 @@ public class Estacionamento {
     		if (vaga != null) {
         		vaga.sair();
         		veiculoVagaMap.remove(placa);
+			return cliente.arrecadadoPorVeiculo(placa);
 		}
 	}
 
