@@ -84,7 +84,7 @@ public class Estacionamento {
 	}
 
 	private Veiculo procurarVeiculo(String placa){
-		for(Cliente cli : clientes){
+		for(Cliente cli : id){
 			Veiculo v = cli.possuiVeiculo(placa);
 			if(v!=null) return v;
 		}
