@@ -173,8 +173,20 @@ public class Estacionamento implements Serializable {
         return total;
     }
 
+    /**
+    * Calcula o valor médio de cada utilização do estacionamento.
+    *
+    * @return media, o valor médio por uso.
     public double valorMedioPorUso() {
-        return 0; // TODO
+        double media = 0;
+        double soma = 0;
+        int numClientes = 0;
+        for (Cliente cliente : clientes) {
+            soma += cliente.arrecadadoTotal();
+            numClientes++
+        }
+        media = soma/numClientes;
+        return media;
     }
 
     public String top5Clientes(int mes) {
