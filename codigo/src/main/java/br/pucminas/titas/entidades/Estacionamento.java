@@ -147,9 +147,9 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-    * Calcula o montante total arrecadado pelo cliente.
+    * Calcula o montante total arrecadado do estacionamento.
     *
-    * @return o total a ser pago pelo cliente.
+    * @return total arrecadado do estacionamento.
     */
     public double totalArrecadado() {
         double total = 0;
@@ -160,9 +160,9 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-    * Calcula o montante total arrecadado pelo cliente em determinado mês.
+    * Calcula o montante total arrecadado do estacionamento em determinado mês.
     *
-    * @return o total arrecadado com o cliente no mês.
+    * @return o total arrecadado do estacionamento no mês.
     */
     public double arrecadacaoNoMes(int mes) {
         double total = 0;
