@@ -75,6 +75,11 @@ public class Estacionamento implements Serializable {
 
     //Parte responsável pelo aluno Gabriel.
 
+    /**
+    * Procura por vagas disponíveis. Estaciona o veículo.
+    *
+    * @param placa. O veículo a ser estacionado.
+    /*
     public void estacionar(String placa) throws EstacionamentoLotadoException {
 
         Vaga vagaDisponivel = this.encontrarVagaDisponivel();
@@ -91,6 +96,11 @@ public class Estacionamento implements Serializable {
         }
     }
 
+    /**
+    * Procura por vagas disponíveis.
+    *
+    * @return a vaga encontrada. Se nenhuma estiver disponível, retorna null.
+    */
     private Vaga encontrarVagaDisponivel() {
         for (Vaga vaga : this.vagas) {
             if (vaga.disponivel()) {
@@ -100,6 +110,12 @@ public class Estacionamento implements Serializable {
         return null;
     }
 
+    /**
+    * Verifica se o cliente possui veículo com a placa especificada.
+    *
+    * @param placa. A placa do veículo a ser procurado.
+    * @return o veículo correspondente.
+    */
     private Veiculo procurarVeiculo(String placa) {
 
         Veiculo veiculo;
@@ -118,6 +134,11 @@ public class Estacionamento implements Serializable {
 
     }
 
+    /** 
+    *Remove o veículo da vaga.
+    *
+    * @param placa. A placa correspondente ao veículo.
+    */
     public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
         Veiculo veiculo = this.procurarVeiculo(placa);
@@ -125,6 +146,10 @@ public class Estacionamento implements Serializable {
 
     }
 
+    /**
+    * Calcula o montante total arrecadado pelo cliente.
+    *
+    * @return o total a ser pago pelo cliente.
     public double totalArrecadado() {
         double total = 0;
         for (Cliente cliente : clientes) {
@@ -133,6 +158,10 @@ public class Estacionamento implements Serializable {
         return total;
     }
 
+    /**
+    * Calcula o montante total arrecadado pelo cliente em determinado mês.
+    *
+    * @return o total arrecadado com o cliente no mês.
     public double arrecadacaoNoMes(int mes) {
         double total = 0;
         for (Cliente cliente : clientes) {
