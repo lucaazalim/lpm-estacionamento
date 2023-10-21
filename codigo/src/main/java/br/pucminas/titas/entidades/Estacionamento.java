@@ -79,7 +79,7 @@ public class Estacionamento implements Serializable {
     * Procura por vagas disponíveis. Estaciona o veículo.
     *
     * @param placa. O veículo a ser estacionado.
-    /*
+    */
     public void estacionar(String placa) throws EstacionamentoLotadoException {
 
         Vaga vagaDisponivel = this.encontrarVagaDisponivel();
