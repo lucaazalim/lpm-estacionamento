@@ -162,6 +162,7 @@ public class Estacionamento implements Serializable {
     /**
     * Calcula o montante total arrecadado do estacionamento em determinado mês.
     *
+    * @param mes O mês a ser considerado.
     * @return o total arrecadado do estacionamento no mês.
     */
     public double arrecadacaoNoMes(int mes) {
