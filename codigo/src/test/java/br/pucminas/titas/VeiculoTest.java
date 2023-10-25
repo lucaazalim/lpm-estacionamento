@@ -21,7 +21,7 @@ public class VeiculoTest {
     @BeforeEach
     public void setUp(){
         veiculo = new Veiculo("ABC123");
-        vaga = new Vaga("1",1);
+        vaga = new Vaga(1,1);
     }
 
     @Test

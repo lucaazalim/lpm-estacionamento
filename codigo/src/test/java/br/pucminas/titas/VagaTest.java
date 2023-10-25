@@ -12,7 +12,7 @@ public class VagaTest {
 
     @BeforeEach
     public void setUp() {
-        vaga = new Vaga("A", 1);
+        vaga = new Vaga(1, 1);
     }
 
     @Test

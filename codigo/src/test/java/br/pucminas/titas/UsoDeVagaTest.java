@@ -33,7 +33,7 @@ public class UsoDeVagaTest {
 
     @BeforeEach
     public void setUp() throws VagaNaoDisponivelException {
-        vaga = new Vaga("Y", 2);
+        vaga = new Vaga(25, 2);
         servico = Servico.POLIMENTO;
         u = new UsoDeVaga(vaga, servico);
     }
