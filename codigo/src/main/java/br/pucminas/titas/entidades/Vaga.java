@@ -46,7 +46,7 @@ public class Vaga implements Serializable {
 
 	@Override
 	public String toString() {
-		return "id: " + id + ";\n" + (disponivel ? "Disponível" : "Indisponível") + ";\n";
+		return "Id: " + id + ";\n" + (disponivel ? "Disponível" : "Indisponível") + ";\n";
 	}
 
 }
