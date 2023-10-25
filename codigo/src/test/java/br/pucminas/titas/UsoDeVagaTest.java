@@ -59,7 +59,7 @@ public class UsoDeVagaTest {
         UsoDeVaga usoDeVaga = new UsoDeVaga(vaga);
         usoDeVaga.sair();
         VeiculoJaSaiuException e = assertThrows(VeiculoJaSaiuException.class, () -> usoDeVaga.sair(), "Este uso de vaga já foi concluído porque o veículo já saiu.");
-        assertEquals("Este uso de vaga já foi concluído porque o veículo já saiu.", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não está em uso");
+        assertEquals("Este uso de vaga já foi concluído porque o veículo já saiu.", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga duas vezes");
     }
 
     @Test
