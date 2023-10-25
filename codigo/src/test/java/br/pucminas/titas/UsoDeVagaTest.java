@@ -50,8 +50,16 @@ public class UsoDeVagaTest {
 
     @Test
     public void tentarSairDeUmaVagaLivre() {
-        //VeiculoJaSaiuException e = assertThrows(VeiculoJaSaiuException.class, () -> u.sair(), "Essa vaga não está em uso");
-        //assertEquals("Essa vaga não está em uso", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não está em uso");
+        ServicoNaoTerminadoException e = assertThrows(ServicoNaoTerminadoException.class, () -> u.sair(), "Os serviços solicitados ainda não foram concluídos");
+        assertEquals("Os serviços solicitados ainda não foram concluídos", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não está em uso");
+    }
+
+    @Test
+    public void tentarSairDuasVezesDaMesmaVaga() throws VeiculoJaSaiuException, ServicoNaoTerminadoException, VagaNaoDisponivelException {
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga);
+        usoDeVaga.sair();
+        VeiculoJaSaiuException e = assertThrows(VeiculoJaSaiuException.class, () -> usoDeVaga.sair(), "Este uso de vaga já foi concluído porque o veículo já saiu.");
+        assertEquals("Este uso de vaga já foi concluído porque o veículo já saiu.", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não está em uso");
     }
 
     @Test
