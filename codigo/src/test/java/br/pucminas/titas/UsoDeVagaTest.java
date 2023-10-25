@@ -2,8 +2,6 @@ package br.pucminas.titas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import br.pucminas.titas.enums.Servico;
@@ -33,7 +31,7 @@ public class UsoDeVagaTest {
 
     @BeforeEach
     public void setUp() throws VagaNaoDisponivelException {
-        vaga = new Vaga("Y", 2);
+        vaga = new Vaga(25, 2);
         servico = Servico.POLIMENTO;
         u = new UsoDeVaga(vaga, servico);
     }

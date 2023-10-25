@@ -7,8 +7,8 @@ public class Vaga implements Serializable {
 	private String id;
 	private boolean disponivel;
 
-	public Vaga(String fila, int numero) {
-		this.id = fila + String.format("%02d", numero);
+	public Vaga(int fila, int numero) {
+		this.id = (char) ('A' + (fila - 1)) + String.format("%02d", numero);
 		this.disponivel = true;
 	}
 
@@ -42,6 +42,11 @@ public class Vaga implements Serializable {
 	 */
 	public boolean disponivel() {
 		return disponivel;
+	}
+
+	@Override
+	public String toString() {
+		return "Id: " + id + ";\n" + (disponivel ? "Disponível" : "Indisponível") + ";\n";
 	}
 
 }
