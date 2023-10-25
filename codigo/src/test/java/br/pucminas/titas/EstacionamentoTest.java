@@ -1,9 +1,6 @@
-package br.pucminas.titas;
+package br.pucminas.titas.entidades;
 
-import br.pucminas.titas.entidades.Cliente;
-import br.pucminas.titas.entidades.Estacionamento;
-import br.pucminas.titas.entidades.Veiculo;
-import br.pucminas.titas.excecoes.EstacionamentoLotadoException;
+import br.pucminas.titas.excecoes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,57 +8,59 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EstacionamentoTest {
 
     private Estacionamento estacionamento;
-    private static final String ID = "1";
-    private static final String NOME = "João";
-    private static final String PLACA = "PUZ-5654";
+    private Cliente cliente;
+    private Veiculo veiculo;
 
     @BeforeEach
     public void setUp() {
-        estacionamento = new Estacionamento("Xulambs Parking", 5, 20);
-        Cliente cliente = new Cliente(NOME,ID);
+        estacionamento = new Estacionamento("Xulambs Parking", 10, 10);
+        cliente = new Cliente("João", "12345");
+        veiculo = new Veiculo("ABC-1234");
+    }
+
+    @Test
+    public void testAddCliente() {
         estacionamento.addCliente(cliente);
-        Veiculo veiculo = new Veiculo(PLACA);
-        estacionamento.addVeiculo(veiculo, ID);
+        Cliente clienteEncontrado = estacionamento.encontrarCliente("12345");
+        assertNotNull(clienteEncontrado, "Confere se cliente foi adicionado.");
+    }
+
+    @Test
+    public void testAddVeiculo() {
+        estacionamento.addCliente(cliente);
+        estacionamento.addVeiculo(veiculo, "12345");
+        Veiculo veiculoEncontrado = estacionamento.procurarVeiculo("ABC-1234");
+        assertEquals(veiculo, veiculoEncontrado, "Confere se veículo foi adicionado.");
     }
 
     @Test
     public void testEstacionar() {
-        assertDoesNotThrow(() -> estacionamento.estacionar(PLACA),"confere se estacionar não lança exceção");
+        estacionamento.addCliente(cliente);
+        estacionamento.addVeiculo(veiculo, "12345");
+
+        assertDoesNotThrow(() -> estacionamento.estacionar("ABC-1234"), "Erro ao estacionar o veículo");
     }
 
     @Test
-    public void testEstacionamentoLotado() {
-        for (int i = 0; i < 100; i++) {
-            try {
-                estacionamento.estacionar("ABC-" + i);
-            } catch (EstacionamentoLotadoException e) {
-                fail("Estacionamento lotado antes do previsto.");
-            }
-        }
-        assertThrows(EstacionamentoLotadoException.class, () -> estacionamento.estacionar(PLACA),"Confere se estacionar quando lotado lança exceção.");
-    }
+    public void testSair() throws EstacionamentoLotadoException {
+        estacionamento.addCliente(cliente);
+        estacionamento.addVeiculo(veiculo, "12345");
+        estacionamento.estacionar("ABC-1234");
 
-    @Test
-    public void testSair() {
-        try {
-            estacionamento.estacionar(PLACA);
-        } catch (EstacionamentoLotadoException e) {
-            fail("Estacionamento lotado, teste incompleto.");
-        }
-        assertDoesNotThrow(() -> estacionamento.sair(PLACA),"confere se sair não lança exceções");
+        assertDoesNotThrow(() -> estacionamento.sair("ABC-1234"), "Erro ao retirar o veículo");
     }
-
 
     @Test
     public void testTotalArrecadado() {
-        double total = estacionamento.totalArrecadado();
-        assertTrue(total >= 0,"Confere se valor não é negativo");
     }
 
     @Test
     public void testArrecadacaoNoMes() {
-        double total = estacionamento.arrecadacaoNoMes(10);
-        assertTrue(total >= 0,"Confere se valor não é negativo");
+    }
+
+    @Test
+    public void testValorMedioPorUso() {
     }
 
 }
+

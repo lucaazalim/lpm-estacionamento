@@ -39,7 +39,7 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente a ser localizado.
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
-    private Cliente encontrarCliente(String idCliente) {
+    Cliente encontrarCliente(String idCliente) {
         for (Cliente cliente : clientes) {
             if (cliente != null && cliente.getId().equals(idCliente)) {
                 return cliente;
@@ -116,7 +116,7 @@ public class Estacionamento implements Serializable {
     * @param placa. A placa do veículo a ser procurado.
     * @return o veículo correspondente.
     */
-    private Veiculo procurarVeiculo(String placa) {
+    Veiculo procurarVeiculo(String placa) {
 
         Veiculo veiculo;
 
@@ -176,14 +176,15 @@ public class Estacionamento implements Serializable {
     /**
     * Calcula o valor médio de cada utilização do estacionamento.
     *
-    * @return media, o valor médio por uso.
+    *  @return media, o valor médio por uso
+    */
     public double valorMedioPorUso() {
         double media = 0;
         double soma = 0;
         int numClientes = 0;
         for (Cliente cliente : clientes) {
             soma += cliente.arrecadadoTotal();
-            numClientes++
+            numClientes++;
         }
         media = soma/numClientes;
         return media;
