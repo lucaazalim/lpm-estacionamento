@@ -50,4 +50,11 @@ public class VagaTest {
         vaga.sair(); 
         assertTrue(vaga.disponivel());
     }
+
+
+    @Test
+    public void testeSeUmaVagaEIgualAOutra() {
+        Vaga v = new Vaga(1, 1);
+        assertTrue(vaga.equals(v));
+    }
 }
