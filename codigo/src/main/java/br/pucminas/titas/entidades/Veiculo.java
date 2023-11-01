@@ -99,8 +99,8 @@ public class Veiculo implements Serializable {
     /**
      * Histórico de uso de vaga deste veículo.
      *
-     * @param de data inicial
-     * @param ate data final
+     * @param de data inicial de entrada
+     * @param ate data final de entrada
      * @return histórico de usos de vaga deste veículo.
      */
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {

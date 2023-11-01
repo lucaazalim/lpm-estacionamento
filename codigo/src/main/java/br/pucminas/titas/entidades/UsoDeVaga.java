@@ -141,8 +141,8 @@ public class UsoDeVaga implements Serializable {
 	/**
 	 * Confere se o cliente entrou entre as datas informadas.
 	 *
-	 * @param de data inicial
-	 * @param ate data final
+	 * @param de data inicial de entrada
+	 * @param ate data final de entrada
 	 * @return true se o cliente entrou entre as datas informadas, false caso contrário.
 	 */
 	public boolean entrouEntre(LocalDateTime de, LocalDateTime ate) {

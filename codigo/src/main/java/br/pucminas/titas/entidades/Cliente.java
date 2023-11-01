@@ -133,8 +133,8 @@ public class Cliente implements Serializable {
     /**
      * Recupera o histórico de uso de vaga do cliente em todos os seus veículos.
      *
-     * @param de data inicial
-     * @param ate data final
+     * @param de data inicial de entrada
+     * @param ate data final de entrada
      * @return O histórico de uso de vaga do cliente em todos os seus veículos.
      */
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
