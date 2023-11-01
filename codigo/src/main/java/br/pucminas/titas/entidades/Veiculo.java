@@ -7,6 +7,7 @@ import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Stream;
@@ -107,8 +108,11 @@ public class Veiculo implements Serializable {
         Objects.requireNonNull(de);
         Objects.requireNonNull(ate);
 
+        LocalDateTime deDateTime = de.atStartOfDay();
+        LocalDateTime ateDateTime = ate.atTime(LocalTime.MIDNIGHT);
+
         return this.usos.stream()
-                .filter(usoDeVaga -> usoDeVaga.entrouEntre(de.atStartOfDay(), ate.atTime(LocalTime.MIDNIGHT)))
+                .filter(usoDeVaga -> usoDeVaga.entrouEntre(deDateTime, ateDateTime))
                 .toList();
 
     }
