@@ -3,18 +3,23 @@ package br.pucminas.titas.entidades;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Estacionamento implements Serializable {
 
     private final String nome;
-    private Cliente[] clientes;
-    private Vaga[] vagas;
+    private List<Cliente> clientes;
+    private List<Vaga> vagas;
     private final int quantFileiras;
     private final int vagasPorFileira;
 
     public Estacionamento(String nome, int fileiras, int vagasPorFila) {
         this.nome = nome;
-        this.clientes = new Cliente[100];
+        this.clientes = new LinkedList<>();
         this.quantFileiras = fileiras;
         this.vagasPorFileira = vagasPorFila;
         gerarVagas();
@@ -22,15 +27,16 @@ public class Estacionamento implements Serializable {
 
     /**
      * Adiciona um veículo para um cliente especificado no estacionamento.
-     *
+     * Recebe como parâmetro um veículo válido e um id de cliente existente. Em caso de cliente inexistente, 
+     * lança uma exceção.
      * @param veiculo O veículo a ser adicionado.
-     * @param idCliente   O ID do cliente proprietário do veículo.
+     * @param idCliente O ID do cliente proprietário do veículo.
+     * @throws NoSuchElementException Em caso de cliente não existente.
      */
     public void addVeiculo(Veiculo veiculo, int idCliente) {
-        Cliente cliente = this.encontrarCliente(idCliente);
-        if (cliente != null) {
-            cliente.addVeiculo(veiculo);
-        }
+        this.encontrarCliente(idCliente)
+            .get()
+            .addVeiculo(veiculo);
     }
 
     /**
@@ -39,13 +45,10 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente a ser localizado.
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
-    Cliente encontrarCliente(int idCliente) {
-        for (Cliente cliente : clientes) {
-            if (cliente != null && cliente.getId() == idCliente) {
-                return cliente;
-            }
-        }
-        return null;
+    public Optional<Cliente> encontrarCliente(int idCliente) {
+        return clientes.stream()
+                .filter(cliente -> cliente.getId() == idCliente)
+                .findFirst();
     }
 
     /**
@@ -54,11 +57,8 @@ public class Estacionamento implements Serializable {
      * @param cliente O cliente a ser adicionado.
      */
     public void addCliente(Cliente cliente) {
-        for(int i = 0; i < this.clientes.length; i++) {
-            if(this.clientes[i] == null) {
-                this.clientes[i] = cliente;
-                break;
-            }
+        if (cliente != null) {
+            this.clientes.add(cliente);
         }
     }
 
@@ -66,10 +66,11 @@ public class Estacionamento implements Serializable {
      * Gera vagas de estacionamento com base no número de fileiras e vagas por fileira.
      */
     private void gerarVagas() {
-        int totalVagas = quantFileiras * vagasPorFileira;
-        this.vagas = new Vaga[totalVagas];
-        for (int i = 0; i < totalVagas; i++) {
-            vagas[i] = new Vaga(quantFileiras, i);
+        this.vagas = new ArrayList<>();
+        for (int i = 1; i <= quantFileiras; i++) {
+            for (int j = 1; j <= vagasPorFileira; j++) {
+                vagas.add(new Vaga(i, j));
+            }
         }
     }
 
@@ -79,20 +80,19 @@ public class Estacionamento implements Serializable {
     * Procura por vagas disponíveis. Estaciona o veículo.
     *
     * @param placa. O veículo a ser estacionado.
+    * @throws EstacionamentoLotadoException
+    * @throws NoSuchElementException Em caso de vaga não disponível.
+    * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
     */
-    public void estacionar(String placa) throws EstacionamentoLotadoException {
+    public void estacionar(String placa) throws EstacionamentoLotadoException, NoSuchElementException, VeiculoNaoEncontradoException {
 
-        Vaga vagaDisponivel = this.encontrarVagaDisponivel();
+        Vaga vaga = this.encontrarVagaDisponivel().get();
         Veiculo veiculo = this.procurarVeiculo(placa);
 
-        if (vagaDisponivel == null) {
-            throw new EstacionamentoLotadoException();
-        } else {
-            try {
-                veiculo.estacionar(vagaDisponivel);
-            } catch (VagaNaoDisponivelException ignored) {
-                // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
-            }
+        try {
+            veiculo.estacionar(vaga);
+        } catch (VagaNaoDisponivelException ignored) {
+            // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
         }
     }
 
@@ -101,13 +101,10 @@ public class Estacionamento implements Serializable {
     *
     * @return a vaga encontrada. Se nenhuma estiver disponível, retorna null.
     */
-    private Vaga encontrarVagaDisponivel() {
-        for (Vaga vaga : this.vagas) {
-            if (vaga.disponivel()) {
-                return vaga;
-            }
-        }
-        return null;
+    private Optional<Vaga> encontrarVagaDisponivel() {
+        return vagas.stream()
+                .filter(vaga -> vaga.disponivel())
+                .findFirst();
     }
 
     /**
@@ -115,6 +112,7 @@ public class Estacionamento implements Serializable {
     *
     * @param placa. A placa do veículo a ser procurado.
     * @return o veículo correspondente.
+    * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
     */
     Veiculo procurarVeiculo(String placa) {
 
@@ -138,12 +136,12 @@ public class Estacionamento implements Serializable {
     *Remove o veículo da vaga.
     *
     * @param placa. A placa correspondente ao veículo.
+    * @throws ServicoNaoTerminadoException
+    * @throws VeiculoNaoEstaEstacionadoException
     */
     public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
-
         Veiculo veiculo = this.procurarVeiculo(placa);
         return veiculo.sair();
-
     }
 
     /**
@@ -152,11 +150,9 @@ public class Estacionamento implements Serializable {
     * @return total arrecadado do estacionamento.
     */
     public double totalArrecadado() {
-        double total = 0;
-        for (Cliente cliente : clientes) {
-            total += cliente.arrecadadoTotal();
-        }
-        return total;
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.arrecadadoTotal())
+                .sum();
     }
 
     /**
@@ -166,11 +162,9 @@ public class Estacionamento implements Serializable {
     * @return o total arrecadado do estacionamento no mês.
     */
     public double arrecadacaoNoMes(int mes) {
-        double total = 0;
-        for (Cliente cliente : clientes) {
-            total += cliente.arrecadadoNoMes(mes);
-        }
-        return total;
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.arrecadadoNoMes(mes))
+                .sum();
     }
 
     /**
@@ -179,15 +173,10 @@ public class Estacionamento implements Serializable {
     *  @return media, o valor médio por uso
     */
     public double valorMedioPorUso() {
-        double media = 0;
-        double soma = 0;
-        int numClientes = 0;
-        for (Cliente cliente : clientes) {
-            soma += cliente.arrecadadoTotal();
-            numClientes++;
-        }
-        media = soma/numClientes;
-        return media;
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.arrecadadoTotal())
+                .average()
+                .getAsDouble();
     }
 
     public String top5Clientes(int mes) {
@@ -198,7 +187,7 @@ public class Estacionamento implements Serializable {
         return this.nome;
     }
 
-    public Cliente[] getClientes() {
+    public List<Cliente> getClientes() {
         return this.clientes;
     }
 }
