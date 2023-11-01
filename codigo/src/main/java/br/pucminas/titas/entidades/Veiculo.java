@@ -105,7 +105,7 @@ public class Veiculo implements Serializable {
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
 
         return this.usos.stream()
-                .filter(usoDeVaga -> usoDeVaga.entrouEntre(de, ate))
+                .filter(usoDeVaga -> usoDeVaga.entrouEntre(de.atStartOfDay(), ate.atTime(LocalTime.MIDNIGHT)))
                 .toList();
 
     }
