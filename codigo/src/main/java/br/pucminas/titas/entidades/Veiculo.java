@@ -6,13 +6,15 @@ import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Veiculo implements Serializable {
 
-    private static final int MAX_USOS = 1000;
-
     private final String placa;
-    private final UsoDeVaga[] usos;
+    private final LinkedList<UsoDeVaga> usos;
 
     /**
      * Cria um novo veículo com a placa informada.
@@ -21,7 +23,7 @@ public class Veiculo implements Serializable {
      */
     public Veiculo(String placa) {
         this.placa = placa;
-        this.usos = new UsoDeVaga[MAX_USOS];
+        this.usos = new LinkedList<>();
     }
 
     /**
@@ -32,14 +34,8 @@ public class Veiculo implements Serializable {
      */
     public void estacionar(Vaga vaga) throws VagaNaoDisponivelException {
 
-        for (int i = 0; i < this.usos.length; i++) {
-
-            if (this.usos[i] == null) {
-                this.usos[i] = new UsoDeVaga(vaga);
-                break;
-            }
-
-        }
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga);
+        this.usos.add(usoDeVaga);
 
     }
 
@@ -52,10 +48,10 @@ public class Veiculo implements Serializable {
      */
     public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
-        for (int i = MAX_USOS - 1; i >= 0; i--) {
-            if (this.usos[i] != null) {
-                return this.usos[i].sair();
-            }
+        UsoDeVaga usoDeVaga = this.usos.removeLast();
+
+        if (usoDeVaga != null) {
+            return usoDeVaga.sair();
         }
 
         throw new VeiculoNaoEstaEstacionadoException();
@@ -69,15 +65,7 @@ public class Veiculo implements Serializable {
      */
     public double totalArrecadado() {
 
-        double totalArrecadado = 0;
-
-        for (UsoDeVaga usoDeVaga : this.usos) {
-            if (usoDeVaga != null) {
-                totalArrecadado += usoDeVaga.valorPago();
-            }
-        }
-
-        return totalArrecadado;
+        return this.usos.stream().mapToDouble(UsoDeVaga::valorPago).sum();
 
     }
 
@@ -89,17 +77,10 @@ public class Veiculo implements Serializable {
      */
     public double arrecadadoNoMes(int mes) {
 
-        double arrecadadoNoMes = 0;
-
-        for (UsoDeVaga usoDeVaga : this.usos) {
-
-            if (usoDeVaga != null && usoDeVaga.getEntrada().getMonthValue() == mes) {
-                arrecadadoNoMes += usoDeVaga.valorPago();
-            }
-
-        }
-
-        return arrecadadoNoMes;
+        return this.usos.stream()
+                .filter(usoDeVaga -> usoDeVaga.getEntrada().getMonthValue() == mes)
+                .mapToDouble(UsoDeVaga::valorPago)
+                .sum();
 
     }
 
@@ -110,15 +91,23 @@ public class Veiculo implements Serializable {
      */
     public int totalDeUsos() {
 
-        int totalDeUsos = 0;
+        return this.usos.size();
 
-        for (UsoDeVaga usoDeVaga : this.usos) {
-            if (usoDeVaga != null) {
-                totalDeUsos++;
-            }
-        }
+    }
 
-        return totalDeUsos;
+    public List<UsoDeVaga> historico() {
+        return this.historico(null, null);
+    }
+
+    public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
+
+        LocalTime meiaNoite = LocalTime.of(23, 59);
+
+        return this.usos.stream()
+                .filter(usoDeVaga -> de == null || usoDeVaga.getEntrada().isAfter(de.atStartOfDay()))
+                .filter(usoDeVaga -> ate == null || usoDeVaga.getEntrada().isBefore(ate.atTime(meiaNoite)))
+                .toList();
+
     }
 
     @Override
