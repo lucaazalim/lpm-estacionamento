@@ -5,8 +5,13 @@ import java.io.Serializable;
 public class Cliente implements Serializable {
 
     private final String nome;
-    private final String id;
+    private final int id;
     private final Veiculo[] veiculos;
+    private static int proximoCLiente;
+
+    static {
+        proximoCLiente = 1;
+    }
 
     /**
      * Constrói um novo objeto Cliente com o nome e id fornecidos.
@@ -15,9 +20,10 @@ public class Cliente implements Serializable {
      * @param nome O nome do cliente.
      * @param id O identificador único do cliente.
      */
-    public Cliente(String nome, String id) {
+    public Cliente(String nome) {
         this.nome = nome;
-        this.id = id;
+        this.id = proximoCLiente;
+        proximoCLiente++;
         this.veiculos = new Veiculo[100]; // limite de 100 veículos
     }
 
@@ -118,5 +124,9 @@ public class Cliente implements Serializable {
             }
         }
         return total;
+    }
+
+    public String getNome() {
+        return null;
     }
 }

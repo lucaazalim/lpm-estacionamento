@@ -69,7 +69,7 @@ public class Estacionamento implements Serializable {
         int totalVagas = quantFileiras * vagasPorFileira;
         this.vagas = new Vaga[totalVagas];
         for (int i = 0; i < totalVagas; i++) {
-            vagas[i] = new Vaga("Y", (i / vagasPorFileira) + (i % vagasPorFileira));
+            vagas[i] = new Vaga(quantFileiras, i);
         }
     }
 
@@ -191,6 +191,14 @@ public class Estacionamento implements Serializable {
     }
 
     public String top5Clientes(int mes) {
-        return null; // TODO
+        return null; // CRIAR MÉTODO PRIVADO: ORGANIZARTOP5CLIENTES(mes)
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public Cliente[] getClientes() {
+        return this.clientes;
     }
 }
