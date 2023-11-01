@@ -80,20 +80,19 @@ public class Estacionamento implements Serializable {
     * Procura por vagas disponíveis. Estaciona o veículo.
     *
     * @param placa. O veículo a ser estacionado.
+    * @throws EstacionamentoLotadoException
+    * @throws NoSuchElementException Em caso de vaga não disponível.
+    * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
     */
-    public void estacionar(String placa) throws EstacionamentoLotadoException {
+    public void estacionar(String placa) throws EstacionamentoLotadoException, NoSuchElementException, VeiculoNaoEncontradoException {
 
-        Vaga vagaDisponivel = this.encontrarVagaDisponivel();
+        Vaga vaga = this.encontrarVagaDisponivel().get();
         Veiculo veiculo = this.procurarVeiculo(placa);
 
-        if (vagaDisponivel == null) {
-            throw new EstacionamentoLotadoException();
-        } else {
-            try {
-                veiculo.estacionar(vagaDisponivel);
-            } catch (VagaNaoDisponivelException ignored) {
-                // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
-            }
+        try {
+            veiculo.estacionar(vaga);
+        } catch (VagaNaoDisponivelException ignored) {
+            // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
         }
     }
 
@@ -102,13 +101,10 @@ public class Estacionamento implements Serializable {
     *
     * @return a vaga encontrada. Se nenhuma estiver disponível, retorna null.
     */
-    private Vaga encontrarVagaDisponivel() {
-        for (Vaga vaga : this.vagas) {
-            if (vaga.disponivel()) {
-                return vaga;
-            }
-        }
-        return null;
+    private Optional<Vaga> encontrarVagaDisponivel() {
+        return vagas.stream()
+                .filter(vaga -> vaga.disponivel())
+                .findFirst();
     }
 
     /**
@@ -116,6 +112,7 @@ public class Estacionamento implements Serializable {
     *
     * @param placa. A placa do veículo a ser procurado.
     * @return o veículo correspondente.
+    * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
     */
     Veiculo procurarVeiculo(String placa) {
 
@@ -139,12 +136,12 @@ public class Estacionamento implements Serializable {
     *Remove o veículo da vaga.
     *
     * @param placa. A placa correspondente ao veículo.
+    * @throws ServicoNaoTerminadoException
+    * @throws VeiculoNaoEstaEstacionadoException
     */
     public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
-
         Veiculo veiculo = this.procurarVeiculo(placa);
         return veiculo.sair();
-
     }
 
     /**
@@ -153,11 +150,9 @@ public class Estacionamento implements Serializable {
     * @return total arrecadado do estacionamento.
     */
     public double totalArrecadado() {
-        double total = 0;
-        for (Cliente cliente : clientes) {
-            total += cliente.arrecadadoTotal();
-        }
-        return total;
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.arrecadadoTotal())
+                .sum();
     }
 
     /**
@@ -167,11 +162,9 @@ public class Estacionamento implements Serializable {
     * @return o total arrecadado do estacionamento no mês.
     */
     public double arrecadacaoNoMes(int mes) {
-        double total = 0;
-        for (Cliente cliente : clientes) {
-            total += cliente.arrecadadoNoMes(mes);
-        }
-        return total;
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.arrecadadoNoMes(mes))
+                .sum();
     }
 
     /**
@@ -180,15 +173,10 @@ public class Estacionamento implements Serializable {
     *  @return media, o valor médio por uso
     */
     public double valorMedioPorUso() {
-        double media = 0;
-        double soma = 0;
-        int numClientes = 0;
-        for (Cliente cliente : clientes) {
-            soma += cliente.arrecadadoTotal();
-            numClientes++;
-        }
-        media = soma/numClientes;
-        return media;
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.arrecadadoTotal())
+                .average()
+                .getAsDouble();
     }
 
     public String top5Clientes(int mes) {
