@@ -7,7 +7,10 @@ import br.pucminas.titas.enums.Servico;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Objects;
 
 public class UsoDeVaga implements Serializable {
 
@@ -170,4 +173,20 @@ public class UsoDeVaga implements Serializable {
 				", serviços: " + this.servico +
 				"}";
 		}
+	/* 
+	 * Confere se o cliente entrou entre as datas informadas.
+	 *
+	 * @param de data inicial de entrada
+	 * @param ate data final de entrada
+	 * @return true se o cliente entrou entre as datas informadas, false caso contrário.
+	 */
+	public boolean entrouEntre(LocalDateTime de, LocalDateTime ate) {
+
+		Objects.requireNonNull(de);
+		Objects.requireNonNull(ate);
+
+		return this.entrada.isAfter(de) && this.entrada.isBefore(ate);
+
+	}
+
 }
