@@ -1,16 +1,20 @@
 package br.pucminas.titas.entidades;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class Cliente implements Serializable {
 
     private final String nome;
     private final int id;
     private final Veiculo[] veiculos;
-    private static int proximoCLiente;
+    private static int proximoCliente;
 
     static {
-        proximoCLiente = 1;
+        proximoCliente = 1;
     }
 
     /**
@@ -18,12 +22,11 @@ public class Cliente implements Serializable {
      * Inicializa um array vazio de veículos com um tamanho de 100.
      *
      * @param nome O nome do cliente.
-     * @param id O identificador único do cliente.
      */
     public Cliente(String nome) {
         this.nome = nome;
-        this.id = proximoCLiente;
-        proximoCLiente++;
+        this.id = proximoCliente;
+        proximoCliente++;
         this.veiculos = new Veiculo[100]; // limite de 100 veículos
     }
 
@@ -32,7 +35,7 @@ public class Cliente implements Serializable {
      *
      * @return O ID do cliente.
      */
-    public String getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -124,6 +127,25 @@ public class Cliente implements Serializable {
             }
         }
         return total;
+    }
+
+    /**
+     * Recupera o histórico de uso de vaga do cliente em todos os seus veículos.
+     *
+     * @param de data inicial de entrada
+     * @param ate data final de entrada
+     * @return O histórico de uso de vaga do cliente em todos os seus veículos.
+     */
+    public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
+
+        Objects.requireNonNull(de);
+        Objects.requireNonNull(ate);
+
+        return Stream.of(this.veiculos)
+                .map(veiculo -> veiculo.historico(de, ate))
+                .flatMap(List::stream)
+                .toList();
+
     }
 
     public String getNome() {

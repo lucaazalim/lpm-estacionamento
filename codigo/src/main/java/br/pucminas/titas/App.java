@@ -9,8 +9,6 @@ import br.pucminas.titas.entidades.Veiculo;
 import br.pucminas.titas.excecoes.EstacionamentoLotadoException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
-import br.pucminas.titas.entidades.Vaga;
-import br.pucminas.titas.entidades.UsoDeVaga;
 
 public class App {
 
@@ -84,9 +82,11 @@ public class App {
 
     /**
      * Salva os dados e sai do programa
+     * @throws IOException
      */
-    public static void salvarESair() {
-        // TO DO
+    public static void salvarESair() throws IOException {
+        Serialization.salvar(estacionamentos);
+        System.exit(0);
     }
 
     /**
@@ -158,7 +158,7 @@ public class App {
      */
     private static Cliente identificarCliente(Estacionamento estacionamento) {
         System.out.println("Digite o ID do cliente");
-        String id = SCANNER.nextLine();
+        int id = SCANNER.nextInt();
         Cliente[] clientes = estacionamento.getClientes();
         for (int j = 0; j < clientes.length; j++) {
             if (id == clientes[j].getId()) {

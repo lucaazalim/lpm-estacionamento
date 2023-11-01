@@ -19,7 +19,7 @@ public class ClienteTest {
     @BeforeEach
     public void setUp() throws VagaNaoDisponivelException {
 
-        cliente = new Cliente("João", "1");
+        cliente = new Cliente("João");
         veiculo = new Veiculo("ABC-1234");
         vaga = new Vaga(25, 1);
 

@@ -26,7 +26,7 @@ public class Estacionamento implements Serializable {
      * @param veiculo O veículo a ser adicionado.
      * @param idCliente   O ID do cliente proprietário do veículo.
      */
-    public void addVeiculo(Veiculo veiculo, String idCliente) {
+    public void addVeiculo(Veiculo veiculo, int idCliente) {
         Cliente cliente = this.encontrarCliente(idCliente);
         if (cliente != null) {
             cliente.addVeiculo(veiculo);
@@ -39,9 +39,9 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente a ser localizado.
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
-    Cliente encontrarCliente(String idCliente) {
+    Cliente encontrarCliente(int idCliente) {
         for (Cliente cliente : clientes) {
-            if (cliente != null && cliente.getId().equals(idCliente)) {
+            if (cliente != null && cliente.getId() == idCliente) {
                 return cliente;
             }
         }
