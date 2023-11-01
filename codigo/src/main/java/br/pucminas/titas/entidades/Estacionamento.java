@@ -3,18 +3,23 @@ package br.pucminas.titas.entidades;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Estacionamento implements Serializable {
 
     private final String nome;
-    private Cliente[] clientes;
-    private Vaga[] vagas;
+    private List<Cliente> clientes;
+    private List<Vaga> vagas;
     private final int quantFileiras;
     private final int vagasPorFileira;
 
     public Estacionamento(String nome, int fileiras, int vagasPorFila) {
         this.nome = nome;
-        this.clientes = new Cliente[100];
+        this.clientes = new LinkedList<>();
         this.quantFileiras = fileiras;
         this.vagasPorFileira = vagasPorFila;
         gerarVagas();
@@ -22,15 +27,16 @@ public class Estacionamento implements Serializable {
 
     /**
      * Adiciona um veículo para um cliente especificado no estacionamento.
-     *
+     * Recebe como parâmetro um veículo válido e um id de cliente existente. Em caso de cliente inexistente, 
+     * lança uma exceção.
      * @param veiculo O veículo a ser adicionado.
-     * @param idCliente   O ID do cliente proprietário do veículo.
+     * @param idCliente O ID do cliente proprietário do veículo.
+     * @throws NoSuchElementException Em caso de cliente não existente.
      */
-    public void addVeiculo(Veiculo veiculo, String idCliente) {
-        Cliente cliente = this.encontrarCliente(idCliente);
-        if (cliente != null) {
-            cliente.addVeiculo(veiculo);
-        }
+    public void addVeiculo(Veiculo veiculo, String idCliente) throws NoSuchElementException {
+        this.encontrarCliente(idCliente)
+            .get()
+            .addVeiculo(veiculo);
     }
 
     /**
@@ -39,13 +45,10 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente a ser localizado.
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
-    Cliente encontrarCliente(String idCliente) {
-        for (Cliente cliente : clientes) {
-            if (cliente != null && cliente.getId().equals(idCliente)) {
-                return cliente;
-            }
-        }
-        return null;
+    public Optional<Cliente> encontrarCliente(String idCliente) {
+        return clientes.stream()
+                .filter(cliente -> cliente.getId().equals(idCliente))
+                .findFirst();
     }
 
     /**
@@ -54,11 +57,8 @@ public class Estacionamento implements Serializable {
      * @param cliente O cliente a ser adicionado.
      */
     public void addCliente(Cliente cliente) {
-        for(int i = 0; i < this.clientes.length; i++) {
-            if(this.clientes[i] == null) {
-                this.clientes[i] = cliente;
-                break;
-            }
+        if (cliente != null) {
+            this.clientes.add(cliente);
         }
     }
 
@@ -66,10 +66,11 @@ public class Estacionamento implements Serializable {
      * Gera vagas de estacionamento com base no número de fileiras e vagas por fileira.
      */
     private void gerarVagas() {
-        int totalVagas = quantFileiras * vagasPorFileira;
-        this.vagas = new Vaga[totalVagas];
-        for (int i = 0; i < totalVagas; i++) {
-            vagas[i] = new Vaga(quantFileiras, i);
+        this.vagas = new ArrayList<>();
+        for (int i = 1; i <= quantFileiras; i++) {
+            for (int j = 1; j <= vagasPorFileira; j++) {
+                vagas.add(new Vaga(i, j));
+            }
         }
     }
 
@@ -198,7 +199,7 @@ public class Estacionamento implements Serializable {
         return this.nome;
     }
 
-    public Cliente[] getClientes() {
+    public List<Cliente> getClientes() {
         return this.clientes;
     }
 }
