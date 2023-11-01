@@ -129,10 +129,13 @@ public class Cliente implements Serializable {
         return total;
     }
 
-    public List<UsoDeVaga> historico() {
-        return this.historico(null, null);
-    }
-
+    /**
+     * Recupera o histórico de uso de vaga do cliente em todos os seus veículos.
+     *
+     * @param de data inicial ou null caso não queira definir uma data inicial
+     * @param ate data final ou null caso não queira definir uma data final
+     * @return O histórico de uso de vaga do cliente em todos os seus veículos.
+     */
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
         return Stream.of(this.veiculos)
                 .map(veiculo -> veiculo.historico(de, ate))

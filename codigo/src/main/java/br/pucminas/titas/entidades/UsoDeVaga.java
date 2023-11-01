@@ -7,7 +7,9 @@ import br.pucminas.titas.enums.Servico;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class UsoDeVaga implements Serializable {
 
@@ -134,4 +136,17 @@ public class UsoDeVaga implements Serializable {
 		return duration.toHours() >= this.servico.getHorasMinimas();
 
 	}
+
+	/**
+	 * Confere se o cliente entrou entre as datas informadas.
+	 *
+	 * @param de data inicial ou null caso não queira definir uma data inicial
+	 * @param ate data final ou null caso não queira definir uma data final
+	 * @return true se o cliente entrou entre as datas informadas, false caso contrário.
+	 */
+	public boolean entrouEntre(LocalDate de, LocalDate ate) {
+		return (de == null || this.entrada.isAfter(de.atStartOfDay()))
+				&& (ate == null || this.entrada.isBefore(ate.atTime(LocalTime.MIDNIGHT)));
+	}
+
 }

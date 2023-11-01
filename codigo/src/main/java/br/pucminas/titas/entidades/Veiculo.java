@@ -95,17 +95,17 @@ public class Veiculo implements Serializable {
 
     }
 
-    public List<UsoDeVaga> historico() {
-        return this.historico(null, null);
-    }
-
+    /**
+     * Histórico de uso de vaga deste veículo.
+     *
+     * @param de data inicial ou null caso não queira definir uma data inicial
+     * @param ate data final ou null caso não queira definir uma data final
+     * @return histórico de usos de vaga deste veículo.
+     */
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
 
-        LocalTime meiaNoite = LocalTime.of(23, 59);
-
         return this.usos.stream()
-                .filter(usoDeVaga -> de == null || usoDeVaga.getEntrada().isAfter(de.atStartOfDay()))
-                .filter(usoDeVaga -> ate == null || usoDeVaga.getEntrada().isBefore(ate.atTime(meiaNoite)))
+                .filter(usoDeVaga -> usoDeVaga.entrouEntre(de, ate))
                 .toList();
 
     }
