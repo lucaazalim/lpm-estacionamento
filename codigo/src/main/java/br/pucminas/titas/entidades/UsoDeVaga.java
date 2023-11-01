@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class UsoDeVaga implements Serializable {
 
@@ -140,21 +141,17 @@ public class UsoDeVaga implements Serializable {
 	/**
 	 * Confere se o cliente entrou entre as datas informadas.
 	 *
-	 * @param de data inicial ou null caso não queira definir uma data inicial
-	 * @param ate data final ou null caso não queira definir uma data final
+	 * @param de data inicial
+	 * @param ate data final
 	 * @return true se o cliente entrou entre as datas informadas, false caso contrário.
 	 */
 	public boolean entrouEntre(LocalDateTime de, LocalDateTime ate) {
 
-		if(de == null) {
-			de = LocalDateTime.MIN;
-		}
-
-		if(ate == null) {
-			ate = LocalDateTime.MAX;
-		}
+		Objects.requireNonNull(de);
+		Objects.requireNonNull(ate);
 
 		return this.entrada.isAfter(de) && this.entrada.isBefore(ate);
+
 	}
 
 }

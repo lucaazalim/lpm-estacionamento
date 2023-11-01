@@ -98,11 +98,14 @@ public class Veiculo implements Serializable {
     /**
      * Histórico de uso de vaga deste veículo.
      *
-     * @param de data inicial ou null caso não queira definir uma data inicial
-     * @param ate data final ou null caso não queira definir uma data final
+     * @param de data inicial
+     * @param ate data final
      * @return histórico de usos de vaga deste veículo.
      */
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
+
+        Objects.requireNonNull(de);
+        Objects.requireNonNull(ate);
 
         return this.usos.stream()
                 .filter(usoDeVaga -> usoDeVaga.entrouEntre(de.atStartOfDay(), ate.atTime(LocalTime.MIDNIGHT)))

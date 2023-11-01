@@ -3,6 +3,7 @@ package br.pucminas.titas.entidades;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class Cliente implements Serializable {
@@ -132,15 +133,20 @@ public class Cliente implements Serializable {
     /**
      * Recupera o histórico de uso de vaga do cliente em todos os seus veículos.
      *
-     * @param de data inicial ou null caso não queira definir uma data inicial
-     * @param ate data final ou null caso não queira definir uma data final
+     * @param de data inicial
+     * @param ate data final
      * @return O histórico de uso de vaga do cliente em todos os seus veículos.
      */
     public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
+
+        Objects.requireNonNull(de);
+        Objects.requireNonNull(ate);
+
         return Stream.of(this.veiculos)
                 .map(veiculo -> veiculo.historico(de, ate))
                 .flatMap(List::stream)
                 .toList();
+
     }
 
     public String getNome() {
