@@ -33,7 +33,7 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente proprietário do veículo.
      * @throws NoSuchElementException Em caso de cliente não existente.
      */
-    public void addVeiculo(Veiculo veiculo, String idCliente) throws NoSuchElementException {
+    public void addVeiculo(Veiculo veiculo, int idCliente) {
         this.encontrarCliente(idCliente)
             .get()
             .addVeiculo(veiculo);
@@ -45,9 +45,9 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente a ser localizado.
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
-    public Optional<Cliente> encontrarCliente(String idCliente) {
+    public Optional<Cliente> encontrarCliente(int idCliente) {
         return clientes.stream()
-                .filter(cliente -> cliente.getId().equals(idCliente))
+                .filter(cliente -> cliente.getId() == idCliente)
                 .findFirst();
     }
 

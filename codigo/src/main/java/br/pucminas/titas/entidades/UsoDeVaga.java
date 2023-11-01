@@ -7,7 +7,10 @@ import br.pucminas.titas.enums.Servico;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Objects;
 
 public class UsoDeVaga implements Serializable {
 
@@ -75,7 +78,8 @@ public class UsoDeVaga implements Serializable {
 	}
 
 	/**
-	 * Calcula o valor total a ser pago
+	 * Calcula o valor total a ser pago baseado na diferença entre o tempo de entrada e de saida,
+	 * os serviços contratados a o preço por fração
 	 * @return retorna o valor total a ser pago
 	 */
 	public double valorPago() {
@@ -134,4 +138,55 @@ public class UsoDeVaga implements Serializable {
 		return duration.toHours() >= this.servico.getHorasMinimas();
 
 	}
+
+	/**
+	 * Indica quando um UsoDeVaga é igual ao outro caso: 
+	 * a vaga for igual e os horários de entrada e saida coincidirem
+	 @param u objeto de refência
+	 @return true se o objeto for igual ao objeto comparado
+	 */
+	public boolean equals(UsoDeVaga u){
+		boolean resp = false;
+		if(u != null && getClass() == u.getClass()){
+			if(this==u) resp = true;
+			else{
+				if((vaga == u.vaga && entrada != u.getEntrada())
+				&& entrada == u.entrada
+				&& saida == u.saida
+				) resp = true;
+			}//procurar igualdade
+		} 
+		return resp;		
+	}
+
+	/**
+	 * Transforma o objeto UsoDeVaga em string retornando:
+	 * a vaga, horário de saida, horário de saida, valor pago e serviços contratados 
+	 * @return 
+	 */
+	public String toString(){
+		return "Uso de vagas {" +
+				"vaga: " + this.vaga +
+				", entrda: " + this.entrada +
+				", saida: " + this.saida + 
+				", valor pago: " + this.valorPago +
+				", serviços: " + this.servico +
+				"}";
+		}
+	/* 
+	 * Confere se o cliente entrou entre as datas informadas.
+	 *
+	 * @param de data inicial de entrada
+	 * @param ate data final de entrada
+	 * @return true se o cliente entrou entre as datas informadas, false caso contrário.
+	 */
+	public boolean entrouEntre(LocalDateTime de, LocalDateTime ate) {
+
+		Objects.requireNonNull(de);
+		Objects.requireNonNull(ate);
+
+		return this.entrada.isAfter(de) && this.entrada.isBefore(ate);
+
+	}
+
 }
