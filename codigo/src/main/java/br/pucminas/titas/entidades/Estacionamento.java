@@ -84,7 +84,7 @@ public class Estacionamento implements Serializable {
     * @throws NoSuchElementException Em caso de vaga não disponível.
     * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
     */
-    public void estacionar(String placa) throws EstacionamentoLotadoException, NoSuchElementException, VeiculoNaoEncontradoException {
+    public void estacionar(String placa) throws NoSuchElementException, VeiculoNaoEncontradoException {
 
         Vaga vaga = this.encontrarVagaDisponivel().get();
         Veiculo veiculo = this.procurarVeiculo(placa);

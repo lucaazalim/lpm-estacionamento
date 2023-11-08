@@ -1,5 +1,7 @@
 package br.pucminas.titas.entidades;
 
+import br.pucminas.titas.plano.Plano;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +12,7 @@ public class Cliente implements Serializable {
 
     private final String nome;
     private final int id;
+    private Plano plano;
     private final Veiculo[] veiculos;
     private static int proximoCliente;
 
@@ -27,6 +30,7 @@ public class Cliente implements Serializable {
         this.nome = nome;
         this.id = proximoCliente;
         proximoCliente++;
+        this.plano = new Plano.Horista();
         this.veiculos = new Veiculo[100]; // limite de 100 veículos
     }
 
@@ -37,6 +41,10 @@ public class Cliente implements Serializable {
      */
     public int getId() {
         return this.id;
+    }
+
+    public void setPlano(Plano plano) {
+        this.plano = plano;
     }
 
     /**
