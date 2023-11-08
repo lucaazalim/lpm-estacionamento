@@ -139,4 +139,8 @@ public class Cliente implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+        return this.nome + " (ID: " + this.id + ") (Plano: " + this.plano + ")";
+    }
 }

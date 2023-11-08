@@ -24,6 +24,10 @@ public interface Plano {
 
         }
 
+        @Override
+        public String toString() {
+            return "Horista";
+        }
     }
 
     class Turnista extends Horista {
@@ -33,7 +37,7 @@ public interface Plano {
         @Override
         public double valorPago(LocalDateTime entrada, LocalDateTime saida) {
 
-            if (turno.contem(entrada.toLocalTime())) {
+            if (this.turno.contem(entrada.toLocalTime())) {
                 return 0;
             }
 
@@ -41,6 +45,10 @@ public interface Plano {
 
         }
 
+        @Override
+        public String toString() {
+            return "Turnista (" + this.turno + ")";
+        }
     }
 
     class Mensalista implements Plano {
@@ -50,6 +58,10 @@ public interface Plano {
             return 0;
         }
 
+        @Override
+        public String toString() {
+            return "Mensalista";
+        }
     }
 
 }

@@ -16,14 +16,14 @@ public class App {
     private static final Scanner scanner = new Scanner(System.in);
 
     private static final List<Estacionamento> estacionamentos = new ArrayList<>();
-    
-    private static Estacionamento estacionamentoSelecionado;
 
-    public static void main(String[] args) throws IOException, VeiculoNaoEstaEstacionadoException, ServicoNaoTerminadoException {
+    private static Estacionamento estacionamento;
+
+    public static void main(String[] args) throws IOException {
         menu();
     }
 
-    public static void menu() throws VeiculoNaoEstaEstacionadoException, ServicoNaoTerminadoException, IOException {
+    public static void menu() throws IOException {
         System.out.println("Escolha uma das opções: ");
         System.out.println("\t0. Salvar e sair");
         System.out.println("\t1. Criar estacionamento");
@@ -44,9 +44,9 @@ public class App {
             case 1 -> criarEstacionamento();
             case 2 -> {
 
-                estacionamentoSelecionado = identificarEstacionamento();
+                estacionamento = identificarEstacionamento();
 
-                if(estacionamentoSelecionado == null) {
+                if(estacionamento == null) {
                     System.out.println("Estacionamento não encontrado.");
                 } else {
                     gerenciarEstacionamento();
@@ -72,7 +72,7 @@ public class App {
         }
     }
 
-    public static void gerenciarEstacionamento() throws VeiculoNaoEstaEstacionadoException, ServicoNaoTerminadoException, IOException {
+    public static void gerenciarEstacionamento() throws IOException {
 
         System.out.println("Escolha uma das opções: ");
         System.out.println("\t0. Voltar ao menu principal");
@@ -151,6 +151,9 @@ public class App {
 
         Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFila);
         estacionamentos.add(estacionamento);
+
+        System.out.println("Estacionamento '" + estacionamento + " criado com sucesso!");
+
     }
 
     /**
@@ -164,7 +167,7 @@ public class App {
         Cliente cliente = new Cliente(nomeCliente);
         System.out.println("Cliente registrado com o ID: " + cliente.getId());
 
-        estacionamentoSelecionado.addCliente(cliente);
+        estacionamento.addCliente(cliente);
 
     }
 
@@ -176,13 +179,12 @@ public class App {
         Cliente cliente = identificarCliente();
 
         System.out.println("Digite a placa do veículo: ");
-        String placa;
-
-        placa = scanner.nextLine();
+        String placa = scanner.nextLine();
 
         Veiculo veiculo = new Veiculo(placa, cliente);
-
         cliente.addVeiculo(veiculo);
+
+        System.out.println("Veículo adicionado ao cliente com sucesso.");
 
     }
 
@@ -199,14 +201,16 @@ public class App {
             return;
         }
 
-        estacionamentoSelecionado.estacionar(placa);
+        estacionamento.estacionar(placa);
+
+        System.out.println("Veículo estacionado com sucesso.");
 
     }
 
     /**
      * Retira o veículo da vaga que ele estava ocupando
      */
-    public static void sairDaVaga() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
+    public static void sairDaVaga() {
 
         System.out.println("Digite a placa do veículo: ");
         String placa = scanner.nextLine();
@@ -216,7 +220,11 @@ public class App {
             return;
         }
 
-        estacionamentoSelecionado.sair(placa);
+        try {
+            estacionamento.sair(placa);
+        }catch(ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
@@ -225,7 +233,7 @@ public class App {
      */
     public static void consultarTotalArrecadado() {
 
-        double total = estacionamentoSelecionado.totalArrecadado();
+        double total = estacionamento.totalArrecadado();
         System.out.println("O total arrecadado pelo estacionamento foi de R$ " + total);
 
     }
@@ -242,7 +250,7 @@ public class App {
      */
     public static void consultarValorMedioPorUso() {
 
-        double valorMedio = estacionamentoSelecionado.valorMedioPorUso();
+        double valorMedio = estacionamento.valorMedioPorUso();
         System.out.println("O valor médio de uso no estacionamento foi de R$ " + valorMedio);
 
     }
@@ -285,7 +293,7 @@ public class App {
         System.out.println("Digite o ID do cliente");
         int id = scanner.nextInt();
 
-        Cliente cliente = estacionamentoSelecionado.getClientes().get(id);
+        Cliente cliente = estacionamento.getClientes().get(id);
 
         if (cliente == null) {
             // TODO Cliente não encontrado

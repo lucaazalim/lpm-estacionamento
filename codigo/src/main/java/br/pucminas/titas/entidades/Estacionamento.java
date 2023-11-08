@@ -190,7 +190,7 @@ public class Estacionamento implements Serializable {
                 .stream()
                 .sorted((x, y) -> Double.compare(x.arrecadadoNoMes(mes), y.arrecadadoNoMes(mes)))
                 .limit(5)
-                .map(cliente -> cliente.toString())
+                .map(Cliente::toString)
                 .collect(Collectors.joining("; "));
 
     }
@@ -201,5 +201,10 @@ public class Estacionamento implements Serializable {
 
     public Map<Integer, Cliente> getClientes() {
         return this.clientes;
+    }
+
+    @Override
+    public String toString() {
+        return this.nome;
     }
 }
