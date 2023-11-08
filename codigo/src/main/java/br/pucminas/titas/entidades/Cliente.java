@@ -4,6 +4,7 @@ import br.pucminas.titas.plano.Plano;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -13,7 +14,7 @@ public class Cliente implements Serializable {
     private final String nome;
     private final int id;
     private Plano plano;
-    private final Veiculo[] veiculos;
+    private final List<Veiculo> veiculos;
     private static int proximoCliente;
 
     static {
@@ -31,14 +32,9 @@ public class Cliente implements Serializable {
         this.id = proximoCliente;
         proximoCliente++;
         this.plano = new Plano.Horista();
-        this.veiculos = new Veiculo[100]; // limite de 100 veículos
+        this.veiculos = new ArrayList<>();
     }
 
-    /**
-     * Recupera o ID do cliente.
-     *
-     * @return O ID do cliente.
-     */
     public int getId() {
         return this.id;
     }
@@ -57,12 +53,7 @@ public class Cliente implements Serializable {
      * @param veiculo O veículo a ser adicionado.
      */
     public void addVeiculo(Veiculo veiculo) {
-        for(int i = 0; i < this.veiculos.length; i++) {
-            if(this.veiculos[i] == null) {
-                this.veiculos[i] = veiculo;
-                break;
-            }
-        }
+        this.veiculos.add(veiculo);
     }
 
     /**
@@ -72,12 +63,9 @@ public class Cliente implements Serializable {
      * @return O veículo com a placa correspondente, ou null se não encontrado.
      */
     public Veiculo possuiVeiculo(String placa) {
-        for (Veiculo veiculo : this.veiculos) {
-            if (veiculo != null && veiculo.getPlaca().equals(placa)) {
-                return veiculo;
-            }
-        }
-        return null;
+        return this.veiculos.stream()
+                .filter(veiculo -> veiculo.getPlaca().equals(placa))
+                .findFirst().orElse(null);
     }
 
     /**
@@ -86,13 +74,9 @@ public class Cliente implements Serializable {
      * @return O total de usos de todos os veículos.
      */
     public int totalDeUsos() {
-        int total = 0;
-        for (Veiculo veiculo : veiculos) {
-            if (veiculo != null) {
-                total += veiculo.totalDeUsos();
-            }
-        }
-        return total;
+        return this.veiculos.stream()
+                .mapToInt(Veiculo::totalDeUsos)
+                .sum();
     }
 
     /**
@@ -102,11 +86,15 @@ public class Cliente implements Serializable {
      * @return O montante total arrecadado pelo veículo, ou 0 se o veículo não for encontrado.
      */
     public double arrecadadoPorVeiculo(String placa) {
+
         Veiculo veiculo = possuiVeiculo(placa);
+
         if (veiculo != null) {
             return veiculo.totalArrecadado();
         }
+
         return 0;
+
     }
 
     /**
@@ -115,13 +103,9 @@ public class Cliente implements Serializable {
      * @return O montante total arrecadado por todos os veículos.
      */
     public double arrecadadoTotal() {
-        double total = 0;
-        for (Veiculo veiculo : veiculos) {
-            if (veiculo != null) {
-                total += veiculo.totalArrecadado();
-            }
-        }
-        return total;
+        return this.veiculos.stream()
+                .mapToDouble(Veiculo::totalArrecadado)
+                .sum();
     }
 
     /**
@@ -131,13 +115,9 @@ public class Cliente implements Serializable {
      * @return O montante total arrecadado no mês especificado.
      */
     public double arrecadadoNoMes(int mes) {
-        double total = 0;
-        for (Veiculo veiculo : veiculos) {
-            if (veiculo != null) {
-                total += veiculo.arrecadadoNoMes(mes);
-            }
-        }
-        return total;
+        return this.veiculos.stream()
+                .mapToDouble(veiculo -> veiculo.arrecadadoNoMes(mes))
+                .sum();
     }
 
     /**
@@ -152,14 +132,11 @@ public class Cliente implements Serializable {
         Objects.requireNonNull(de);
         Objects.requireNonNull(ate);
 
-        return Stream.of(this.veiculos)
+        return this.veiculos.stream()
                 .map(veiculo -> veiculo.historico(de, ate))
                 .flatMap(List::stream)
                 .toList();
 
     }
 
-    public String getNome() {
-        return null;
-    }
 }
