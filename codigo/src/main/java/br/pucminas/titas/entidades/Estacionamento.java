@@ -3,6 +3,7 @@ package br.pucminas.titas.entidades;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,15 +17,19 @@ public class Estacionamento implements Serializable {
     private final String nome;
     private Map<Integer, Cliente> clientes;
     private List<Vaga> vagas;
-    private final int quantFileiras;
-    private final int vagasPorFileira;
 
-    public Estacionamento(String nome, int fileiras, int vagasPorFila) {
+    public Estacionamento(String nome, int fileiras, int vagasPorFileira) {
+
         this.nome = nome;
         this.clientes = new LinkedHashMap<>();
-        this.quantFileiras = fileiras;
-        this.vagasPorFileira = vagasPorFila;
-        gerarVagas();
+        this.vagas = new ArrayList<>();
+
+        for (int i = 1; i <= fileiras; i++) {
+            for (int j = 1; j <= vagasPorFileira; j++) {
+                this.vagas.add(new Vaga(i, j));
+            }
+        }
+
     }
 
     /**
@@ -32,7 +37,6 @@ public class Estacionamento implements Serializable {
      * Recebe como parâmetro um veículo válido e um id de cliente existente. Em caso de cliente inexistente, 
      * lança uma exceção.
      * @param veiculo O veículo a ser adicionado.
-     * @param idCliente O ID do cliente proprietário do veículo.
      * @throws NoSuchElementException Em caso de cliente não existente.
      */
     public void addVeiculo(Veiculo veiculo) throws NoSuchElementException {
@@ -57,18 +61,6 @@ public class Estacionamento implements Serializable {
     public void addCliente(Cliente cliente) {
         if (cliente != null) {
             this.clientes.put((Integer) cliente.getId(), cliente);
-        }
-    }
-
-    /**
-     * Gera vagas de estacionamento com base no número de fileiras e vagas por fileira.
-     */
-    private void gerarVagas() {
-        this.vagas = new ArrayList<>();
-        for (int i = 1; i <= quantFileiras; i++) {
-            for (int j = 1; j <= vagasPorFileira; j++) {
-                vagas.add(new Vaga(i, j));
-            }
         }
     }
 
@@ -108,7 +100,7 @@ public class Estacionamento implements Serializable {
     /**
     * Verifica se o cliente possui veículo com a placa especificada.
     *
-    * @param placa. A placa do veículo a ser procurado.
+    * @param placa A placa do veículo a ser procurado.
     * @return o veículo correspondente.
     * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
     */
@@ -133,7 +125,7 @@ public class Estacionamento implements Serializable {
     /** 
     *Remove o veículo da vaga.
     *
-    * @param placa. A placa correspondente ao veículo.
+    * @param placa A placa correspondente ao veículo.
     * @throws ServicoNaoTerminadoException
     * @throws VeiculoNaoEstaEstacionadoException
     */
@@ -157,13 +149,13 @@ public class Estacionamento implements Serializable {
     /**
     * Calcula o montante total arrecadado do estacionamento em determinado mês.
     *
-    * @param mes O mês a ser considerado.
+    * @param anoMes Ano e mês a serem consultados.
     * @return o total arrecadado do estacionamento no mês.
     */
-    public double arrecadacaoNoMes(int mes) {
+    public double totalArrecadadoNoMes(YearMonth anoMes) {
         return clientes.values()
                 .stream()
-                .mapToDouble(cliente -> cliente.arrecadadoNoMes(mes))
+                .mapToDouble(cliente -> cliente.arrecadadoNoMes(anoMes))
                 .sum();
     }
 
@@ -175,28 +167,24 @@ public class Estacionamento implements Serializable {
     public double valorMedioPorUso() {
         return clientes.values()
                 .stream()
-                .mapToDouble(cliente -> cliente.arrecadadoTotal())
-                .average()
-                .getAsDouble();
+                .mapToDouble(Cliente::arrecadadoTotal)
+                .average().orElse(0);
     }
 
     /**
      * Método para buscar os 5 melhores clientes de um mês
-     * @param mes mês que deseja filtrar os melhores 5 clientes
+     *
+     * @param anoMes Ano e mês a serem consultados.
      * @return retorna uma string com todos os top 5 do mês
      */
-    public String top5Clientes(int mes) {
+    public String top5Clientes(YearMonth anoMes) {
         return clientes.values()
                 .stream()
-                .sorted((x, y) -> Double.compare(x.arrecadadoNoMes(mes), y.arrecadadoNoMes(mes)))
+                .sorted((cliente1, cliente2) -> Double.compare(cliente2.arrecadadoNoMes(anoMes), cliente1.arrecadadoNoMes(anoMes)))
                 .limit(5)
                 .map(Cliente::toString)
                 .collect(Collectors.joining("; "));
 
-    }
-
-    public String getNome() {
-        return this.nome;
     }
 
     public Map<Integer, Cliente> getClientes() {

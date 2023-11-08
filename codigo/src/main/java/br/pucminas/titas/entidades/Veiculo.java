@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.*;
 
 public class Veiculo implements Serializable {
@@ -81,13 +82,13 @@ public class Veiculo implements Serializable {
     /**
      * Retorna o total arrecadado com o veículo no mês informado.
      *
-     * @param mes Mês a ser consultado
+     * @param anoMes Ano e mês a serem consultados.
      * @return total arrecadado com o veículo no mês informado.
      */
-    public double arrecadadoNoMes(int mes) {
+    public double arrecadadoNoMes(YearMonth anoMes) {
 
         return this.usos.stream()
-                .filter(usoDeVaga -> usoDeVaga.getEntrada().getMonthValue() == mes)
+                .filter(usoDeVaga -> YearMonth.of(usoDeVaga.getEntrada().getYear(), usoDeVaga.getEntrada().getMonth()).equals(anoMes))
                 .mapToDouble(UsoDeVaga::valorPago)
                 .sum();
 

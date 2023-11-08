@@ -4,6 +4,7 @@ import br.pucminas.titas.plano.Plano;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -111,12 +112,12 @@ public class Cliente implements Serializable {
     /**
      * Calcula o montante arrecadado por todos os veículos do cliente em um determinado mês.
      *
-     * @param mes O mês a ser considerado.
+     * @param anoMes Ano e mês a serem consultados.
      * @return O montante total arrecadado no mês especificado.
      */
-    public double arrecadadoNoMes(int mes) {
+    public double arrecadadoNoMes(YearMonth anoMes) {
         return this.veiculos.stream()
-                .mapToDouble(veiculo -> veiculo.arrecadadoNoMes(mes))
+                .mapToDouble(veiculo -> veiculo.arrecadadoNoMes(anoMes))
                 .sum();
     }
 

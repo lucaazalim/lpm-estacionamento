@@ -7,6 +7,7 @@ import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.IOException;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -42,17 +43,7 @@ public class App {
         switch (opcao) {
             case 0 -> salvarESair();
             case 1 -> criarEstacionamento();
-            case 2 -> {
-
-                estacionamento = identificarEstacionamento();
-
-                if(estacionamento == null) {
-                    System.out.println("Estacionamento não encontrado.");
-                } else {
-                    gerenciarEstacionamento();
-                }
-
-            }
+            case 2 -> gerenciarEstacionamento();
 
             default -> System.out.println("A opção informada é inválida.");
         }
@@ -73,6 +64,21 @@ public class App {
     }
 
     public static void gerenciarEstacionamento() throws IOException {
+
+        System.out.println("Qual estacionamento você gostaria de gerenciar?");
+
+        for (int i = 0; i < estacionamentos.size(); i++) {
+            System.out.println((i + 1) + ". " + estacionamentos.get(i));
+        }
+
+        int estacionamentoSelecionado = Integer.parseInt(scanner.nextLine());
+
+        if (estacionamentos.size() < estacionamentoSelecionado) {
+            System.out.println("Esta opção de estacionamento não existe.");
+            return;
+        }
+
+        estacionamento = estacionamentos.get(estacionamentoSelecionado - 1);
 
         System.out.println("Escolha uma das opções: ");
         System.out.println("\t0. Voltar ao menu principal");
@@ -104,7 +110,7 @@ public class App {
             case 3 -> estacionarVeiculo();
             case 4 -> sairDaVaga();
             case 5 -> consultarTotalArrecadado();
-            case 6 -> consultarTotalMes();
+            case 6 -> consultarTotalArrecadadoMes();
             case 7 -> consultarValorMedioPorUso();
             case 8 -> mostrarTop5Clientes();
             case 9 -> mostrarHistoricoCliente();
@@ -140,6 +146,7 @@ public class App {
      * Cria um estacionamento, com nome, número de fileiras e quantidade de vagas por fileira.
      */
     public static void criarEstacionamento() {
+
         System.out.println("Qual é o nome do estacionamento?");
         String nome = scanner.nextLine();
 
@@ -147,9 +154,9 @@ public class App {
         int fileiras = scanner.nextInt();
 
         System.out.println("Quantas vagas por fileira há no estacionamento?");
-        int vagasPorFila = scanner.nextInt();
+        int vagasPorFileira = scanner.nextInt();
 
-        Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFila);
+        Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFileira);
         estacionamentos.add(estacionamento);
 
         System.out.println("Estacionamento '" + estacionamento + " criado com sucesso!");
@@ -177,6 +184,10 @@ public class App {
     public static void adicionarVeiculo() {
 
         Cliente cliente = identificarCliente();
+
+        if (cliente == null) {
+            return;
+        }
 
         System.out.println("Digite a placa do veículo: ");
         String placa = scanner.nextLine();
@@ -222,7 +233,7 @@ public class App {
 
         try {
             estacionamento.sair(placa);
-        }catch(ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
+        } catch (ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
             System.out.println(e.getMessage());
         }
 
@@ -241,8 +252,15 @@ public class App {
     /**
      * Exibe o total arrecadado pelo estacionamento em um determinado mês
      */
-    public static void consultarTotalMes() {
-        // TODO
+    public static void consultarTotalArrecadadoMes() {
+
+        System.out.println("Informe o mês e ano desejados (MM/AAAA): ");
+        YearMonth anoMes = YearMonth.parse(scanner.nextLine());
+
+        double total = estacionamento.totalArrecadadoNoMes(anoMes);
+        System.out.println("O total arrecadado em " + anoMes + " foi de R$ " + total);
+
+
     }
 
     /**
@@ -274,15 +292,6 @@ public class App {
 
     }
 
-    private static Estacionamento identificarEstacionamento() {
-        System.out.println("Qual estacionamento você gostaria de usar?");
-        String nome = scanner.nextLine();
-
-        return estacionamentos.stream()
-                .filter(estacionamento -> estacionamento.getNome().equals(nome))
-                .findFirst().orElse(null);
-    }
-
     /**
      * Procura cliente com o ID fornecido
      *
@@ -296,7 +305,7 @@ public class App {
         Cliente cliente = estacionamento.getClientes().get(id);
 
         if (cliente == null) {
-            // TODO Cliente não encontrado
+            System.out.println("Cliente não encontrado.");
         }
 
         return cliente;
