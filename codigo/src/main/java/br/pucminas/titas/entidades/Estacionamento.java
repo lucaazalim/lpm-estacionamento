@@ -114,7 +114,7 @@ public class Estacionamento implements Serializable {
     * @return o veículo correspondente.
     * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
     */
-    Veiculo procurarVeiculo(String placa) {
+    private Veiculo procurarVeiculo(String placa) {
 
         Veiculo veiculo;
 
