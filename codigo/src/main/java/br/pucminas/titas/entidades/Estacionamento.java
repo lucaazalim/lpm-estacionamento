@@ -4,22 +4,23 @@ import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class Estacionamento implements Serializable {
 
     private final String nome;
-    private List<Cliente> clientes;
+    private Map<Integer, Cliente> clientes;
     private List<Vaga> vagas;
     private final int quantFileiras;
     private final int vagasPorFileira;
 
     public Estacionamento(String nome, int fileiras, int vagasPorFila) {
         this.nome = nome;
-        this.clientes = new LinkedList<>();
+        this.clientes = new LinkedHashMap<>();
         this.quantFileiras = fileiras;
         this.vagasPorFileira = vagasPorFila;
         gerarVagas();
@@ -33,7 +34,7 @@ public class Estacionamento implements Serializable {
      * @param idCliente O ID do cliente proprietário do veículo.
      * @throws NoSuchElementException Em caso de cliente não existente.
      */
-    public void addVeiculo(Veiculo veiculo, int idCliente) {
+    public void addVeiculo(Veiculo veiculo, int idCliente) throws NoSuchElementException {
         this.encontrarCliente(idCliente)
             .get()
             .addVeiculo(veiculo);
@@ -46,9 +47,7 @@ public class Estacionamento implements Serializable {
      * @return O objeto cliente, se encontrado, caso contrário, retorna null.
      */
     public Optional<Cliente> encontrarCliente(int idCliente) {
-        return clientes.stream()
-                .filter(cliente -> cliente.getId() == idCliente)
-                .findFirst();
+        return Optional.ofNullable(clientes.get((Integer) idCliente));
     }
 
     /**
@@ -58,7 +57,7 @@ public class Estacionamento implements Serializable {
      */
     public void addCliente(Cliente cliente) {
         if (cliente != null) {
-            this.clientes.add(cliente);
+            this.clientes.put((Integer) cliente.getId(), cliente);
         }
     }
 
@@ -118,7 +117,7 @@ public class Estacionamento implements Serializable {
 
         Veiculo veiculo;
 
-        for (Cliente cliente : clientes) {
+        for (Cliente cliente : clientes.values()) {
 
             veiculo = cliente.possuiVeiculo(placa);
 
@@ -150,7 +149,8 @@ public class Estacionamento implements Serializable {
     * @return total arrecadado do estacionamento.
     */
     public double totalArrecadado() {
-        return clientes.stream()
+        return clientes.values()
+                .stream()
                 .mapToDouble(cliente -> cliente.arrecadadoTotal())
                 .sum();
     }
@@ -162,7 +162,8 @@ public class Estacionamento implements Serializable {
     * @return o total arrecadado do estacionamento no mês.
     */
     public double arrecadacaoNoMes(int mes) {
-        return clientes.stream()
+        return clientes.values()
+                .stream()
                 .mapToDouble(cliente -> cliente.arrecadadoNoMes(mes))
                 .sum();
     }
@@ -173,7 +174,8 @@ public class Estacionamento implements Serializable {
     *  @return media, o valor médio por uso
     */
     public double valorMedioPorUso() {
-        return clientes.stream()
+        return clientes.values()
+                .stream()
                 .mapToDouble(cliente -> cliente.arrecadadoTotal())
                 .average()
                 .getAsDouble();
@@ -187,7 +189,7 @@ public class Estacionamento implements Serializable {
         return this.nome;
     }
 
-    public List<Cliente> getClientes() {
+    public Map<Integer, Cliente> getClientes() {
         return this.clientes;
     }
 }
