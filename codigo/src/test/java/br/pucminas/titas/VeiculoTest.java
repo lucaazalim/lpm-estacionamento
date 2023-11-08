@@ -20,7 +20,7 @@ public class VeiculoTest {
 
     @BeforeEach
     public void setUp(){
-        veiculo = new Veiculo("ABC123");
+        veiculo = new Veiculo("ABC123", null);
         vaga = new Vaga(1,1);
     }
 

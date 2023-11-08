@@ -43,6 +43,10 @@ public class Cliente implements Serializable {
         return this.id;
     }
 
+    public Plano getPlano() {
+        return this.plano;
+    }
+
     public void setPlano(Plano plano) {
         this.plano = plano;
     }
@@ -68,9 +72,8 @@ public class Cliente implements Serializable {
      * @return O veículo com a placa correspondente, ou null se não encontrado.
      */
     public Veiculo possuiVeiculo(String placa) {
-        Veiculo qual = new Veiculo(placa);
-        for (Veiculo veiculo : veiculos) {
-            if (veiculo != null && veiculo.equals(qual)) {
+        for (Veiculo veiculo : this.veiculos) {
+            if (veiculo != null && veiculo.getPlaca().equals(placa)) {
                 return veiculo;
             }
         }

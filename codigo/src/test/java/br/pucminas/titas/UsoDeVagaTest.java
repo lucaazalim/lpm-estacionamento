@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import br.pucminas.titas.entidades.Cliente;
+import br.pucminas.titas.entidades.Veiculo;
 import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.entidades.UsoDeVaga;
 import br.pucminas.titas.entidades.Vaga;
@@ -23,7 +25,10 @@ import java.time.LocalDateTime;
 public class UsoDeVagaTest {
 	private static final double VALOR_FRACAO = 4.0;
 	private static final double VALOR_MAXIMO = 50.0;
+
     private Vaga vaga;
+    private Cliente cliente;
+    private Veiculo veiculo;
     private Servico servico;
 
     @Mock
@@ -31,9 +36,15 @@ public class UsoDeVagaTest {
 
     @BeforeEach
     public void setUp() throws VagaNaoDisponivelException {
+
         vaga = new Vaga(25, 2);
+        cliente = new Cliente("João");
+        veiculo = new Veiculo("ABC-1234", cliente);
+
         servico = Servico.POLIMENTO;
-        u = new UsoDeVaga(vaga, servico);
+
+        u = new UsoDeVaga(vaga, veiculo, servico);
+
     }
 
     @Test

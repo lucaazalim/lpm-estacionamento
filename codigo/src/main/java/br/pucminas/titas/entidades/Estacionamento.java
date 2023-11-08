@@ -79,7 +79,7 @@ public class Estacionamento implements Serializable {
     /**
     * Procura por vagas disponíveis. Estaciona o veículo.
     *
-    * @param placa. O veículo a ser estacionado.
+    * @param placa O veículo a ser estacionado.
     * @throws EstacionamentoLotadoException
     * @throws NoSuchElementException Em caso de vaga não disponível.
     * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.

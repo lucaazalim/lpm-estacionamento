@@ -14,20 +14,19 @@ import java.util.Objects;
 
 public class UsoDeVaga implements Serializable {
 
-	private static final double VALOR_FRACAO = 4.0;
-	private static final double VALOR_MAXIMO = 50.0;
 	private Vaga vaga;
+	private Veiculo veiculo;
 	private LocalDateTime entrada;
 	private LocalDateTime saida;
 	private double valorPago;
 	private Servico servico;
 
-	public UsoDeVaga(Vaga vaga) throws VagaNaoDisponivelException {
-		init(vaga, null);
+	public UsoDeVaga(Vaga vaga, Veiculo veiculo) throws VagaNaoDisponivelException {
+		init(vaga, veiculo, null);
 	}
 
-	public UsoDeVaga(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
-		init(vaga, servico);
+	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) throws VagaNaoDisponivelException {
+		init(vaga, veiculo, servico);
 	}
 
 	/**
@@ -36,13 +35,17 @@ public class UsoDeVaga implements Serializable {
 	 * @param servico
 	 * @throws VagaNaoDisponivelException
 	 */
-	private void init(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
+	private void init(Vaga vaga, Veiculo veiculo, Servico servico) throws VagaNaoDisponivelException {
+
+		Objects.requireNonNull(vaga);
+		Objects.requireNonNull(veiculo);
 
 		if(!vaga.disponivel()){
 			throw new VagaNaoDisponivelException("Vaga não disponivel");
 		}
 
 		this.vaga = vaga;
+		this.veiculo = veiculo;
 		this.servico = servico;
 		entrada = LocalDateTime.now();
 	}
@@ -88,22 +91,7 @@ public class UsoDeVaga implements Serializable {
 			return 0;
 		}
 
-		Duration duration = Duration.between(this.entrada, this.saida);
-
-		double minutos = duration.toMinutes();
-		double fracaoMinutos = Math.floor(minutos / 15);
-
-		this.valorPago = fracaoMinutos * VALOR_FRACAO;
-
-		if(this.valorPago > VALOR_MAXIMO){
-			this.valorPago = VALOR_MAXIMO;
-		}
-
-		if(this.servico != null) {
-			this.valorPago += this.getServicoPrecoTotal();
-		}
-
-		return this.valorPago;
+		return this.veiculo.getCliente().getPlano().valorPago(this.entrada, this.saida);
 
 	}
 

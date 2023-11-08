@@ -13,6 +13,7 @@ import java.util.*;
 public class Veiculo implements Serializable {
 
     private final String placa;
+    private final Cliente cliente;
     private final LinkedList<UsoDeVaga> usos;
 
     /**
@@ -20,9 +21,18 @@ public class Veiculo implements Serializable {
      *
      * @param placa Placa do veículo
      */
-    public Veiculo(String placa) {
+    public Veiculo(String placa, Cliente cliente) {
         this.placa = placa;
+        this.cliente = cliente;
         this.usos = new LinkedList<>();
+    }
+
+    public String getPlaca() {
+        return this.placa;
+    }
+
+    public Cliente getCliente() {
+        return this.cliente;
     }
 
     /**
@@ -33,7 +43,7 @@ public class Veiculo implements Serializable {
      */
     public void estacionar(Vaga vaga) throws VagaNaoDisponivelException {
 
-        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga);
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this);
         this.usos.add(usoDeVaga);
 
     }

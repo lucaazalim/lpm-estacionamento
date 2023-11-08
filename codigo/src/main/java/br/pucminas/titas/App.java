@@ -147,7 +147,7 @@ public class App {
 
         placa = SCANNER.nextLine();
 
-        Veiculo veiculo = new Veiculo(placa);
+        Veiculo veiculo = new Veiculo(placa, cliente);
 
         cliente.addVeiculo(veiculo);
     }
