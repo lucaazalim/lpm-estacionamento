@@ -4,6 +4,7 @@ import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Estacionamento;
 import br.pucminas.titas.entidades.Veiculo;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
+import br.pucminas.titas.excecoes.VeiculoNaoEncontradoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.IOException;
@@ -21,10 +22,20 @@ public class App {
     private static Estacionamento estacionamento;
 
     public static void main(String[] args) throws IOException {
+
+        try {
+            Serialization.carregar(estacionamentos::add);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Houve um erro ao carregar os dados dos estacionamentos.");
+            System.exit(1);
+        }
+
         menu();
+
     }
 
     public static void menu() throws IOException {
+
         System.out.println("Escolha uma das opções: ");
         System.out.println("\t0. Salvar e sair");
         System.out.println("\t1. Criar estacionamento");
@@ -65,20 +76,24 @@ public class App {
 
     public static void gerenciarEstacionamento() throws IOException {
 
-        System.out.println("Qual estacionamento você gostaria de gerenciar?");
+        if (estacionamento == null) {
 
-        for (int i = 0; i < estacionamentos.size(); i++) {
-            System.out.println((i + 1) + ". " + estacionamentos.get(i));
+            System.out.println("Qual estacionamento você gostaria de gerenciar?");
+
+            for (int i = 0; i < estacionamentos.size(); i++) {
+                System.out.println((i + 1) + ". " + estacionamentos.get(i));
+            }
+
+            int estacionamentoSelecionado = Integer.parseInt(scanner.nextLine());
+
+            if (estacionamentos.size() < estacionamentoSelecionado) {
+                System.out.println("Esta opção de estacionamento não existe.");
+                return;
+            }
+
+            estacionamento = estacionamentos.get(estacionamentoSelecionado - 1);
+
         }
-
-        int estacionamentoSelecionado = Integer.parseInt(scanner.nextLine());
-
-        if (estacionamentos.size() < estacionamentoSelecionado) {
-            System.out.println("Esta opção de estacionamento não existe.");
-            return;
-        }
-
-        estacionamento = estacionamentos.get(estacionamentoSelecionado - 1);
 
         System.out.println("Escolha uma das opções: ");
         System.out.println("\t0. Voltar ao menu principal");
@@ -102,6 +117,7 @@ public class App {
 
         switch (opcao) {
             case 0 -> {
+                estacionamento = null;
                 menu();
                 return;
             }
@@ -117,7 +133,6 @@ public class App {
 
             default -> System.out.println("A opção informada é inválida.");
         }
-
 
         System.out.println();
         System.out.println("Pressione ENTER para voltar ao menu...");
@@ -151,15 +166,15 @@ public class App {
         String nome = scanner.nextLine();
 
         System.out.println("Quantas fileiras tem o estacionamento?");
-        int fileiras = scanner.nextInt();
+        int fileiras = Integer.parseInt(scanner.nextLine());
 
         System.out.println("Quantas vagas por fileira há no estacionamento?");
-        int vagasPorFileira = scanner.nextInt();
+        int vagasPorFileira = Integer.parseInt(scanner.nextLine());
 
         Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFileira);
         estacionamentos.add(estacionamento);
 
-        System.out.println("Estacionamento '" + estacionamento + " criado com sucesso!");
+        System.out.println("Estacionamento '" + estacionamento + "' criado com sucesso!");
 
     }
 
@@ -171,7 +186,9 @@ public class App {
         System.out.println("Digite o nome do cliente: ");
         String nomeCliente = scanner.nextLine();
 
-        Cliente cliente = new Cliente(nomeCliente);
+        int proximoId = estacionamento.getClientes().size() + 1;
+
+        Cliente cliente = new Cliente(proximoId, nomeCliente);
         System.out.println("Cliente registrado com o ID: " + cliente.getId());
 
         estacionamento.addCliente(cliente);
@@ -212,7 +229,11 @@ public class App {
             return;
         }
 
-        estacionamento.estacionar(placa);
+        try {
+            estacionamento.estacionar(placa);
+        } catch (VeiculoNaoEncontradoException e) {
+            System.out.println(e.getMessage());
+        }
 
         System.out.println("Veículo estacionado com sucesso.");
 
@@ -233,6 +254,7 @@ public class App {
 
         try {
             estacionamento.sair(placa);
+            System.out.println("O veículo foi removido da vaga com sucesso.");
         } catch (ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
             System.out.println(e.getMessage());
         }
@@ -299,8 +321,8 @@ public class App {
      */
     private static Cliente identificarCliente() {
 
-        System.out.println("Digite o ID do cliente");
-        int id = scanner.nextInt();
+        System.out.println("Informe o ID do cliente: ");
+        int id = Integer.parseInt(scanner.nextLine());
 
         Cliente cliente = estacionamento.getClientes().get(id);
 

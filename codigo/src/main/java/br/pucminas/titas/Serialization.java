@@ -3,35 +3,44 @@ package br.pucminas.titas;
 import br.pucminas.titas.entidades.Estacionamento;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class Serialization {
 
-    private static final String NOME_DO_ARQUIVO = "estacionamentos.dat";
+    private static final Path CAMINHO = Path.of("estacionamentos.dat");
 
-    public static void salvar(Collection<Estacionamento> estacionamentos) throws IOException {
+    public static void salvar(List<Estacionamento> estacionamentos) throws IOException {
 
-        try (FileOutputStream fileOut = new FileOutputStream(NOME_DO_ARQUIVO)) {
-            try(ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
-                objectOut.writeObject(estacionamentos.toArray());
+        try (FileOutputStream fileOut = new FileOutputStream(CAMINHO.toString())) {
+            try (ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+                objectOut.writeObject(estacionamentos);
             }
         }
 
     }
 
-    public static Collection<Estacionamento> carregar() throws IOException, ClassNotFoundException {
+    public static void carregar(Consumer<Estacionamento> consumer) throws IOException, ClassNotFoundException {
 
-        Estacionamento[] estacionamentos;
+        if (Files.notExists(CAMINHO)) {
+            return;
+        }
 
-        try (FileInputStream fileIn = new FileInputStream(NOME_DO_ARQUIVO)) {
-             try(ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-                estacionamentos = (Estacionamento[]) objectIn.readObject();
+        List<Estacionamento> estacionamentos;
+
+        try (FileInputStream fileIn = new FileInputStream(CAMINHO.toString())) {
+            try (ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+                estacionamentos = (List<Estacionamento>) objectIn.readObject();
             }
         }
 
-        return List.of(estacionamentos);
+        estacionamentos.forEach(consumer);
 
     }
 

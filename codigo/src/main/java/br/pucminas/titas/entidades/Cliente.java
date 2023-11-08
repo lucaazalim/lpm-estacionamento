@@ -16,11 +16,6 @@ public class Cliente implements Serializable {
     private final int id;
     private Plano plano;
     private final List<Veiculo> veiculos;
-    private static int proximoCliente;
-
-    static {
-        proximoCliente = 1;
-    }
 
     /**
      * Constrói um novo objeto Cliente com o nome e id fornecidos.
@@ -28,10 +23,9 @@ public class Cliente implements Serializable {
      *
      * @param nome O nome do cliente.
      */
-    public Cliente(String nome) {
+    public Cliente(Integer id, String nome) {
+        this.id = id;
         this.nome = nome;
-        this.id = proximoCliente;
-        proximoCliente++;
         this.plano = new Plano.Horista();
         this.veiculos = new ArrayList<>();
     }

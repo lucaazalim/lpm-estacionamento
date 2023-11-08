@@ -1,9 +1,10 @@
 package br.pucminas.titas.plano;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public interface Plano {
+public interface Plano extends Serializable {
 
     double valorPago(LocalDateTime entrada, LocalDateTime saida);
 
