@@ -182,6 +182,11 @@ public class Estacionamento implements Serializable {
                 .getAsDouble();
     }
 
+    /**
+     * Método para buscar os 5 melhores clientes de um mês
+     * @param mes mês que deseja filtrar os melhores 5 clientes
+     * @return retorna uma string com todos os top 5 do mês
+     */
     public String top5Clientes(int mes) {
         return clientes.values()
                 .stream()
