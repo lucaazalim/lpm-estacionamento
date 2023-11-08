@@ -1,6 +1,5 @@
 package br.pucminas.titas.entidades;
 
-import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Veiculo implements Serializable {
 

@@ -4,11 +4,13 @@ import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Estacionamento implements Serializable {
 
@@ -182,7 +184,13 @@ public class Estacionamento implements Serializable {
     }
 
     public String top5Clientes(int mes) {
-        return null; // CRIAR MÉTODO PRIVADO: ORGANIZARTOP5CLIENTES(mes)
+        return clientes.values()
+                .stream()
+                .sorted((x, y) -> Double.compare(x.arrecadadoNoMes(mes), y.arrecadadoNoMes(mes)))
+                .limit(5)
+                .map(cliente -> cliente.toString())
+                .collect(Collectors.joining("; "));
+
     }
 
     public String getNome() {
