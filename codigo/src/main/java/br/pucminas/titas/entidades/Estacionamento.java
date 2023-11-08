@@ -34,8 +34,9 @@ public class Estacionamento implements Serializable {
 
     /**
      * Adiciona um veículo para um cliente especificado no estacionamento.
-     * Recebe como parâmetro um veículo válido e um id de cliente existente. Em caso de cliente inexistente, 
+     * Recebe como parâmetro um veículo válido e um id de cliente existente. Em caso de cliente inexistente,
      * lança uma exceção.
+     *
      * @param veiculo O veículo a ser adicionado.
      * @throws NoSuchElementException Em caso de cliente não existente.
      */
@@ -67,14 +68,14 @@ public class Estacionamento implements Serializable {
     //Parte responsável pelo aluno Gabriel.
 
     /**
-    * Procura por vagas disponíveis. Estaciona o veículo.
-    *
-    * @param placa O veículo a ser estacionado.
-    * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
-    */
-    public void estacionar(String placa) {
+     * Procura por vagas disponíveis. Estaciona o veículo.
+     *
+     * @param placa O veículo a ser estacionado.
+     * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
+     */
+    public void estacionar(String placa) throws VeiculoNaoEncontradoException {
 
-        Vaga vaga = this.encontrarVagaDisponivel().orElseThrow(() -> new VeiculoNaoEncontradoException(placa));
+        Vaga vaga = this.encontrarVagaDisponivel().get();
         Veiculo veiculo = this.procurarVeiculo(placa);
 
         try {
@@ -85,24 +86,24 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-    * Procura por vagas disponíveis.
-    *
-    * @return a vaga encontrada. Se nenhuma estiver disponível, retorna null.
-    */
+     * Procura por vagas disponíveis.
+     *
+     * @return a vaga encontrada. Se nenhuma estiver disponível, retorna null.
+     */
     private Optional<Vaga> encontrarVagaDisponivel() {
         return vagas.stream()
-                .filter(vaga -> vaga.disponivel())
+                .filter(Vaga::disponivel)
                 .findFirst();
     }
 
     /**
-    * Verifica se o cliente possui veículo com a placa especificada.
-    *
-    * @param placa A placa do veículo a ser procurado.
-    * @return o veículo correspondente.
-    * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
-    */
-    private Veiculo procurarVeiculo(String placa) {
+     * Verifica se o cliente possui veículo com a placa especificada.
+     *
+     * @param placa A placa do veículo a ser procurado.
+     * @return o veículo correspondente.
+     * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
+     */
+    private Veiculo procurarVeiculo(String placa) throws VeiculoNaoEncontradoException {
 
         Veiculo veiculo;
 
@@ -120,23 +121,24 @@ public class Estacionamento implements Serializable {
 
     }
 
-    /** 
-    *Remove o veículo da vaga.
-    *
-    * @param placa A placa correspondente ao veículo.
-    * @throws ServicoNaoTerminadoException
-    * @throws VeiculoNaoEstaEstacionadoException
-    */
-    public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
+    /**
+     * Remove o veículo da vaga.
+     *
+     * @param placa A placa correspondente ao veículo.
+     * @throws ServicoNaoTerminadoException
+     * @throws VeiculoNaoEstaEstacionadoException
+     * @throws VeiculoNaoEncontradoException
+     */
+    public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoNaoEncontradoException {
         Veiculo veiculo = this.procurarVeiculo(placa);
         return veiculo.sair();
     }
 
     /**
-    * Calcula o montante total arrecadado do estacionamento.
-    *
-    * @return total arrecadado do estacionamento.
-    */
+     * Calcula o montante total arrecadado do estacionamento.
+     *
+     * @return total arrecadado do estacionamento.
+     */
     public double totalArrecadado() {
         return clientes.values()
                 .stream()
@@ -145,11 +147,11 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-    * Calcula o montante total arrecadado do estacionamento em determinado mês.
-    *
-    * @param anoMes Ano e mês a serem consultados.
-    * @return o total arrecadado do estacionamento no mês.
-    */
+     * Calcula o montante total arrecadado do estacionamento em determinado mês.
+     *
+     * @param anoMes Ano e mês a serem consultados.
+     * @return o total arrecadado do estacionamento no mês.
+     */
     public double totalArrecadadoNoMes(YearMonth anoMes) {
         return clientes.values()
                 .stream()
@@ -158,10 +160,10 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-    * Calcula o valor médio de cada utilização do estacionamento.
-    *
-    *  @return media, o valor médio por uso
-    */
+     * Calcula o valor médio de cada utilização do estacionamento.
+     *
+     * @return media, o valor médio por uso
+     */
     public double valorMedioPorUso() {
         return clientes.values()
                 .stream()

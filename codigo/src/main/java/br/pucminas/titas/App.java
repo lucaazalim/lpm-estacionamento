@@ -49,8 +49,6 @@ public class App {
             opcao = -1;
         }
 
-        boolean saindo = false;
-
         switch (opcao) {
             case 0 -> salvarESair();
             case 1 -> criarEstacionamento();
@@ -59,24 +57,19 @@ public class App {
             default -> System.out.println("A opção informada é inválida.");
         }
 
-        if (!saindo) {
+        pressioneEnterParaVoltar();
+        menu();
 
-            System.out.println();
-            System.out.println("Pressione ENTER para voltar ao menu...");
-
-            try {
-                System.in.read();
-            } catch (IOException ignored) {
-            }
-
-            menu();
-
-        }
     }
 
     public static void gerenciarEstacionamento() throws IOException {
 
         if (estacionamento == null) {
+
+            if (estacionamentos.isEmpty()) {
+                System.out.println("Não há estacionamentos cadastrados.");
+                return;
+            }
 
             System.out.println("Qual estacionamento você gostaria de gerenciar?");
 
@@ -134,6 +127,13 @@ public class App {
             default -> System.out.println("A opção informada é inválida.");
         }
 
+        pressioneEnterParaVoltar();
+        gerenciarEstacionamento();
+
+    }
+
+    public static void pressioneEnterParaVoltar() {
+
         System.out.println();
         System.out.println("Pressione ENTER para voltar ao menu...");
 
@@ -141,8 +141,6 @@ public class App {
             System.in.read();
         } catch (IOException ignored) {
         }
-
-        gerenciarEstacionamento();
 
     }
 
@@ -184,12 +182,12 @@ public class App {
     public static void cadastrarCliente() {
 
         System.out.println("Digite o nome do cliente: ");
-        String nomeCliente = scanner.nextLine();
+        String nome = scanner.nextLine();
 
         int proximoId = estacionamento.getClientes().size() + 1;
 
-        Cliente cliente = new Cliente(proximoId, nomeCliente);
-        System.out.println("Cliente registrado com o ID: " + cliente.getId());
+        Cliente cliente = new Cliente(proximoId, nome);
+        System.out.println("Cliente registrado com sucesso: " + cliente);
 
         estacionamento.addCliente(cliente);
 
@@ -255,7 +253,7 @@ public class App {
         try {
             estacionamento.sair(placa);
             System.out.println("O veículo foi removido da vaga com sucesso.");
-        } catch (ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
+        } catch (VeiculoNaoEncontradoException | ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
             System.out.println(e.getMessage());
         }
 

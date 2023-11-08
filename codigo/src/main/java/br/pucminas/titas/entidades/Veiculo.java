@@ -58,7 +58,13 @@ public class Veiculo implements Serializable {
      */
     public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
-        UsoDeVaga usoDeVaga = this.usos.removeLast();
+        UsoDeVaga usoDeVaga;
+
+        try {
+            usoDeVaga = this.usos.removeLast();
+        }catch(NoSuchElementException e) {
+            usoDeVaga = null;
+        }
 
         if (usoDeVaga != null) {
             return usoDeVaga.sair();
