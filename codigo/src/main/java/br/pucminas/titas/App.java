@@ -1,9 +1,10 @@
-package br.pucminas.titas.app;
+package br.pucminas.titas;
 
 import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Estacionamento;
 import br.pucminas.titas.entidades.Veiculo;
 import br.pucminas.titas.enums.Servico;
+import br.pucminas.titas.excecoes.AppExcecao;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEncontradoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
@@ -41,7 +42,7 @@ public class App {
 
         System.out.println("Escolha uma das opções: ");
         System.out.println("\t0. Salvar e sair");
-        System.out.println("\t1. Criar estacionamento");
+        System.out.println("\t1. Cadastrar estacionamento");
         System.out.println("\t2. Gerenciar estacionamento");
 
         try {
@@ -49,14 +50,17 @@ public class App {
             int opcao = lerNumero();
 
             switch (opcao) {
-                case 0 -> salvarESair();
-                case 1 -> criarEstacionamento();
+                case 0 -> {
+                    Serialization.salvar(estacionamentos);
+                    System.exit(0);
+                }
+                case 1 -> cadastrarEstacionamento();
                 case 2 -> gerenciarEstacionamento();
                 default -> System.out.println("A opção informada é inválida.");
             }
 
         } catch (AppExcecao e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
 
         pressioneEnterParaVoltar();
@@ -102,24 +106,30 @@ public class App {
         System.out.println("\t8. Mostrar top 5 clientes");
         System.out.println("\t9. Mostrar histórico do cliente");
 
-        int opcao = lerNumero();
+        try {
 
-        switch (opcao) {
-            case 0 -> {
-                estacionamento = null;
-                menu();
-                return;
+            int opcao = lerNumero();
+
+            switch (opcao) {
+                case 0 -> {
+                    estacionamento = null;
+                    menu();
+                    return;
+                }
+                case 1 -> cadastrarCliente();
+                case 2 -> cadastrarVeiculo();
+                case 3 -> estacionarVeiculo();
+                case 4 -> sairDaVaga();
+                case 5 -> consultarTotalArrecadado();
+                case 6 -> consultarTotalArrecadadoMes();
+                case 7 -> consultarValorMedioPorUso();
+                case 8 -> consultarTopClientes();
+                case 9 -> consultarHistoricoCliente();
+                default -> System.out.println("A opção informada é inválida.");
             }
-            case 1 -> cadastrarCliente();
-            case 2 -> cadastrarVeiculo();
-            case 3 -> estacionarVeiculo();
-            case 4 -> sairDaVaga();
-            case 5 -> consultarTotalArrecadado();
-            case 6 -> consultarTotalArrecadadoMes();
-            case 7 -> consultarValorMedioPorUso();
-            case 8 -> consultarTopClientes();
-            case 9 -> consultarHistoricoCliente();
-            default -> System.out.println("A opção informada é inválida.");
+
+        }catch(AppExcecao e) {
+            System.err.println(e.getMessage());
         }
 
         pressioneEnterParaVoltar();
@@ -139,21 +149,10 @@ public class App {
 
     }
 
-
-    /**
-     * Salva os dados e sai do programa
-     *
-     * @throws IOException
-     */
-    public static void salvarESair() throws IOException {
-        Serialization.salvar(estacionamentos);
-        System.exit(0);
-    }
-
     /**
      * Cria um estacionamento, com nome, número de fileiras e quantidade de vagas por fileira.
      */
-    public static void criarEstacionamento() throws AppExcecao {
+    public static void cadastrarEstacionamento() throws AppExcecao {
 
         System.out.println("Qual é o nome do estacionamento?");
         String nome = scanner.nextLine();
@@ -194,10 +193,6 @@ public class App {
     public static void cadastrarVeiculo() throws AppExcecao {
 
         Cliente cliente = lerCliente();
-
-        if (cliente == null) {
-            return;
-        }
 
         System.out.println("Informe a placa do veículo: ");
         String placa = scanner.nextLine();
@@ -249,11 +244,6 @@ public class App {
 
         System.out.println("Digite a placa do veículo: ");
         String placa = scanner.nextLine();
-
-        if (placa == null) {
-            System.out.println("Veículo não encontrado.");
-            return;
-        }
 
         try {
             estacionamento.sair(placa);

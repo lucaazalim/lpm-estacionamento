@@ -1,4 +1,4 @@
-package br.pucminas.titas.app;
+package br.pucminas.titas.excecoes;
 
 public class AppExcecao extends Exception {
 
