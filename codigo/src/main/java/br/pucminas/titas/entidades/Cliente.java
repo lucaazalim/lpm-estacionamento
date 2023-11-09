@@ -1,18 +1,18 @@
 package br.pucminas.titas.entidades;
 
+import br.pucminas.titas.enums.TipoPlano;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Cliente implements Serializable {
 
     private final int id;
     private final String nome;
     private Plano plano;
-    private final List<Veiculo> veiculos;
+    private final Map<String, Veiculo> veiculos;
 
     /**
      * Constrói um novo objeto Cliente com o nome e id fornecidos.
@@ -23,8 +23,8 @@ public class Cliente implements Serializable {
     public Cliente(Integer id, String nome) {
         this.id = id;
         this.nome = nome;
-        this.plano = new Plano.Horista();
-        this.veiculos = new ArrayList<>();
+        this.plano = TipoPlano.HORISTA.get();
+        this.veiculos = new HashMap<>();
     }
 
     public int getId() {
@@ -48,20 +48,18 @@ public class Cliente implements Serializable {
      *
      * @param veiculo O veículo a ser adicionado.
      */
-    public void addVeiculo(Veiculo veiculo) {
-        this.veiculos.add(veiculo);
+    public void cadastrarVeiculo(Veiculo veiculo) {
+        this.veiculos.putIfAbsent(veiculo.getPlaca(), veiculo);
     }
 
     /**
-     * Verifica se o cliente possui um veículo com uma determinada placa.
+     * Procura um veículo na lista de veículos do cliente.
      *
-     * @param placa A placa para verificar.
+     * @param placa A placa a ser procurada.
      * @return O veículo com a placa correspondente, ou null se não encontrado.
      */
-    public Veiculo possuiVeiculo(String placa) {
-        return this.veiculos.stream()
-                .filter(veiculo -> veiculo.getPlaca().equals(placa))
-                .findFirst().orElse(null);
+    public Veiculo procurarVeiculo(String placa) {
+        return this.veiculos.get(placa);
     }
 
     /**
@@ -70,27 +68,9 @@ public class Cliente implements Serializable {
      * @return O total de usos de todos os veículos.
      */
     public int totalDeUsos() {
-        return this.veiculos.stream()
+        return this.veiculos.values().stream()
                 .mapToInt(Veiculo::totalDeUsos)
                 .sum();
-    }
-
-    /**
-     * Recupera o montante total arrecadado por um veículo específico.
-     *
-     * @param placa A placa do veículo.
-     * @return O montante total arrecadado pelo veículo, ou 0 se o veículo não for encontrado.
-     */
-    public double arrecadadoPorVeiculo(String placa) {
-
-        Veiculo veiculo = possuiVeiculo(placa);
-
-        if (veiculo != null) {
-            return veiculo.totalArrecadado();
-        }
-
-        return 0;
-
     }
 
     /**
@@ -99,7 +79,7 @@ public class Cliente implements Serializable {
      * @return O montante total arrecadado por todos os veículos.
      */
     public double arrecadadoTotal() {
-        return this.veiculos.stream()
+        return this.veiculos.values().stream()
                 .mapToDouble(Veiculo::totalArrecadado)
                 .sum();
     }
@@ -111,7 +91,7 @@ public class Cliente implements Serializable {
      * @return O montante total arrecadado no mês especificado.
      */
     public double arrecadadoNoMes(YearMonth anoMes) {
-        return this.veiculos.stream()
+        return this.veiculos.values().stream()
                 .mapToDouble(veiculo -> veiculo.arrecadadoNoMes(anoMes))
                 .sum();
     }
@@ -128,7 +108,7 @@ public class Cliente implements Serializable {
         Objects.requireNonNull(de);
         Objects.requireNonNull(ate);
 
-        return this.veiculos.stream()
+        return this.veiculos.values().stream()
                 .map(veiculo -> veiculo.historico(de, ate))
                 .flatMap(List::stream)
                 .toList();

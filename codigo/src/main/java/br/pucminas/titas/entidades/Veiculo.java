@@ -96,7 +96,7 @@ public class Veiculo implements Serializable {
     public double arrecadadoNoMes(YearMonth anoMes) {
 
         return this.usos.stream()
-                .filter(usoDeVaga -> YearMonth.of(usoDeVaga.getEntrada().getYear(), usoDeVaga.getEntrada().getMonth()).equals(anoMes))
+                .filter(usoDeVaga -> usoDeVaga.entrouEntre(anoMes.atDay(1).atStartOfDay(), anoMes.atEndOfMonth().atTime(LocalTime.MIDNIGHT)))
                 .mapToDouble(UsoDeVaga::valorPago)
                 .sum();
 

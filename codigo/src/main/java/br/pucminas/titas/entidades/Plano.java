@@ -6,70 +6,75 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public interface Plano extends Serializable {
+public abstract class Plano implements Serializable {
 
-    double valorPago(LocalDateTime entrada, LocalDateTime saida);
+    private String nome;
 
-    class Horista implements Plano {
+    public Plano(String nome) {
+        this.nome = nome;
+    }
 
-        double VALOR_FRACAO = 4.0;
-        double VALOR_MAXIMO = 50.0;
+    public abstract double calcularValor(LocalDateTime entrada, LocalDateTime saida);
+
+    @Override
+    public String toString() {
+        return this.nome;
+    }
+
+
+    public static class Horista extends Plano {
+
+        public Horista(String nome) {
+            super(nome);
+        }
 
         @Override
-        public double valorPago(LocalDateTime entrada, LocalDateTime saida) {
+        public double calcularValor(LocalDateTime entrada, LocalDateTime saida) {
 
             Duration duration = Duration.between(entrada, saida);
 
             double minutos = duration.toMinutes();
             double fracaoMinutos = Math.floor(minutos / 15);
 
-            return Math.min(fracaoMinutos * VALOR_FRACAO, VALOR_MAXIMO);
+            double valorFracao = 4;
+            double valorMaximo = 50;
 
-        }
+            return Math.min(fracaoMinutos * valorFracao, valorMaximo);
 
-        @Override
-        public String toString() {
-            return "Horista";
         }
 
     }
 
-    class Turnista extends Horista {
+    public static class Turnista extends Horista {
 
         private Turno turno;
 
         public Turnista(Turno turno) {
+            super("Turnista (" + turno + ")");
             this.turno = turno;
         }
 
         @Override
-        public double valorPago(LocalDateTime entrada, LocalDateTime saida) {
+        public double calcularValor(LocalDateTime entrada, LocalDateTime saida) {
 
             if (this.turno.contem(entrada.toLocalTime())) {
                 return 0;
             }
 
-            return super.valorPago(entrada, saida);
+            return super.calcularValor(entrada, saida);
 
         }
-
-        @Override
-        public String toString() {
-            return "Turnista (" + this.turno + ")";
-        }
-
     }
 
-    class Mensalista implements Plano {
+    public static class Mensalista extends Plano {
 
-        @Override
-        public double valorPago(LocalDateTime entrada, LocalDateTime saida) {
-            return 0;
+        public Mensalista() {
+            super("Mensalista");
         }
 
         @Override
-        public String toString() {
-            return "Mensalista";
+        public double calcularValor(LocalDateTime entrada, LocalDateTime saida) {
+            return 0;
         }
 
     }

@@ -35,10 +35,6 @@ public class UsoDeVaga implements Serializable {
 
 	}
 
-	public LocalDateTime getEntrada(){
-		return this.entrada;
-	}
-
 	/**
 	 * Tenta liberar a vaga
 	 * @return retorna o preço a ser pago pelo cliente
@@ -72,24 +68,8 @@ public class UsoDeVaga implements Serializable {
 			return 0;
 		}
 
-		return this.veiculo.getCliente().getPlano().valorPago(this.entrada, this.saida);
+		return this.veiculo.getCliente().getPlano().calcularValor(this.entrada, this.saida);
 
-	}
-
-	/**
-	 * Adiciona um serviço ou troca o serviço atual por um novo
-	 * @param servico Serviço ser escolhido
-	 */
-	public void adicionaServico(Servico servico) {
-		this.servico = servico;
-	}
-
-	/**
-	 * Pega o preço do serviço solicitado
-	 * @return retorna o preço do serviço solicitado
-	 */
-	public double getServicoPrecoTotal() {
-		return servico.getPreco();
 	}
 
 	/**
@@ -108,39 +88,6 @@ public class UsoDeVaga implements Serializable {
 
 	}
 
-	/**
-	 * Indica quando um UsoDeVaga é igual ao outro caso: 
-	 * a vaga for igual e os horários de entrada e saida coincidirem
-	 @param u objeto de refência
-	 @return true se o objeto for igual ao objeto comparado
-	 */
-	public boolean equals(UsoDeVaga u){
-		boolean resp = false;
-		if(u != null && getClass() == u.getClass()){
-			if(this==u) resp = true;
-			else{
-				if((vaga == u.vaga && entrada != u.getEntrada())
-				&& entrada == u.entrada
-				&& saida == u.saida
-				) resp = true;
-			}//procurar igualdade
-		} 
-		return resp;		
-	}
-
-	/**
-	 * Transforma o objeto UsoDeVaga em string retornando:
-	 * a vaga, horário de saida, horário de saida, valor pago e serviços contratados 
-	 * @return 
-	 */
-	public String toString(){
-		return "Uso de vagas {" +
-				"vaga: " + this.vaga +
-				", entrda: " + this.entrada +
-				", saida: " + this.saida + 
-				", serviços: " + this.servico +
-				"}";
-		}
 	/* 
 	 * Confere se o cliente entrou entre as datas informadas.
 	 *
@@ -157,4 +104,8 @@ public class UsoDeVaga implements Serializable {
 
 	}
 
+	@Override
+	public String toString() {
+		return this.vaga + " - " + this.veiculo + " - " + this.servico + " - " + this.entrada + " - " + this.saida;
+	}
 }

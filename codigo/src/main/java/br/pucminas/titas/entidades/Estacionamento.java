@@ -6,7 +6,6 @@ import br.pucminas.titas.excecoes.*;
 import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Estacionamento implements Serializable {
 
@@ -41,15 +40,14 @@ public class Estacionamento implements Serializable {
     /**
      * Estaciona um veículo em alguma vaga disponível.
      *
-     * @param placa A placa do veículo a ser estacionado.
+     * @param veiculo O veículo a ser estacionado.
      * @param servico O serviço a ser realizado ou null, caso nenhum serviço vá ser realizado.
      * @throws VeiculoNaoEncontradoException A placa informada não pertence a nenhum veículo cadastrado.
      * @throws EstacionamentoLotadoExcecao Não há vagas disponíveis neste estacionamento.
      * @throws VagaNaoDisponivelException A vaga escolhida não está disponível.
      */
-    public void estacionar(String placa, Servico servico) throws VeiculoNaoEncontradoException, EstacionamentoLotadoExcecao, VagaNaoDisponivelException {
+    public void estacionar(Veiculo veiculo, Servico servico) throws EstacionamentoLotadoExcecao, VagaNaoDisponivelException {
 
-        Veiculo veiculo = this.procurarVeiculo(placa);
         Vaga vaga = vagas.stream()
                 .filter(Vaga::disponivel)
                 .findFirst().orElseThrow(() -> new EstacionamentoLotadoExcecao(this));
@@ -71,7 +69,7 @@ public class Estacionamento implements Serializable {
 
         for (Cliente cliente : clientes.values()) {
 
-            veiculo = cliente.possuiVeiculo(placa);
+            veiculo = cliente.procurarVeiculo(placa);
 
             if (veiculo != null) {
                 return veiculo;
