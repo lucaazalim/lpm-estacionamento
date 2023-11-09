@@ -1,19 +1,16 @@
 package br.pucminas.titas.entidades;
 
-import br.pucminas.titas.plano.Plano;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class Cliente implements Serializable {
 
-    private final String nome;
     private final int id;
+    private final String nome;
     private Plano plano;
     private final List<Veiculo> veiculos;
 
@@ -32,6 +29,10 @@ public class Cliente implements Serializable {
 
     public int getId() {
         return this.id;
+    }
+
+    public String getNome() {
+        return this.nome;
     }
 
     public Plano getPlano() {

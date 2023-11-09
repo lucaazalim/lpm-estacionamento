@@ -19,11 +19,12 @@ public enum Servico {
         return preco;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
     public int getHorasMinimas() {
         return horaMinimas;
+    }
+
+    @Override
+    public String toString() {
+        return this.nome;
     }
 }

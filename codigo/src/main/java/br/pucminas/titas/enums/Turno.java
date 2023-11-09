@@ -1,4 +1,4 @@
-package br.pucminas.titas.plano;
+package br.pucminas.titas.enums;
 
 import java.time.LocalTime;
 

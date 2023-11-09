@@ -1,4 +1,4 @@
-package br.pucminas.titas;
+package br.pucminas.titas.app;
 
 import br.pucminas.titas.entidades.Estacionamento;
 

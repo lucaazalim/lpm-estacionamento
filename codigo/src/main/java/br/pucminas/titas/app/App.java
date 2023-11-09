@@ -1,14 +1,17 @@
-package br.pucminas.titas;
+package br.pucminas.titas.app;
 
 import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Estacionamento;
 import br.pucminas.titas.entidades.Veiculo;
+import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEncontradoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.IOException;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -41,20 +44,19 @@ public class App {
         System.out.println("\t1. Criar estacionamento");
         System.out.println("\t2. Gerenciar estacionamento");
 
-        int opcao;
-
         try {
-            opcao = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException exception) {
-            opcao = -1;
-        }
 
-        switch (opcao) {
-            case 0 -> salvarESair();
-            case 1 -> criarEstacionamento();
-            case 2 -> gerenciarEstacionamento();
+            int opcao = lerNumero();
 
-            default -> System.out.println("A opção informada é inválida.");
+            switch (opcao) {
+                case 0 -> salvarESair();
+                case 1 -> criarEstacionamento();
+                case 2 -> gerenciarEstacionamento();
+                default -> System.out.println("A opção informada é inválida.");
+            }
+
+        } catch (AppExcecao e) {
+            System.out.println(e.getMessage());
         }
 
         pressioneEnterParaVoltar();
@@ -62,7 +64,7 @@ public class App {
 
     }
 
-    public static void gerenciarEstacionamento() throws IOException {
+    public static void gerenciarEstacionamento() throws IOException, AppExcecao {
 
         if (estacionamento == null) {
 
@@ -77,7 +79,7 @@ public class App {
                 System.out.println((i + 1) + ". " + estacionamentos.get(i));
             }
 
-            int estacionamentoSelecionado = Integer.parseInt(scanner.nextLine());
+            int estacionamentoSelecionado = lerNumero();
 
             if (estacionamentos.size() < estacionamentoSelecionado) {
                 System.out.println("Esta opção de estacionamento não existe.");
@@ -100,13 +102,7 @@ public class App {
         System.out.println("\t8. Mostrar top 5 clientes");
         System.out.println("\t9. Mostrar histórico do cliente");
 
-        int opcao;
-
-        try {
-            opcao = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException exception) {
-            opcao = -1;
-        }
+        int opcao = lerNumero();
 
         switch (opcao) {
             case 0 -> {
@@ -115,15 +111,14 @@ public class App {
                 return;
             }
             case 1 -> cadastrarCliente();
-            case 2 -> adicionarVeiculo();
+            case 2 -> cadastrarVeiculo();
             case 3 -> estacionarVeiculo();
             case 4 -> sairDaVaga();
             case 5 -> consultarTotalArrecadado();
             case 6 -> consultarTotalArrecadadoMes();
             case 7 -> consultarValorMedioPorUso();
-            case 8 -> mostrarTop5Clientes();
-            case 9 -> mostrarHistoricoCliente();
-
+            case 8 -> consultarTopClientes();
+            case 9 -> consultarHistoricoCliente();
             default -> System.out.println("A opção informada é inválida.");
         }
 
@@ -158,16 +153,16 @@ public class App {
     /**
      * Cria um estacionamento, com nome, número de fileiras e quantidade de vagas por fileira.
      */
-    public static void criarEstacionamento() {
+    public static void criarEstacionamento() throws AppExcecao {
 
         System.out.println("Qual é o nome do estacionamento?");
         String nome = scanner.nextLine();
 
         System.out.println("Quantas fileiras tem o estacionamento?");
-        int fileiras = Integer.parseInt(scanner.nextLine());
+        int fileiras = lerNumero();
 
         System.out.println("Quantas vagas por fileira há no estacionamento?");
-        int vagasPorFileira = Integer.parseInt(scanner.nextLine());
+        int vagasPorFileira = lerNumero();
 
         Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFileira);
         estacionamentos.add(estacionamento);
@@ -196,15 +191,15 @@ public class App {
     /**
      * Adiciona um veículo ao cliente
      */
-    public static void adicionarVeiculo() {
+    public static void cadastrarVeiculo() throws AppExcecao {
 
-        Cliente cliente = identificarCliente();
+        Cliente cliente = lerCliente();
 
         if (cliente == null) {
             return;
         }
 
-        System.out.println("Digite a placa do veículo: ");
+        System.out.println("Informe a placa do veículo: ");
         String placa = scanner.nextLine();
 
         Veiculo veiculo = new Veiculo(placa, cliente);
@@ -217,18 +212,28 @@ public class App {
     /**
      * Estaciona o veículo em uma vaga disponível
      */
-    public static void estacionarVeiculo() {
+    public static void estacionarVeiculo() throws AppExcecao {
 
         System.out.println("Digite a placa do veículo: ");
         String placa = scanner.nextLine();
 
-        if (placa == null) {
-            System.out.println("Veículo não encontrado.");
-            return;
+        System.out.println("Informe o serviço que o veículo irá utilizar: ");
+        System.out.println("\t0. Nenhum");
+
+        for (Servico servico : Servico.values()) {
+            System.out.println("\t" + servico.ordinal() + ". " + servico);
         }
 
+        int servicoSelecionado = lerNumero();
+
+        if(servicoSelecionado < 0 || servicoSelecionado > Servico.values().length) {
+            throw new AppExcecao("A opção de serviço informada é inválida.");
+        }
+
+        Servico servico = Servico.values()[servicoSelecionado];
+
         try {
-            estacionamento.estacionar(placa);
+            estacionamento.estacionar(placa, servico);
         } catch (VeiculoNaoEncontradoException e) {
             System.out.println(e.getMessage());
         }
@@ -272,10 +277,9 @@ public class App {
     /**
      * Exibe o total arrecadado pelo estacionamento em um determinado mês
      */
-    public static void consultarTotalArrecadadoMes() {
+    public static void consultarTotalArrecadadoMes() throws AppExcecao {
 
-        System.out.println("Informe o mês e ano desejados (MM/AAAA): ");
-        YearMonth anoMes = YearMonth.parse(scanner.nextLine());
+        YearMonth anoMes = lerAnoMes();
 
         double total = estacionamento.totalArrecadadoNoMes(anoMes);
         System.out.println("O total arrecadado em " + anoMes + " foi de R$ " + total);
@@ -296,39 +300,76 @@ public class App {
     /**
      * Mostra os cinco clientes que mais geraram arrecadação em um determinado mês
      */
-    public static void mostrarTop5Clientes() {
-        // TO DO
+    public static void consultarTopClientes() throws AppExcecao {
+
+        YearMonth anoMes = lerAnoMes();
+
+        System.out.println("Informe a quantidade limite de clientes: ");
+        int limite = lerNumero();
+
+        List<Cliente> clientes = estacionamento.topClientes(anoMes, limite);
+
+        System.out.println("Os " + limite + " clientes que mais utilizaram o estacionamento em " + anoMes + " foram: ");
+
+        for(int i = 0; i < clientes.size(); i++) {
+            System.out.println("\t" + (i + 1) + ". " + clientes.get(i));
+        }
+
     }
 
     /**
      * Mostra o histórico do cliente
      */
-    public static void mostrarHistoricoCliente() {
+    public static void consultarHistoricoCliente() throws AppExcecao {
 
-        Cliente cliente = identificarCliente();
+        Cliente cliente = lerCliente();
 
-        System.out.println("Total de usos dos veículos: " + cliente.totalDeUsos());
+        System.out.println("Total de usos de todos os veículos do cliente: " + cliente.totalDeUsos());
         System.out.println("Arrecadação total do cliente: " + cliente.arrecadadoTotal());
 
     }
 
-    /**
-     * Procura cliente com o ID fornecido
-     *
-     * @return o cliente encontrado
-     */
-    private static Cliente identificarCliente() {
+    private static Cliente lerCliente() throws AppExcecao {
 
-        System.out.println("Informe o ID do cliente: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        System.out.println("Informe o ID ou nome do cliente: ");
+        String idOuNome = scanner.nextLine();
 
-        Cliente cliente = estacionamento.getClientes().get(id);
+        Cliente cliente;
+
+        try {
+            int id = Integer.parseInt(idOuNome);
+            cliente = estacionamento.getClientes().get(id);
+        } catch (NumberFormatException e) {
+            cliente = estacionamento.getClientes().values().stream()
+                    .filter(c -> c.getNome().equals(idOuNome))
+                    .findFirst().orElse(null);
+        }
 
         if (cliente == null) {
-            System.out.println("Cliente não encontrado.");
+            throw new AppExcecao("O cliente informado não foi encontrado.");
         }
 
         return cliente;
+
+    }
+
+    private static Integer lerNumero() throws AppExcecao {
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            throw new AppExcecao("O valor informado deve ser um número válido.");
+        }
+    }
+
+    private static YearMonth lerAnoMes() throws AppExcecao {
+
+        System.out.println("Informe o mês e ano desejados (mês/ano): ");
+
+        try {
+            return YearMonth.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("MM/yyyy"));
+        }catch(DateTimeParseException e) {
+            throw new AppExcecao("O valor informado deve estar no formato mês/ano.");
+        }
 
     }
 

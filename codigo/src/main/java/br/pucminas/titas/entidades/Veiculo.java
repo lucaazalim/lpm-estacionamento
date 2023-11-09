@@ -1,5 +1,6 @@
 package br.pucminas.titas.entidades;
 
+import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
@@ -42,9 +43,9 @@ public class Veiculo implements Serializable {
      * @param vaga Vaga onde o veículo será estacionado
      * @throws VagaNaoDisponivelException
      */
-    public void estacionar(Vaga vaga) throws VagaNaoDisponivelException {
+    public void estacionar(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
 
-        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this);
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this, servico);
         this.usos.add(usoDeVaga);
 
     }

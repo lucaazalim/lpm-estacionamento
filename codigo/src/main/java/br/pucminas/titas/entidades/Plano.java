@@ -1,4 +1,6 @@
-package br.pucminas.titas.plano;
+package br.pucminas.titas.entidades;
+
+import br.pucminas.titas.enums.Turno;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -29,11 +31,16 @@ public interface Plano extends Serializable {
         public String toString() {
             return "Horista";
         }
+
     }
 
     class Turnista extends Horista {
 
         private Turno turno;
+
+        public Turnista(Turno turno) {
+            this.turno = turno;
+        }
 
         @Override
         public double valorPago(LocalDateTime entrada, LocalDateTime saida) {
@@ -50,6 +57,7 @@ public interface Plano extends Serializable {
         public String toString() {
             return "Turnista (" + this.turno + ")";
         }
+
     }
 
     class Mensalista implements Plano {
@@ -63,6 +71,7 @@ public interface Plano extends Serializable {
         public String toString() {
             return "Mensalista";
         }
+
     }
 
 }

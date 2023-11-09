@@ -16,14 +16,8 @@ public class UsoDeVaga implements Serializable {
 
 	private Vaga vaga;
 	private Veiculo veiculo;
-	private LocalDateTime entrada;
-	private LocalDateTime saida;
-	private double valorPago;
 	private Servico servico;
-
-	public UsoDeVaga(Vaga vaga, Veiculo veiculo) throws VagaNaoDisponivelException {
-		init(vaga, veiculo, null);
-	}
+	private LocalDateTime entrada, saida;
 
 	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) throws VagaNaoDisponivelException {
 		init(vaga, veiculo, servico);
@@ -157,7 +151,6 @@ public class UsoDeVaga implements Serializable {
 				"vaga: " + this.vaga +
 				", entrda: " + this.entrada +
 				", saida: " + this.saida + 
-				", valor pago: " + this.valorPago +
 				", serviços: " + this.servico +
 				"}";
 		}

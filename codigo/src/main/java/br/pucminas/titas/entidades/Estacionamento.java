@@ -1,15 +1,11 @@
 package br.pucminas.titas.entidades;
 
+import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Estacionamento implements Serializable {
@@ -73,13 +69,13 @@ public class Estacionamento implements Serializable {
      * @param placa O veículo a ser estacionado.
      * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
      */
-    public void estacionar(String placa) throws VeiculoNaoEncontradoException {
+    public void estacionar(String placa, Servico servico) throws VeiculoNaoEncontradoException {
 
         Vaga vaga = this.encontrarVagaDisponivel().get();
         Veiculo veiculo = this.procurarVeiculo(placa);
 
         try {
-            veiculo.estacionar(vaga);
+            veiculo.estacionar(vaga, servico);
         } catch (VagaNaoDisponivelException ignored) {
             // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
         }
@@ -172,27 +168,31 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-     * Método para buscar os 5 melhores clientes de um mês
+     * Retorna os clientes que mais utilizaram o estacionamento.
      *
      * @param anoMes Ano e mês a serem consultados.
-     * @return retorna uma string com todos os top 5 do mês
+     * @param limite O limite de clientes a serem retornados.
+     * @return uma lista com os clientes que mais utilizaram o estacionamento.
      */
-    public String top5Clientes(YearMonth anoMes) {
+    public List<Cliente> topClientes(YearMonth anoMes, int limite) {
         return clientes.values()
                 .stream()
                 .sorted((cliente1, cliente2) -> Double.compare(cliente2.arrecadadoNoMes(anoMes), cliente1.arrecadadoNoMes(anoMes)))
-                .limit(5)
-                .map(Cliente::toString)
-                .collect(Collectors.joining("; "));
+                .limit(limite)
+                .toList();
 
     }
 
+    /**
+     * @return uma versão imutável do mapa de clientes.
+     */
     public Map<Integer, Cliente> getClientes() {
-        return this.clientes;
+        return Collections.unmodifiableMap(this.clientes);
     }
 
     @Override
     public String toString() {
         return this.nome;
     }
+
 }
