@@ -3,6 +3,7 @@ package br.pucminas.titas.entidades;
 import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.Serializable;
@@ -57,7 +58,7 @@ public class Veiculo implements Serializable {
      * @throws ServicoNaoTerminadoException
      * @throws VeiculoNaoEstaEstacionadoException
      */
-    public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
+    public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoJaSaiuException {
 
         UsoDeVaga usoDeVaga;
 

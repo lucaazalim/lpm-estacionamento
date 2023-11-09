@@ -20,36 +20,23 @@ public class UsoDeVaga implements Serializable {
 	private LocalDateTime entrada, saida;
 
 	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) throws VagaNaoDisponivelException {
-		init(vaga, veiculo, servico);
-	}
-
-	/**
-	 * Um construtor padrão
-	 * @param vaga
-	 * @param servico
-	 * @throws VagaNaoDisponivelException
-	 */
-	private void init(Vaga vaga, Veiculo veiculo, Servico servico) throws VagaNaoDisponivelException {
 
 		Objects.requireNonNull(vaga);
 		Objects.requireNonNull(veiculo);
 
 		if(!vaga.disponivel()){
-			throw new VagaNaoDisponivelException("Vaga não disponivel");
+			throw new VagaNaoDisponivelException(vaga);
 		}
 
 		this.vaga = vaga;
 		this.veiculo = veiculo;
 		this.servico = servico;
 		entrada = LocalDateTime.now();
+
 	}
 
-	/**
-	 * Pega o data e hora da entrada do cliente
-	 * @return
-	 */
 	public LocalDateTime getEntrada(){
-		return LocalDateTime.from(this.entrada);
+		return this.entrada;
 	}
 
 	/**
@@ -65,7 +52,7 @@ public class UsoDeVaga implements Serializable {
 		}
 
 		if (!podeSair(LocalDateTime.now())) {
-			throw new ServicoNaoTerminadoException("Os serviços solicitados ainda não foram concluídos");
+			throw new ServicoNaoTerminadoException();
 		}
 
 		saida = LocalDateTime.now();	

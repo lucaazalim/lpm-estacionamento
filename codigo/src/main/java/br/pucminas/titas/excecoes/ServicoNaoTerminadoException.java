@@ -1,13 +1,9 @@
 package br.pucminas.titas.excecoes;
 
 public class ServicoNaoTerminadoException extends Exception {
-    private String message;
 
-    public ServicoNaoTerminadoException(String message) {
-        this.message = message;
+    public ServicoNaoTerminadoException() {
+        super("Os serviços que estão sendo realizados neste veículo ainda não foram concluídos.");
     }
-    
-    public String getMessage() {
-        return this.message;
-    }
+
 }

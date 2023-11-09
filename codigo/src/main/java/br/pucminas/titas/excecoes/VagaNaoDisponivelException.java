@@ -1,14 +1,12 @@
 package br.pucminas.titas.excecoes;
 
-public class VagaNaoDisponivelException extends Exception {
-    private String message;
+import br.pucminas.titas.entidades.Vaga;
 
-    public VagaNaoDisponivelException(String message) {
-        this.message = message;
+public class VagaNaoDisponivelException extends Exception {
+
+    public VagaNaoDisponivelException(Vaga vaga) {
+        super("A vaga '" + vaga + "' não está disponível.");
     }
-    
-    public String getMessage() {
-        return this.message;
-    }
+
 }
 

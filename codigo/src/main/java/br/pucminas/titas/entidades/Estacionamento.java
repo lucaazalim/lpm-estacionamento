@@ -29,75 +29,41 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-     * Adiciona um veículo para um cliente especificado no estacionamento.
-     * Recebe como parâmetro um veículo válido e um id de cliente existente. Em caso de cliente inexistente,
-     * lança uma exceção.
-     *
-     * @param veiculo O veículo a ser adicionado.
-     * @throws NoSuchElementException Em caso de cliente não existente.
-     */
-    public void addVeiculo(Veiculo veiculo) throws NoSuchElementException {
-        veiculo.getCliente().addVeiculo(veiculo);
-    }
-
-    /**
-     * Localiza um cliente no estacionamento usando o ID do cliente fornecido.
-     *
-     * @param idCliente O ID do cliente a ser localizado.
-     * @return O objeto cliente, se encontrado, caso contrário, retorna null.
-     */
-    public Optional<Cliente> encontrarCliente(int idCliente) {
-        return Optional.ofNullable(clientes.get(idCliente));
-    }
-
-    /**
      * Adiciona um cliente ao estacionamento.
      *
      * @param cliente O cliente a ser adicionado.
      */
     public void addCliente(Cliente cliente) {
-        if (cliente != null) {
-            this.clientes.put((Integer) cliente.getId(), cliente);
-        }
+        Objects.requireNonNull(cliente);
+        this.clientes.put(cliente.getId(), cliente);
     }
 
-    //Parte responsável pelo aluno Gabriel.
-
     /**
-     * Procura por vagas disponíveis. Estaciona o veículo.
+     * Estaciona um veículo em alguma vaga disponível.
      *
-     * @param placa O veículo a ser estacionado.
-     * @throws VeiculoNaoEncontradoException Em caso de não exista um carro com a placa passada.
+     * @param placa A placa do veículo a ser estacionado.
+     * @param servico O serviço a ser realizado ou null, caso nenhum serviço vá ser realizado.
+     * @throws VeiculoNaoEncontradoException A placa informada não pertence a nenhum veículo cadastrado.
+     * @throws EstacionamentoLotadoExcecao Não há vagas disponíveis neste estacionamento.
+     * @throws VagaNaoDisponivelException A vaga escolhida não está disponível.
      */
-    public void estacionar(String placa, Servico servico) throws VeiculoNaoEncontradoException {
+    public void estacionar(String placa, Servico servico) throws VeiculoNaoEncontradoException, EstacionamentoLotadoExcecao, VagaNaoDisponivelException {
 
-        Vaga vaga = this.encontrarVagaDisponivel().get();
         Veiculo veiculo = this.procurarVeiculo(placa);
-
-        try {
-            veiculo.estacionar(vaga, servico);
-        } catch (VagaNaoDisponivelException ignored) {
-            // Exceção pode ser ignorada porque já foi confirmado que a vaga está disponível
-        }
-    }
-
-    /**
-     * Procura por vagas disponíveis.
-     *
-     * @return a vaga encontrada. Se nenhuma estiver disponível, retorna null.
-     */
-    private Optional<Vaga> encontrarVagaDisponivel() {
-        return vagas.stream()
+        Vaga vaga = vagas.stream()
                 .filter(Vaga::disponivel)
-                .findFirst();
+                .findFirst().orElseThrow(() -> new EstacionamentoLotadoExcecao(this));
+
+        veiculo.estacionar(vaga, servico);
+
     }
 
     /**
-     * Verifica se o cliente possui veículo com a placa especificada.
+     * Verifica se algum cliente possui veículo com a placa especificada.
      *
      * @param placa A placa do veículo a ser procurado.
      * @return o veículo correspondente.
-     * @throws VeiculoNaoEncontradoException caso não exista veículos com essa placa
+     * @throws VeiculoNaoEncontradoException caso não exista veículos com a placa informada.
      */
     private Veiculo procurarVeiculo(String placa) throws VeiculoNaoEncontradoException {
 
@@ -118,27 +84,27 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-     * Remove o veículo da vaga.
+     * Libera a vaga do veículo com a placa especificada.
      *
-     * @param placa A placa correspondente ao veículo.
-     * @throws ServicoNaoTerminadoException
-     * @throws VeiculoNaoEstaEstacionadoException
-     * @throws VeiculoNaoEncontradoException
+     * @param placa A placa do veículo a ser procurado.
+     * @return o valor a ser pago por este uso do estacionamento.
+     * @throws VeiculoNaoEncontradoException caso não exista veículos com a placa informada.
+     * @throws ServicoNaoTerminadoException caso o serviço ainda não tenha sido concluído.
+     * @throws VeiculoNaoEstaEstacionadoException caso o veículo já não esteja estacionado.
      */
-    public double sair(String placa) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoNaoEncontradoException {
-        Veiculo veiculo = this.procurarVeiculo(placa);
-        return veiculo.sair();
+    public double sair(String placa) throws VeiculoNaoEncontradoException, ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoJaSaiuException {
+        return this.procurarVeiculo(placa).sair();
     }
 
     /**
-     * Calcula o montante total arrecadado do estacionamento.
+     * Calcula o montante total arrecadado pelo estacionamento.
      *
-     * @return total arrecadado do estacionamento.
+     * @return total arrecadado pelo estacionamento.
      */
     public double totalArrecadado() {
         return clientes.values()
                 .stream()
-                .mapToDouble(cliente -> cliente.arrecadadoTotal())
+                .mapToDouble(Cliente::arrecadadoTotal)
                 .sum();
     }
 
