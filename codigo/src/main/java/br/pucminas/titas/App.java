@@ -6,7 +6,6 @@ import br.pucminas.titas.entidades.Plano;
 import br.pucminas.titas.entidades.Veiculo;
 import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.enums.TipoPlano;
-import br.pucminas.titas.enums.Turno;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.IOException;
@@ -20,16 +19,17 @@ import java.util.Scanner;
 
 public class App {
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final DateTimeFormatter FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy");
 
-    private static final List<Estacionamento> estacionamentos = new ArrayList<>();
+    private static final List<Estacionamento> ESTACIONAMENTOS = new ArrayList<>();
 
     private static Estacionamento estacionamento;
 
     public static void main(String[] args) throws IOException {
 
         try {
-            Serialization.carregar(estacionamentos::add);
+            Serialization.carregar(ESTACIONAMENTOS::add);
         } catch (ClassNotFoundException e) {
             System.out.println("Houve um erro ao carregar os dados dos estacionamentos.");
             System.exit(1);
@@ -40,7 +40,7 @@ public class App {
             System.out.println("Salvando dados...");
 
             try {
-                Serialization.salvar(estacionamentos);
+                Serialization.salvar(ESTACIONAMENTOS);
                 System.out.println("Dados salvos com sucesso.");
             } catch (IOException e) {
                 System.err.println("Ocorreu um erro ao salvar os dados.");
@@ -83,25 +83,23 @@ public class App {
 
         if (estacionamento == null) {
 
-            if (estacionamentos.isEmpty()) {
-                System.out.println("Não há estacionamentos cadastrados.");
-                return;
+            if (ESTACIONAMENTOS.isEmpty()) {
+                throw new AppExcecao("Não há estacionamentos cadastrados.");
             }
 
             System.out.println("Qual estacionamento você deseja gerenciar?");
 
-            for (int i = 1; i <= estacionamentos.size(); i++) {
-                System.out.println("\t" + i + ". " + estacionamentos.get(i - 1));
+            for (int i = 1; i <= ESTACIONAMENTOS.size(); i++) {
+                System.out.println("\t" + i + ". " + ESTACIONAMENTOS.get(i - 1));
             }
 
-            int estacionamentoSelecionado = lerNumero();
+            int opcao = lerNumero();
 
-            if (estacionamentos.size() < estacionamentoSelecionado) {
-                System.out.println("Esta opção de estacionamento não existe.");
-                return;
+            if (ESTACIONAMENTOS.size() < opcao) {
+                throw new AppExcecao("Esta opção de estacionamento não existe.");
             }
 
-            estacionamento = estacionamentos.get(estacionamentoSelecionado - 1);
+            estacionamento = ESTACIONAMENTOS.get(opcao - 1);
 
         }
 
@@ -166,7 +164,7 @@ public class App {
     public static void cadastrarEstacionamento() throws AppExcecao {
 
         System.out.println("Qual é o nome do estacionamento?");
-        String nome = scanner.nextLine();
+        String nome = SCANNER.nextLine();
 
         System.out.println("Quantas fileiras tem o estacionamento?");
         int fileiras = lerNumero();
@@ -175,7 +173,7 @@ public class App {
         int vagasPorFileira = lerNumero();
 
         Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFileira);
-        estacionamentos.add(estacionamento);
+        ESTACIONAMENTOS.add(estacionamento);
 
         System.out.println("Estacionamento '" + estacionamento + "' criado com sucesso!");
 
@@ -187,7 +185,7 @@ public class App {
     public static void cadastrarCliente() {
 
         System.out.println("Informe o nome do cliente: ");
-        String nome = scanner.nextLine();
+        String nome = SCANNER.nextLine();
 
         int proximoId = estacionamento.getClientes().size() + 1;
 
@@ -220,7 +218,7 @@ public class App {
         Cliente cliente = lerCliente();
 
         System.out.println("Informe a placa do veículo: ");
-        String placa = scanner.nextLine();
+        String placa = SCANNER.nextLine();
 
         Servico servico = lerEnum(Servico.class, true);
         Veiculo veiculo = Optional.ofNullable(cliente.procurarVeiculo(placa)).orElseGet(() -> new Veiculo(placa, cliente));
@@ -249,7 +247,7 @@ public class App {
     public static void sairDaVaga() throws AppExcecao {
 
         System.out.println("Digite a placa do veículo: ");
-        String placa = scanner.nextLine();
+        String placa = SCANNER.nextLine();
 
         try {
             double valorPago = estacionamento.sair(placa);
@@ -279,7 +277,7 @@ public class App {
         YearMonth anoMes = lerAnoMes();
 
         double total = estacionamento.totalArrecadadoNoMes(anoMes);
-        System.out.println("O total arrecadado em " + anoMes + " foi de R$ " + total);
+        System.out.println("O total arrecadado em " + anoMes.format(FORMATO_ANO_MES) + " foi de R$ " + total);
 
 
     }
@@ -306,7 +304,7 @@ public class App {
 
         List<Cliente> clientes = estacionamento.topClientes(anoMes, limite);
 
-        System.out.println("Os " + limite + " clientes que mais utilizaram o estacionamento em " + anoMes + " foram: ");
+        System.out.println("Os " + limite + " clientes que mais utilizaram o estacionamento em " + anoMes.format(FORMATO_ANO_MES) + " foram: ");
 
         for (int i = 0; i < clientes.size(); i++) {
             System.out.println("\t" + (i + 1) + ". " + clientes.get(i));
@@ -329,7 +327,7 @@ public class App {
     private static Cliente lerCliente() throws AppExcecao {
 
         System.out.println("Informe o ID ou nome do cliente: ");
-        String idOuNome = scanner.nextLine();
+        String idOuNome = SCANNER.nextLine();
 
         Cliente cliente;
 
@@ -352,7 +350,7 @@ public class App {
 
     private static Integer lerNumero() throws AppExcecao {
         try {
-            return Integer.parseInt(scanner.nextLine());
+            return Integer.parseInt(SCANNER.nextLine());
         } catch (NumberFormatException e) {
             throw new AppExcecao("O valor informado deve ser um número válido.");
         }
@@ -360,12 +358,12 @@ public class App {
 
     private static YearMonth lerAnoMes() throws AppExcecao {
 
-        System.out.println("Informe o mês e ano desejados (mês/ano): ");
+        System.out.println("Informe o mês e ano desejados (MM/AAAA): ");
 
         try {
-            return YearMonth.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("MM/yyyy"));
+            return YearMonth.parse(SCANNER.nextLine(), FORMATO_ANO_MES);
         } catch (DateTimeParseException e) {
-            throw new AppExcecao("O valor informado deve estar no formato mês/ano.");
+            throw new AppExcecao("O valor informado deve estar no formato MM/AAAA.");
         }
 
     }

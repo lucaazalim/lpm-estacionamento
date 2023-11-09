@@ -45,17 +45,18 @@ public class Vaga implements Serializable {
 	}
 
 	/**
-	 * Confere se uma vaga é igual a outra baseado no seu id
+	 * Confere se uma vaga é igual a outra baseado no seu id.
+	 *
 	 * @param vaga vaga a ser comparada
 	 * @return se vaga for igual retorna true, se não, false
 	 */
 	public boolean equals(Vaga vaga) {
-		return id.equals(vaga.id);
+		return this.id.equals(vaga.id);
 	}
 
 	@Override
 	public String toString() {
-		return "Id: " + id + ";\n" + (disponivel ? "Disponível" : "Indisponível") + ";\n";
+		return this.id + " " + (disponivel ? "(Disponível)" : "(Indisponível)");
 	}
 
 }
