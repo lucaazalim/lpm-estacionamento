@@ -2,7 +2,6 @@ package br.pucminas.titas.entidades;
 
 import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
-import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
 import br.pucminas.titas.enums.Servico;
 
 import java.io.Serializable;
@@ -19,14 +18,10 @@ public class UsoDeVaga implements Serializable {
 	private Servico servico;
 	private LocalDateTime entrada, saida;
 
-	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) throws VagaNaoDisponivelException {
+	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) {
 
 		Objects.requireNonNull(vaga);
 		Objects.requireNonNull(veiculo);
-
-		if(!vaga.disponivel()){
-			throw new VagaNaoDisponivelException(vaga);
-		}
 
 		this.vaga = vaga;
 		this.veiculo = veiculo;
@@ -55,6 +50,15 @@ public class UsoDeVaga implements Serializable {
 		vaga.sair();
 		return valorPago();
 
+	}
+
+	/**
+	 * Confere se o veículo já saiu.
+	 *
+	 * @return true se o veículo já saiu, false caso contrário.
+	 */
+	public boolean saiu() {
+		return this.saida != null;
 	}
 
 	/**

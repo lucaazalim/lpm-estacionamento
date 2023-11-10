@@ -42,15 +42,14 @@ public class Estacionamento implements Serializable {
      *
      * @param veiculo O veículo a ser estacionado.
      * @param servico O serviço a ser realizado ou null, caso nenhum serviço vá ser realizado.
-     * @throws VeiculoNaoEncontradoException A placa informada não pertence a nenhum veículo cadastrado.
-     * @throws EstacionamentoLotadoExcecao Não há vagas disponíveis neste estacionamento.
-     * @throws VagaNaoDisponivelException A vaga escolhida não está disponível.
+     * @throws EstacionamentoLotadoException Caso o estacionamento não tenha vagas disponíveis.
+     * @throws VeiculoJaEstacionadoException Caso o veículo informado já esteja estacionado.
      */
-    public void estacionar(Veiculo veiculo, Servico servico) throws EstacionamentoLotadoExcecao, VagaNaoDisponivelException {
+    public void estacionar(Veiculo veiculo, Servico servico) throws EstacionamentoLotadoException, VeiculoJaEstacionadoException {
 
         Vaga vaga = vagas.stream()
                 .filter(Vaga::disponivel)
-                .findFirst().orElseThrow(() -> new EstacionamentoLotadoExcecao(this));
+                .findFirst().orElseThrow(() -> new EstacionamentoLotadoException(this));
 
         veiculo.estacionar(vaga, servico);
 
@@ -60,24 +59,14 @@ public class Estacionamento implements Serializable {
      * Verifica se algum cliente possui veículo com a placa especificada.
      *
      * @param placa A placa do veículo a ser procurado.
-     * @return o veículo correspondente.
-     * @throws VeiculoNaoEncontradoException caso não exista veículos com a placa informada.
+     * @return o veículo correspondente ou null caso não seja encontrado.
      */
-    private Veiculo procurarVeiculo(String placa) throws VeiculoNaoEncontradoException {
+    public Veiculo procurarVeiculo(String placa) {
 
-        Veiculo veiculo;
-
-        for (Cliente cliente : clientes.values()) {
-
-            veiculo = cliente.procurarVeiculo(placa);
-
-            if (veiculo != null) {
-                return veiculo;
-            }
-
-        }
-
-        throw new VeiculoNaoEncontradoException(placa);
+        return this.clientes.values().stream()
+                .map(cliente -> cliente.procurarVeiculo(placa))
+                .filter(Objects::nonNull)
+                .findFirst().orElse(null);
 
     }
 
@@ -86,12 +75,11 @@ public class Estacionamento implements Serializable {
      *
      * @param placa A placa do veículo a ser procurado.
      * @return o valor a ser pago por este uso do estacionamento.
-     * @throws VeiculoNaoEncontradoException caso não exista veículos com a placa informada.
      * @throws ServicoNaoTerminadoException caso o serviço ainda não tenha sido concluído.
      * @throws VeiculoNaoEstaEstacionadoException caso o veículo já não esteja estacionado.
      */
-    public double sair(String placa) throws VeiculoNaoEncontradoException, ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoJaSaiuException {
-        return this.procurarVeiculo(placa).sair();
+    public double sair(Veiculo veiculo) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoJaSaiuException {
+        return veiculo.sair();
     }
 
     /**

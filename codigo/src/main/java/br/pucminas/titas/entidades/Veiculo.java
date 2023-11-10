@@ -1,10 +1,7 @@
 package br.pucminas.titas.entidades;
 
 import br.pucminas.titas.enums.Servico;
-import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
-import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
-import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
-import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
+import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -41,10 +38,15 @@ public class Veiculo implements Serializable {
     /**
      * Estaciona o veículo na vaga informada.
      *
-     * @param vaga Vaga onde o veículo será estacionado
-     * @throws VagaNaoDisponivelException
+     * @param vaga    Vaga onde o veículo será estacionado
+     * @param servico Serviço a ser realizado ou null, caso nenhum serviço vá ser realizado.
+     * @throws VeiculoJaEstacionadoException caso o veículo já esteja estacionado.
      */
-    public void estacionar(Vaga vaga, Servico servico) throws VagaNaoDisponivelException {
+    public void estacionar(Vaga vaga, Servico servico) throws VeiculoJaEstacionadoException {
+
+        if (!this.usos.isEmpty() && !this.usos.getLast().saiu()) {
+            throw new VeiculoJaEstacionadoException(this);
+        }
 
         UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this, servico);
         this.usos.add(usoDeVaga);
@@ -64,7 +66,7 @@ public class Veiculo implements Serializable {
 
         try {
             usoDeVaga = this.usos.removeLast();
-        }catch(NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             usoDeVaga = null;
         }
 
@@ -116,7 +118,7 @@ public class Veiculo implements Serializable {
     /**
      * Histórico de uso de vaga deste veículo.
      *
-     * @param de data inicial de entrada
+     * @param de  data inicial de entrada
      * @param ate data final de entrada
      * @return histórico de usos de vaga deste veículo.
      */

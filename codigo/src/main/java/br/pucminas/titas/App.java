@@ -227,13 +227,13 @@ public class App {
 
         try {
             estacionamento.estacionar(veiculo, servico);
-        } catch (EstacionamentoLotadoExcecao | VagaNaoDisponivelException e) {
-            throw new AppExcecao(e.getMessage());
+        } catch (EstacionamentoLotadoException | VeiculoJaEstacionadoException e) {
+            throw new AppExcecao(e);
         }
 
         System.out.print("Veículo estacionado!");
 
-        if(servico != null) {
+        if (servico != null) {
             System.out.print(" O serviço '" + servico + "' será realizado.");
         }
 
@@ -246,15 +246,20 @@ public class App {
      */
     public static void sairDaVaga() throws AppExcecao {
 
-        System.out.println("Digite a placa do veículo: ");
+        System.out.println("Informe a placa do veículo: ");
         String placa = SCANNER.nextLine();
 
+        Veiculo veiculo = estacionamento.procurarVeiculo(placa);
+
+        if (veiculo == null) {
+            throw new AppExcecao("O veículo informado não foi encontrado.");
+        }
+
         try {
-            double valorPago = estacionamento.sair(placa);
+            double valorPago = estacionamento.sair(veiculo);
             System.out.println("O veículo foi removido da vaga e o valor a ser pago é R$ " + valorPago + ".");
-        } catch (VeiculoNaoEncontradoException | ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException |
-                 VeiculoJaSaiuException e) {
-            throw new AppExcecao(e.getMessage());
+        } catch (ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException | VeiculoJaSaiuException e) {
+            throw new AppExcecao(e);
         }
 
     }
@@ -372,7 +377,7 @@ public class App {
 
         System.out.println("Informe a opção desejada: ");
 
-        if(opcaoNenhum) {
+        if (opcaoNenhum) {
             System.out.println("\t0. Nenhum");
         }
 
@@ -382,7 +387,7 @@ public class App {
 
         int opcao = lerNumero();
 
-        if(opcao == 0 && opcaoNenhum) {
+        if (opcao == 0 && opcaoNenhum) {
             return null;
         }
 
