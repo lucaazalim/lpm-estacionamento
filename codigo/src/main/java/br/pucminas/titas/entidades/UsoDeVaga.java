@@ -9,6 +9,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Representa um uso de vaga do estacionamento por um veículo.
+ */
 public class UsoDeVaga implements Serializable {
 
 	private Vaga vaga;

@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+/**
+ * Representa o plano de um cliente.
+ */
 public abstract class Plano implements Serializable {
 
     private String nome;

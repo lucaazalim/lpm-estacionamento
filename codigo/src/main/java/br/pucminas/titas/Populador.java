@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Cria dados fictícios para que o sistema possa ser testado.
+ */
 public class Populador {
 
     private static final Random RANDOM = new Random();

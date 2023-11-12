@@ -1,5 +1,8 @@
 package br.pucminas.titas.enums;
 
+/**
+ * Representa um serviço a ser prestado durante o uso de uma vaga.
+ */
 public enum Servico {
     MANOBRISTA("Manobrista", 5, 0),
     LAVAGEM("Lavagem", 20, 1),

@@ -2,6 +2,9 @@ package br.pucminas.titas.enums;
 
 import br.pucminas.titas.entidades.Plano;
 
+/**
+ * Representa o tipo de plano de um cliente.
+ */
 public enum TipoPlano {
 
     HORISTA(new Plano.Horista("Horista")),

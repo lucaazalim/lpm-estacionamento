@@ -2,6 +2,9 @@ package br.pucminas.titas.enums;
 
 import java.time.LocalTime;
 
+/**
+ * Representa o turno de um plano do tipo Turnista.
+ */
 public enum Turno {
 
     MANHA("Manhã", LocalTime.of(8, 0), LocalTime.of(12, 0)),

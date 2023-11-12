@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.*;
 
+/**
+ * Representa um estacionamento gerenciado pelo sistema.
+ */
 public class Estacionamento implements Serializable {
 
     private final String nome;

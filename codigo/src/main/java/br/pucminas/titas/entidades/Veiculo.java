@@ -11,6 +11,9 @@ import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * Representa um veículo cadastrado em um estacionamento específico.
+ */
 public class Veiculo implements Serializable {
 
     private final String placa;

@@ -8,6 +8,9 @@ import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * Representa um cliente de um estacionamento específico.
+ */
 public class Cliente implements Serializable {
 
     private final int id;
