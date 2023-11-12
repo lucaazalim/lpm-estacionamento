@@ -79,6 +79,18 @@ public class Cliente implements Serializable {
     }
 
     /**
+     * Calcula o total de usos de todos os veículos do cliente.
+     *
+     * @param anoMes O ano e mês a serem consultados.
+     * @return O total de usos de todos os veículos.
+     */
+    public int totalDeUsos(YearMonth anoMes) {
+        return this.veiculos.values().stream()
+                .mapToInt(veiculo -> veiculo.totalDeUsos(anoMes))
+                .sum();
+    }
+
+    /**
      * Calcula o montante total arrecadado por todos os veículos do cliente.
      *
      * @return O montante total arrecadado por todos os veículos.

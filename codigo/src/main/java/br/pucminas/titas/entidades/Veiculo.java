@@ -126,10 +126,24 @@ public class Veiculo implements Serializable {
     }
 
     /**
+     * Retorna o total de usos do veículo no mês informado.
+     *
+     * @param anoMes Ano e mês a serem consultados.
+     * @return total de usos do veículo no mês informado.
+     */
+    public int totalDeUsos(YearMonth anoMes) {
+        return (int) this.usosDeVaga.stream()
+                .filter(usoDeVaga -> usoDeVaga.entrouEntre(
+                        anoMes.atDay(1).atStartOfDay(), anoMes.atEndOfMonth().atTime(LocalTime.MIDNIGHT)
+                ))
+                .count();
+    }
+
+    /**
      * Histórico de uso de vaga deste veículo.
      *
-     * @param de  data inicial de entrada
-     * @param ate data final de entrada
+     * @param de         data inicial de entrada
+     * @param ate        data final de entrada
      * @param comparador comparador para ordenar o relatório.
      * @return histórico de usos de vaga deste veículo.
      */

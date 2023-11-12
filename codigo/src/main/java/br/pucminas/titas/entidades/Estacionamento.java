@@ -1,6 +1,7 @@
 package br.pucminas.titas.entidades;
 
 import br.pucminas.titas.enums.Servico;
+import br.pucminas.titas.enums.TipoPlano;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.Serializable;
@@ -30,6 +31,16 @@ public class Estacionamento implements Serializable {
 
     }
 
+    /**
+     * @return uma versão imutável do mapa de clientes.
+     */
+    public Map<Integer, Cliente> getClientes() {
+        return Collections.unmodifiableMap(this.clientes);
+    }
+
+    /**
+     * @return uma versão imutável da lista de vagas.
+     */
     public List<Vaga> getVagas() {
         return Collections.unmodifiableList(this.vagas);
     }
@@ -102,7 +113,7 @@ public class Estacionamento implements Serializable {
      * @return total arrecadado pelo estacionamento.
      */
     public double totalArrecadado() {
-        return clientes.values()
+        return this.clientes.values()
                 .stream()
                 .mapToDouble(Cliente::arrecadadoTotal)
                 .sum();
@@ -115,7 +126,7 @@ public class Estacionamento implements Serializable {
      * @return o total arrecadado do estacionamento no mês.
      */
     public double totalArrecadadoNoMes(YearMonth anoMes) {
-        return clientes.values()
+        return this.clientes.values()
                 .stream()
                 .mapToDouble(cliente -> cliente.arrecadadoNoMes(anoMes))
                 .sum();
@@ -141,7 +152,7 @@ public class Estacionamento implements Serializable {
      * @return uma lista com os clientes que mais utilizaram o estacionamento.
      */
     public List<Cliente> topClientes(YearMonth anoMes, int limite) {
-        return clientes.values()
+        return this.clientes.values()
                 .stream()
                 .sorted((cliente1, cliente2) -> Double.compare(cliente2.arrecadadoNoMes(anoMes), cliente1.arrecadadoNoMes(anoMes)))
                 .limit(limite)
@@ -150,10 +161,35 @@ public class Estacionamento implements Serializable {
     }
 
     /**
-     * @return uma versão imutável do mapa de clientes.
+     * Retorna a média de usos do estacionamento por cliente
+     * em um mês específico de clientes de um plano específico.
+     *
+     * @param anoMes ano e mês a serem consultados.
+     * @param tipoPlano tipo de plano a ser consultado.
+     * @return o total de usos do estacionamento no mês informado de clientes do plano informado.
      */
-    public Map<Integer, Cliente> getClientes() {
-        return Collections.unmodifiableMap(this.clientes);
+    public double mediaDeUsos(YearMonth anoMes, TipoPlano tipoPlano) {
+        return this.clientes.values()
+                .stream()
+                .filter(cliente -> cliente.getPlano().equals(tipoPlano.get()))
+                .mapToInt(cliente -> cliente.totalDeUsos(anoMes))
+                .average().orElse(0);
+    }
+
+    /**
+     * Retorna a média de arrecadação do estacionamento por cliente
+     * em um mês específico de clientes de um plano específico.
+     *
+     * @param anoMes ano e mês a serem consultados.
+     * @param tipoPlano tipo de plano a ser consultado.
+     * @return o total de arrecadação do estacionamento no mês informado de clientes do plano informado.
+     */
+    public double arrecadacaoMediaPorCliente(YearMonth anoMes, TipoPlano tipoPlano) {
+        return this.clientes.values()
+                .stream()
+                .filter(cliente -> cliente.getPlano().equals(tipoPlano.get()))
+                .mapToDouble(cliente -> cliente.arrecadadoNoMes(anoMes))
+                .average().orElse(0);
     }
 
     @Override

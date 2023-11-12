@@ -107,16 +107,16 @@ public class Populador {
                     estacionamento.getVagas().get(2),
                     veiculo1,
                     null,
-                    LocalDateTime.of(2023, 2, 1, 7, 0, 0),
-                    LocalDateTime.of(2023, 2, 1, 18, 0, 0)
+                    LocalDateTime.of(2023, 7, 1, 7, 0, 0),
+                    LocalDateTime.of(2023, 7, 1, 18, 0, 0)
             ));
 
             veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
                     estacionamento.getVagas().get(3),
                     veiculo1,
                     Servico.MANOBRISTA,
-                    LocalDateTime.of(2023, 3, 3, 17, 0, 0),
-                    LocalDateTime.of(2023, 3, 3, 18, 0, 0)
+                    LocalDateTime.of(2023, 3, 8, 17, 0, 0),
+                    LocalDateTime.of(2023, 3, 8, 18, 0, 0)
             ));
 
             cliente1.cadastrarVeiculo(veiculo1);

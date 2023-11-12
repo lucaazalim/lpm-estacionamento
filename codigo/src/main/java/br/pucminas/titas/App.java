@@ -31,7 +31,7 @@ public class App {
             System.exit(1);
         }
 
-        if(ESTACIONAMENTOS.isEmpty()) {
+        if (ESTACIONAMENTOS.isEmpty()) {
             ESTACIONAMENTOS.addAll(Populador.gerarEstacionamentos());
         }
 
@@ -58,6 +58,7 @@ public class App {
         System.out.println("\t0. Sair");
         System.out.println("\t1. Cadastrar estacionamento");
         System.out.println("\t2. Gerenciar estacionamento");
+        System.out.println("\t3. Arrecadação total de cada estacionamento");
 
         try {
 
@@ -67,6 +68,7 @@ public class App {
                 case 0 -> System.exit(0);
                 case 1 -> cadastrarEstacionamento();
                 case 2 -> gerenciarEstacionamento();
+                case 3 -> consultarTotalArrecadadoPorTodosOsEstacionamentos();
                 default -> System.out.println("A opção informada é inválida.");
             }
 
@@ -114,6 +116,7 @@ public class App {
         System.out.println("\t7. Consultar valor médio por uso");
         System.out.println("\t8. Consultar top clientes");
         System.out.println("\t9. Consultar histórico de um cliente");
+        System.out.println("\t10. Outras informações do estacionamento");
 
         try {
 
@@ -134,6 +137,7 @@ public class App {
                 case 7 -> consultarValorMedioPorUso();
                 case 8 -> consultarTopClientes();
                 case 9 -> consultarHistoricoCliente();
+                case 10 -> consultarOutrasInformacoes();
                 default -> System.out.println("A opção informada é inválida.");
             }
 
@@ -154,6 +158,24 @@ public class App {
         try {
             System.in.read();
         } catch (IOException ignored) {
+        }
+
+    }
+
+    public static void consultarTotalArrecadadoPorTodosOsEstacionamentos() {
+
+        System.out.println("Arrecadação total de cada estacionamento em ordem decrescente: ");
+
+        List<Estacionamento> estacionamentosOrdenados = ESTACIONAMENTOS.stream()
+                .sorted(Comparator.comparing(Estacionamento::totalArrecadado).reversed())
+                .toList();
+
+        for (int i = 0; i < estacionamentosOrdenados.size(); i++) {
+
+            Estacionamento estacionamentoAtual = estacionamentosOrdenados.get(i);
+
+            System.out.println("\t" + (i + 1) + ". " + estacionamentoAtual + " - R$ " + estacionamentoAtual.totalArrecadado());
+
         }
 
     }
@@ -336,7 +358,7 @@ public class App {
 
         Comparator<UsoDeVaga> comparador;
 
-        switch(lerNumero()) {
+        switch (lerNumero()) {
 
             case 1 -> comparador = Comparator.comparing(UsoDeVaga::getEntrada);
             case 2 -> comparador = Comparator.comparing(UsoDeVaga::valorPago);
@@ -352,6 +374,13 @@ public class App {
         System.out.println("Histórico de usos de vaga: ");
 
         historico.forEach(usoDeVaga -> System.out.println("\t - " + usoDeVaga));
+
+    }
+
+    public static void consultarOutrasInformacoes() {
+
+        System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.mediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA));
+        System.out.println("Arrecadação média gerada pelos clientes horistas no mês corrente: R$ " + estacionamento.arrecadacaoMediaPorCliente(YearMonth.now(), TipoPlano.HORISTA));
 
     }
 
