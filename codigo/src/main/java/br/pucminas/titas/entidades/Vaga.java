@@ -4,59 +4,36 @@ import java.io.Serializable;
 
 public class Vaga implements Serializable {
 
-	private String id;
+	private final String id;
 	private boolean disponivel;
 
-	public Vaga(int fila, int numero) {
-		this.id = (char) ('A' + (fila - 1)) + String.format("%02d", numero);
+	public Vaga(int coluna, int linha) {
+		this.id = ((char) ('A' + coluna)) + String.format("%02d", linha + 1);
 		this.disponivel = true;
 	}
 
-	/**
-	 * Tenta utilizar a vaga
-	 * @return true se foi possível | false se não
-	 */
-	public boolean estacionar() {
-		if (disponivel) {
-			disponivel = false;
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Tenta liberar a vaga
-	 * @return true se foi possível | false se não
-	 */
-	public boolean sair() {
-		if (!disponivel) {
-			disponivel = true;
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Retorna se a vaga está disponível
-	 * @return
-	 */
 	public boolean disponivel() {
-		return disponivel;
+		return this.disponivel;
 	}
 
-	/**
-	 * Confere se uma vaga é igual a outra baseado no seu id.
-	 *
-	 * @param vaga vaga a ser comparada
-	 * @return se vaga for igual retorna true, se não, false
-	 */
-	public boolean equals(Vaga vaga) {
-		return this.id.equals(vaga.id);
+	public void setDisponivel(boolean disponivel) {
+		this.disponivel = disponivel;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if(obj instanceof Vaga vaga) {
+			return vaga.id.equals(this.id);
+		}
+
+		return false;
+
 	}
 
 	@Override
 	public String toString() {
-		return this.id + " " + (disponivel ? "(Disponível)" : "(Indisponível)");
+		return this.id + " " + (this.disponivel() ? "(Disponível)" : "(Ocupada)");
 	}
 
 }

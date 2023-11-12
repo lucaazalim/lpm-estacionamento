@@ -1,14 +1,12 @@
 package br.pucminas.titas.entidades;
 
-import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
 import br.pucminas.titas.enums.Servico;
+import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Objects;
 
 public class UsoDeVaga implements Serializable {
@@ -19,6 +17,10 @@ public class UsoDeVaga implements Serializable {
 	private LocalDateTime entrada, saida;
 
 	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) {
+		this(vaga, veiculo, servico, LocalDateTime.now(), null);
+	}
+
+	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico, LocalDateTime entrada, LocalDateTime saida) {
 
 		Objects.requireNonNull(vaga);
 		Objects.requireNonNull(veiculo);
@@ -26,29 +28,32 @@ public class UsoDeVaga implements Serializable {
 		this.vaga = vaga;
 		this.veiculo = veiculo;
 		this.servico = servico;
-		entrada = LocalDateTime.now();
+		this.entrada = entrada;
+		this.saida = saida;
 
 	}
 
 	/**
 	 * Tenta liberar a vaga
+	 *
 	 * @return retorna o preço a ser pago pelo cliente
-	 * @throws ServicoNaoTerminadoException
-	 * @throws VeiculoJaSaiuException
+	 * @throws ServicoNaoTerminadoException ao tentar sair antes do serviço ser finalizado.
+	 * @throws VeiculoNaoEstaEstacionadoException ao tentar sair sem que o veículo esteja estacionado.
 	 */
-	public double sair() throws ServicoNaoTerminadoException, VeiculoJaSaiuException {
+	public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
 		if (this.saida != null) {
-			throw new VeiculoJaSaiuException();
+			throw new VeiculoNaoEstaEstacionadoException();
 		}
 
-		if (!podeSair(LocalDateTime.now())) {
+		if (!this.podeSair()) {
 			throw new ServicoNaoTerminadoException();
 		}
 
-		saida = LocalDateTime.now();	
-		vaga.sair();
-		return valorPago();
+		this.saida = LocalDateTime.now();
+		this.vaga.setDisponivel(true);
+
+		return this.valorPago();
 
 	}
 
@@ -72,7 +77,13 @@ public class UsoDeVaga implements Serializable {
 			return 0;
 		}
 
-		return this.veiculo.getCliente().getPlano().calcularValor(this.entrada, this.saida);
+		double valorPago = this.veiculo.getCliente().getPlano().calcularValor(this.entrada, this.saida);
+
+		if(this.servico != null) {
+			valorPago += servico.getPreco();
+		}
+
+		return valorPago;
 
 	}
 
@@ -81,18 +92,18 @@ public class UsoDeVaga implements Serializable {
 	 * @param saida horário da saída
 	 * @return
 	 */
-	public boolean podeSair(LocalDateTime saida) {
+	public boolean podeSair() {
 
 		if(this.servico == null) {
 			return true;
 		}
 
-		Duration duration = Duration.between(this.entrada, saida);
+		Duration duration = Duration.between(this.entrada, LocalDateTime.now());
 		return duration.toHours() >= this.servico.getHorasMinimas();
 
 	}
 
-	/* 
+	/**
 	 * Confere se o cliente entrou entre as datas informadas.
 	 *
 	 * @param de data inicial de entrada

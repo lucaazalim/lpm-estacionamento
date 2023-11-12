@@ -14,7 +14,7 @@ public class Veiculo implements Serializable {
 
     private final String placa;
     private final Cliente cliente;
-    private final LinkedList<UsoDeVaga> usos;
+    private final LinkedList<UsoDeVaga> usosDeVaga;
 
     /**
      * Cria um novo veículo com a placa informada.
@@ -24,7 +24,7 @@ public class Veiculo implements Serializable {
     public Veiculo(String placa, Cliente cliente) {
         this.placa = placa;
         this.cliente = cliente;
-        this.usos = new LinkedList<>();
+        this.usosDeVaga = new LinkedList<>();
     }
 
     public String getPlaca() {
@@ -44,12 +44,14 @@ public class Veiculo implements Serializable {
      */
     public void estacionar(Vaga vaga, Servico servico) throws VeiculoJaEstacionadoException {
 
-        if (!this.usos.isEmpty() && !this.usos.getLast().saiu()) {
+        if (!this.usosDeVaga.isEmpty() && !this.usosDeVaga.getLast().saiu()) {
             throw new VeiculoJaEstacionadoException(this);
         }
 
         UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this, servico);
-        this.usos.add(usoDeVaga);
+        this.usosDeVaga.add(usoDeVaga);
+
+        vaga.setDisponivel(false);
 
     }
 
@@ -60,12 +62,12 @@ public class Veiculo implements Serializable {
      * @throws ServicoNaoTerminadoException
      * @throws VeiculoNaoEstaEstacionadoException
      */
-    public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoJaSaiuException {
+    public double sair() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
         UsoDeVaga usoDeVaga;
 
         try {
-            usoDeVaga = this.usos.removeLast();
+            usoDeVaga = this.usosDeVaga.getLast();
         } catch (NoSuchElementException e) {
             usoDeVaga = null;
         }
@@ -85,7 +87,7 @@ public class Veiculo implements Serializable {
      */
     public double totalArrecadado() {
 
-        return this.usos.stream().mapToDouble(UsoDeVaga::valorPago).sum();
+        return this.usosDeVaga.stream().mapToDouble(UsoDeVaga::valorPago).sum();
 
     }
 
@@ -97,7 +99,7 @@ public class Veiculo implements Serializable {
      */
     public double arrecadadoNoMes(YearMonth anoMes) {
 
-        return this.usos.stream()
+        return this.usosDeVaga.stream()
                 .filter(usoDeVaga -> usoDeVaga.entrouEntre(anoMes.atDay(1).atStartOfDay(), anoMes.atEndOfMonth().atTime(LocalTime.MIDNIGHT)))
                 .mapToDouble(UsoDeVaga::valorPago)
                 .sum();
@@ -111,7 +113,7 @@ public class Veiculo implements Serializable {
      */
     public int totalDeUsos() {
 
-        return this.usos.size();
+        return this.usosDeVaga.size();
 
     }
 
@@ -130,7 +132,7 @@ public class Veiculo implements Serializable {
         LocalDateTime deDateTime = de.atStartOfDay();
         LocalDateTime ateDateTime = ate.atTime(LocalTime.MIDNIGHT);
 
-        return this.usos.stream()
+        return this.usosDeVaga.stream()
                 .filter(usoDeVaga -> usoDeVaga.entrouEntre(deDateTime, ateDateTime))
                 .toList();
 

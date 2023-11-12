@@ -1,14 +1,12 @@
 package br.pucminas.titas;
 
-import br.pucminas.titas.entidades.Cliente;
-import br.pucminas.titas.entidades.Estacionamento;
-import br.pucminas.titas.entidades.Plano;
-import br.pucminas.titas.entidades.Veiculo;
+import br.pucminas.titas.entidades.*;
 import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.enums.TipoPlano;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -21,6 +19,7 @@ public class App {
 
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final DateTimeFormatter FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy");
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private static final List<Estacionamento> ESTACIONAMENTOS = new ArrayList<>();
 
@@ -29,7 +28,7 @@ public class App {
     public static void main(String[] args) throws IOException {
 
         try {
-            Serialization.carregar(ESTACIONAMENTOS::add);
+            Serializador.carregar(ESTACIONAMENTOS::add);
         } catch (ClassNotFoundException e) {
             System.out.println("Houve um erro ao carregar os dados dos estacionamentos.");
             System.exit(1);
@@ -40,7 +39,7 @@ public class App {
             System.out.println("Salvando dados...");
 
             try {
-                Serialization.salvar(ESTACIONAMENTOS);
+                Serializador.salvar(ESTACIONAMENTOS);
                 System.out.println("Dados salvos com sucesso.");
             } catch (IOException e) {
                 System.err.println("Ocorreu um erro ao salvar os dados.");
@@ -112,7 +111,7 @@ public class App {
         System.out.println("\t5. Consultar total arrecadado");
         System.out.println("\t6. Consultar total arrecadado no mês");
         System.out.println("\t7. Consultar valor médio por uso");
-        System.out.println("\t8. Consultar top 5 clientes");
+        System.out.println("\t8. Consultar top clientes");
         System.out.println("\t9. Consultar histórico de um cliente");
 
         try {
@@ -159,20 +158,20 @@ public class App {
     }
 
     /**
-     * Cria um estacionamento, com nome, número de fileiras e quantidade de vagas por fileira.
+     * Cria um estacionamento.
      */
     public static void cadastrarEstacionamento() throws AppExcecao {
 
         System.out.println("Qual é o nome do estacionamento?");
         String nome = SCANNER.nextLine();
 
-        System.out.println("Quantas fileiras tem o estacionamento?");
-        int fileiras = lerNumero();
+        System.out.println("Quantas colunas tem o estacionamento?");
+        int colunas = lerNumero();
 
-        System.out.println("Quantas vagas por fileira há no estacionamento?");
-        int vagasPorFileira = lerNumero();
+        System.out.println("Quantas linhas tem o estacionamento?");
+        int linhas = lerNumero();
 
-        Estacionamento estacionamento = new Estacionamento(nome, fileiras, vagasPorFileira);
+        Estacionamento estacionamento = new Estacionamento(nome, colunas, linhas);
         ESTACIONAMENTOS.add(estacionamento);
 
         System.out.println("Estacionamento '" + estacionamento + "' criado com sucesso!");
@@ -187,12 +186,8 @@ public class App {
         System.out.println("Informe o nome do cliente: ");
         String nome = SCANNER.nextLine();
 
-        int proximoId = estacionamento.getClientes().size() + 1;
-
-        Cliente cliente = new Cliente(proximoId, nome);
+        Cliente cliente = estacionamento.cadastrarCliente(nome);
         System.out.println("Cliente registrado com sucesso: " + cliente);
-
-        estacionamento.addCliente(cliente);
 
     }
 
@@ -228,7 +223,7 @@ public class App {
         try {
             estacionamento.estacionar(veiculo, servico);
         } catch (EstacionamentoLotadoException | VeiculoJaEstacionadoException e) {
-            throw new AppExcecao(e);
+            throw new AppExcecao(e.getMessage());
         }
 
         System.out.print("Veículo estacionado!");
@@ -258,8 +253,8 @@ public class App {
         try {
             double valorPago = estacionamento.sair(veiculo);
             System.out.println("O veículo foi removido da vaga e o valor a ser pago é R$ " + valorPago + ".");
-        } catch (ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException | VeiculoJaSaiuException e) {
-            throw new AppExcecao(e);
+        } catch (ServicoNaoTerminadoException | VeiculoNaoEstaEstacionadoException e) {
+            throw new AppExcecao(e.getMessage());
         }
 
     }
@@ -309,6 +304,10 @@ public class App {
 
         List<Cliente> clientes = estacionamento.topClientes(anoMes, limite);
 
+        if (clientes.isEmpty()) {
+            throw new AppExcecao("Não há nenhum resultado para a pesquisa realizada.");
+        }
+
         System.out.println("Os " + limite + " clientes que mais utilizaram o estacionamento em " + anoMes.format(FORMATO_ANO_MES) + " foram: ");
 
         for (int i = 0; i < clientes.size(); i++) {
@@ -324,8 +323,20 @@ public class App {
 
         Cliente cliente = lerCliente();
 
+        System.out.println("Informe a data inicial do histórico: ");
+        LocalDate de = lerData();
+
+        System.out.println("Informe a data final do histórico: ");
+        LocalDate ate = lerData();
+
         System.out.println("Total de usos de todos os veículos do cliente: " + cliente.totalDeUsos());
         System.out.println("Arrecadação total do cliente: " + cliente.arrecadadoTotal());
+
+        List<UsoDeVaga> historico = cliente.historico(de, ate);
+
+        System.out.println("Histórico de usos de vaga: ");
+
+        historico.forEach(usoDeVaga -> System.out.println("\t" + usoDeVaga));
 
     }
 
@@ -369,6 +380,16 @@ public class App {
             return YearMonth.parse(SCANNER.nextLine(), FORMATO_ANO_MES);
         } catch (DateTimeParseException e) {
             throw new AppExcecao("O valor informado deve estar no formato MM/AAAA.");
+        }
+
+    }
+
+    private static LocalDate lerData() throws AppExcecao {
+
+        try {
+            return LocalDate.parse(SCANNER.nextLine(), FORMATO_DATA);
+        } catch (DateTimeParseException e) {
+            throw new AppExcecao("A data informada é inválida.");
         }
 
     }

@@ -1,114 +1,127 @@
 package br.pucminas.titas;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import br.pucminas.titas.entidades.Cliente;
-import br.pucminas.titas.entidades.Veiculo;
-import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.entidades.UsoDeVaga;
 import br.pucminas.titas.entidades.Vaga;
-import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
+import br.pucminas.titas.entidades.Veiculo;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import br.pucminas.titas.enums.Servico;
+import br.pucminas.titas.enums.TipoPlano;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
-import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
+import br.pucminas.titas.excecoes.VeiculoJaEstacionadoException;
+import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.*;
 
-@ExtendWith(MockitoExtension.class)
 public class UsoDeVagaTest {
-	private static final double VALOR_FRACAO = 4.0;
-	private static final double VALOR_MAXIMO = 50.0;
 
     private Vaga vaga;
     private Cliente cliente;
     private Veiculo veiculo;
-    private Servico servico;
-
-    @Mock
-    private UsoDeVaga u;
 
     @BeforeEach
-    public void setUp() throws VagaNaoDisponivelException {
-
-        vaga = new Vaga(25, 2);
-        cliente = new Cliente("João");
-        veiculo = new Veiculo("ABC-1234", cliente);
-
-        servico = Servico.POLIMENTO;
-
-        u = new UsoDeVaga(vaga, veiculo, servico);
-
+    public void setup() {
+        vaga = new Vaga(0, 0);
+        cliente = new Cliente(1, "João");
+        veiculo = new Veiculo("ABC123", cliente);
     }
 
     @Test
-    public void tentarUsarUmaVagaEmUso() {
-        vaga.estacionar();
-        VagaNaoDisponivelException e = assertThrows(VagaNaoDisponivelException.class, () -> {
-            new UsoDeVaga(vaga);
-        }, "Vaga não disponivel");
-        
-        assertEquals("Vaga não disponivel", e.getMessage(), "Testa se uma exeção é lançada quando a vaga não estiver disponível");
-    }
+    public void testSairJaSaido() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
-    @Test
-    public void tentarSairDeUmaVagaLivre() {
-        ServicoNaoTerminadoException e = assertThrows(ServicoNaoTerminadoException.class, () -> u.sair(), "Os serviços solicitados ainda não foram concluídos");
-        assertEquals("Os serviços solicitados ainda não foram concluídos", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não está em uso");
-    }
-
-    @Test
-    public void tentarSairDuasVezesDaMesmaVaga() throws VeiculoJaSaiuException, ServicoNaoTerminadoException, VagaNaoDisponivelException {
-        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga);
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, veiculo, null);
         usoDeVaga.sair();
-        VeiculoJaSaiuException e = assertThrows(VeiculoJaSaiuException.class, () -> usoDeVaga.sair(), "Este uso de vaga já foi concluído porque o veículo já saiu.");
-        assertEquals("Este uso de vaga já foi concluído porque o veículo já saiu.", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga duas vezes");
+
+        assertThrows(VeiculoNaoEstaEstacionadoException.class, usoDeVaga::sair);
+
     }
 
     @Test
-    public void tentarSairSemServicoTerminado() {
-        vaga.estacionar();
-        ServicoNaoTerminadoException e = assertThrows(ServicoNaoTerminadoException.class, () -> {
-            u.sair();
-        }, "Os serviços solicitados ainda não foram concluídos");
-        
-        assertEquals("Os serviços solicitados ainda não foram concluídos", e.getMessage(), "Testa se uma exeção é lançada quando se tenta sair de uma vaga que não o serviço solicitado ainda não foi concluído");
+    public void testSairComServicoNaoTerminado() {
+
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, veiculo, Servico.LAVAGEM);
+
+        assertThrows(ServicoNaoTerminadoException.class, usoDeVaga::sair);
+
     }
 
     @Test
-    public void pegarOValorTotal() {
-        LocalDateTime saida = LocalDateTime.now().plusHours(3);
-        double valorTotal = valorPagoMock(saida);
+    public void testSaiu() throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
 
-        assertEquals(93d, valorTotal, "Testa se o valor total é calculado corretamente");
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, veiculo, null);
+        usoDeVaga.sair();
+
+        assertTrue(usoDeVaga.saiu());
+
     }
 
     @Test
-    public void tentarSairSemTerminoDosServicos() {
-        LocalDateTime saida = LocalDateTime.now().plusHours(1);
-        assertFalse(podeSairMock(saida), "Testa se a verificação do termino dos serviços está correta");
+    public void testValorPago() {
+
+        UsoDeVaga usoDeVaga = new UsoDeVaga(
+                vaga,
+                veiculo,
+                null,
+                LocalDateTime.of(2023, 1, 1, 9, 0, 0),
+                LocalDateTime.of(2023, 1, 1, 16, 0, 0)
+        );
+
+        assertEquals(50, usoDeVaga.valorPago(), "Testando valor pago por um horista.");
+
+        cliente.setPlano(TipoPlano.TURNISTA_MANHA.get());
+
+        assertEquals(0, usoDeVaga.valorPago(), "Testando valor pago por um turnista (manhã).");
+
+        cliente.setPlano(TipoPlano.TURNISTA_NOITE.get());
+
+        assertEquals(50, usoDeVaga.valorPago(), "Testando valor pago por um turnista (noite).");
+
+        cliente.setPlano(TipoPlano.MENSALISTA.get());
+
+        assertEquals(0, usoDeVaga.valorPago(), "Testando valor pago por um mensalista.");
+
     }
 
-	public boolean podeSairMock(LocalDateTime saida) {
-		Duration duration = Duration.between(u.getEntrada(), saida);
-		return duration.toHours() >= servico.getHorasMinimas();
-	}
+    @Test
+    public void testPodeSair() {
 
-    public double valorPagoMock(LocalDateTime saida) {
-		Duration duration = Duration.between(u.getEntrada(), saida);
-		double minutos = duration.toMinutes();
-		double fracaoMinutos = Math.floor(minutos / 15);
-		double valorPago = fracaoMinutos * VALOR_FRACAO;
-		if(valorPago > VALOR_MAXIMO){
-			valorPago = VALOR_MAXIMO;
-		}
-        valorPago += u.getServicoPrecoTotal();
-		return valorPago;
-	}
+        UsoDeVaga usoDeVaga = new UsoDeVaga(
+                vaga,
+                veiculo,
+                Servico.POLIMENTO,
+                LocalDateTime.of(2023, 1, 1, 9, 0, 0),
+                null
+        );
+
+        assertTrue(usoDeVaga.podeSair());
+
+    }
+
+    @Test
+    public void testEntrouEntre() {
+
+        UsoDeVaga usoDeVaga = new UsoDeVaga(
+                vaga,
+                veiculo,
+                Servico.POLIMENTO,
+                LocalDateTime.of(2023, 1, 1, 9, 0, 0),
+                null
+        );
+
+        assertTrue(usoDeVaga.entrouEntre(
+                LocalDateTime.of(2022, 12, 30, 10, 0, 0),
+                LocalDateTime.of(2023, 1, 2, 10, 0, 0)
+        ));
+
+        assertFalse(usoDeVaga.entrouEntre(
+                LocalDateTime.of(2021, 12, 30, 10, 0, 0),
+                LocalDateTime.of(2022, 1, 2, 10, 0, 0)
+        ));
+
+    }
+
 }

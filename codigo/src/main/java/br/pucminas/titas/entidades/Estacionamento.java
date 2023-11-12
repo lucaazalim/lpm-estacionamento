@@ -13,28 +13,35 @@ public class Estacionamento implements Serializable {
     private Map<Integer, Cliente> clientes;
     private List<Vaga> vagas;
 
-    public Estacionamento(String nome, int fileiras, int vagasPorFileira) {
+    public Estacionamento(String nome, int colunas, int linhas) {
 
         this.nome = nome;
         this.clientes = new LinkedHashMap<>();
         this.vagas = new ArrayList<>();
 
-        for (int i = 1; i <= fileiras; i++) {
-            for (int j = 1; j <= vagasPorFileira; j++) {
-                this.vagas.add(new Vaga(i, j));
+        for (int coluna = 0; coluna < colunas; coluna++) {
+            for (int linha = 0; linha < linhas; linha++) {
+                this.vagas.add(new Vaga(coluna, linha));
             }
         }
 
     }
 
     /**
-     * Adiciona um cliente ao estacionamento.
+     * Cadastra um cliente no estacionamento.
      *
-     * @param cliente O cliente a ser adicionado.
+     * @param nome Nome do cliente a ser cadastrado.
      */
-    public void addCliente(Cliente cliente) {
-        Objects.requireNonNull(cliente);
+    public Cliente cadastrarCliente(String nome) {
+
+        Objects.requireNonNull(nome);
+
+        Cliente cliente = new Cliente(this.clientes.size() + 1, nome);
+
         this.clientes.put(cliente.getId(), cliente);
+
+        return cliente;
+
     }
 
     /**
@@ -47,7 +54,7 @@ public class Estacionamento implements Serializable {
      */
     public void estacionar(Veiculo veiculo, Servico servico) throws EstacionamentoLotadoException, VeiculoJaEstacionadoException {
 
-        Vaga vaga = vagas.stream()
+        Vaga vaga = this.vagas.stream()
                 .filter(Vaga::disponivel)
                 .findFirst().orElseThrow(() -> new EstacionamentoLotadoException(this));
 
@@ -73,12 +80,12 @@ public class Estacionamento implements Serializable {
     /**
      * Libera a vaga do veículo com a placa especificada.
      *
-     * @param placa A placa do veículo a ser procurado.
+     * @param veiculo O veículo a ser liberado.
      * @return o valor a ser pago por este uso do estacionamento.
-     * @throws ServicoNaoTerminadoException caso o serviço ainda não tenha sido concluído.
+     * @throws ServicoNaoTerminadoException       caso o serviço ainda não tenha sido concluído.
      * @throws VeiculoNaoEstaEstacionadoException caso o veículo já não esteja estacionado.
      */
-    public double sair(Veiculo veiculo) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException, VeiculoJaSaiuException {
+    public double sair(Veiculo veiculo) throws ServicoNaoTerminadoException, VeiculoNaoEstaEstacionadoException {
         return veiculo.sair();
     }
 

@@ -59,6 +59,7 @@ public class Cliente implements Serializable {
      * @return O veículo com a placa correspondente, ou null se não encontrado.
      */
     public Veiculo procurarVeiculo(String placa) {
+        Objects.requireNonNull(placa);
         return this.veiculos.get(placa);
     }
 
@@ -119,4 +120,5 @@ public class Cliente implements Serializable {
     public String toString() {
         return this.nome + " (ID: " + this.id + ") (Plano: " + this.plano + ")";
     }
+
 }

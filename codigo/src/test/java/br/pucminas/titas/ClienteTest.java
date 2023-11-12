@@ -1,61 +1,69 @@
 package br.pucminas.titas;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import br.pucminas.titas.entidades.Cliente;
-import br.pucminas.titas.entidades.Vaga;
 import br.pucminas.titas.entidades.Veiculo;
-import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClienteTest {
 
-    private Cliente cliente;
-    private Veiculo veiculo;
-    private Vaga vaga;
+    private static Cliente cliente;
 
-    @BeforeEach
-    public void setUp() throws VagaNaoDisponivelException {
+    @BeforeAll
+    public static void setup() {
+        cliente = new Cliente(1, "João");
+    }
 
-        cliente = new Cliente("João");
-        veiculo = new Veiculo("ABC-1234", cliente);
-        vaga = new Vaga(25, 1);
+    @Test
+    @Order(1)
+    public void testCadastrarVeiculo() {
 
-        veiculo.estacionar(vaga);
+        Veiculo veiculo = new Veiculo("ABC123", cliente);
+
+        assertDoesNotThrow(() -> cliente.cadastrarVeiculo(veiculo));
 
     }
 
     @Test
-    public void testAddVeiculo() {
-        cliente.addVeiculo(veiculo);
-        assertNotNull(cliente.possuiVeiculo("ABC-1234"),"Testando adição de veículos ao cliente.");
-    }
+    @Order(2)
+    public void testProcurarVeiculo() {
 
-    @Test
-    public void testPossuiVeiculo() {
-        cliente.addVeiculo(veiculo);
-        assertNotNull(cliente.possuiVeiculo("ABC-1234"),"Testando posse de veículo do cliente.");
-        assertNull(cliente.possuiVeiculo("PUZ-5654"),"Testando que cliente não possui veículo que não foi adicionado.");
+        assertNotNull(cliente.procurarVeiculo("ABC123"));
+
     }
 
     @Test
     public void testTotalDeUsos() {
-        cliente.addVeiculo(veiculo);
-        assertEquals(1, cliente.totalDeUsos(),"Testando total de usos de um cliente.");
-    }
 
-    @Test
-    public void testArrecadadoPorVeiculo() {
-        cliente.addVeiculo(veiculo);
-        assertEquals(0, cliente.arrecadadoPorVeiculo("ABC-1234"), "Testando total arrecadado por veículo do cliente.");
+        assertEquals(0, cliente.totalDeUsos());
+
     }
 
     @Test
     public void testArrecadadoTotal() {
-        cliente.addVeiculo(veiculo);
-        assertEquals(0, cliente.arrecadadoTotal(),"Testando total arrecadado por cliente.");
+
+        assertEquals(0, cliente.arrecadadoTotal());
+
     }
+
+    @Test
+    public void testArrecadadoNoMes() {
+
+        assertEquals(0, cliente.arrecadadoNoMes(YearMonth.of(2023, 1)));
+
+    }
+
+    @Test
+    public void testHistorico() {
+
+        assertEquals(0, cliente.historico(LocalDate.MIN, LocalDate.MAX).size());
+
+    }
+
 
 }

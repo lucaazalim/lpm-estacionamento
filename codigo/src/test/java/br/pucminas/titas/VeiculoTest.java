@@ -1,57 +1,96 @@
 package br.pucminas.titas;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.LocalDate;
-
+import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Vaga;
 import br.pucminas.titas.entidades.Veiculo;
-import br.pucminas.titas.excecoes.VeiculoJaSaiuException;
-import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
-import br.pucminas.titas.excecoes.VagaNaoDisponivelException;
+import static org.junit.jupiter.api.Assertions.*;
+
+import br.pucminas.titas.excecoes.VeiculoJaEstacionadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VeiculoTest {
-    
-    private Veiculo veiculo;
-    private Vaga vaga;
 
-    @BeforeEach
-    public void setUp(){
-        veiculo = new Veiculo("ABC123", null);
-        vaga = new Vaga(1,1);
+    private static Cliente cliente;
+    private static Veiculo veiculo;
+    private static Vaga vaga;
+
+    @BeforeAll
+    public static void setup() {
+        cliente = new Cliente(1, "João");
+        veiculo = new Veiculo("ABC123", cliente);
+        vaga = new Vaga(0, 0);
     }
 
     @Test
-    public void testEstacionar() throws VagaNaoDisponivelException {
-        veiculo.estacionar(vaga);
-        assertEquals(1,veiculo.totalDeUsos());
+    @Order(1)
+    public void testEstacionar() {
+
+        assertDoesNotThrow(
+                () -> veiculo.estacionar(vaga, null),
+                "Garantindo que nenhuma exceção é lançada ao estacionar."
+        );
+
+        assertThrows(
+                VeiculoJaEstacionadoException.class,
+                () -> veiculo.estacionar(vaga, null),
+                "Testando exceção ao estacionar veículo já estacionado."
+        );
+
+        assertFalse(vaga.disponivel(), "Garantindo que vaga não está disponível após estacionar.");
+
     }
 
     @Test
-    public void testSair() throws VagaNaoDisponivelException, VeiculoNaoEstaEstacionadoException, ServicoNaoTerminadoException {
-        veiculo.estacionar(vaga);
-        double valorPago = veiculo.sair();
-        assertEquals(1, veiculo.totalDeUsos());
-        assertTrue(valorPago >= 0);
+    @Order(2)
+    public void testSair() {
+
+        assertDoesNotThrow(veiculo::sair, "Garantindo que nenhuma exceção é lançada ao sair.");
+
+        assertThrows(
+                VeiculoNaoEstaEstacionadoException.class,
+                veiculo::sair,
+                "Testando exceção ao sair com um veículo que já saiu."
+        );
+
+        assertTrue(vaga.disponivel());
+
     }
 
     @Test
-    public void testTotalArrecadado() throws VagaNaoDisponivelException {
-        veiculo.estacionar(vaga);
-        veiculo.estacionar(vaga);
-        double totalArrecadado = veiculo.totalArrecadado();
+    @Order(3)
+    public void testTotalArrecadado() {
+
         assertEquals(0, veiculo.totalArrecadado());
-        assertTrue(totalArrecadado >= 0);
+
     }
 
     @Test
-    public void testArrecadadoNoMes() throws VagaNaoDisponivelException{
-        veiculo.estacionar(vaga);
-        veiculo.estacionar(vaga);
-        double arrecadacaoNoMes = veiculo.arrecadadoNoMes(LocalDate.now().getMonthValue());
-        assertTrue(arrecadacaoNoMes >= 0);
+    @Order(4)
+    public void testArrecadadoNoMes() {
+
+        assertEquals(0, veiculo.arrecadadoNoMes(YearMonth.of(2023, 1)));
+
     }
+
+    @Test
+    @Order(5)
+    public void testTotalDeUsos()  {
+
+        assertEquals(1, veiculo.totalDeUsos());
+
+    }
+
+    @Test
+    @Order(6)
+    public void testHistorico() {
+
+        assertEquals(1, veiculo.historico(LocalDate.MIN, LocalDate.MAX).size());
+
+    }
+
 }

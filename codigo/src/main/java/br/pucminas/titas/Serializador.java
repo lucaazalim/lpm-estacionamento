@@ -5,14 +5,10 @@ import br.pucminas.titas.entidades.Estacionamento;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-public class Serialization {
+public class Serializador {
 
     private static final Path CAMINHO = Path.of("estacionamentos.dat");
 

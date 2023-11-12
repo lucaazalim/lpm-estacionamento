@@ -6,8 +6,4 @@ public class AppExcecao extends Exception {
         super(mensagem);
     }
 
-    public AppExcecao(Exception exception) {
-        super(exception);
-    }
-
 }
