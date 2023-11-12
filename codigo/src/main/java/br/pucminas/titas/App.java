@@ -10,10 +10,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class App {
 
@@ -32,6 +29,10 @@ public class App {
         } catch (ClassNotFoundException e) {
             System.out.println("Houve um erro ao carregar os dados dos estacionamentos.");
             System.exit(1);
+        }
+
+        if(ESTACIONAMENTOS.isEmpty()) {
+            ESTACIONAMENTOS.addAll(Populador.gerarEstacionamentos());
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -329,14 +330,28 @@ public class App {
         System.out.println("Informe a data final do histórico: ");
         LocalDate ate = lerData();
 
+        System.out.println("Como você deseja ordenar o relatório?");
+        System.out.println("\t1. Data de entrada");
+        System.out.println("\t2. Valor pago");
+
+        Comparator<UsoDeVaga> comparador;
+
+        switch(lerNumero()) {
+
+            case 1 -> comparador = Comparator.comparing(UsoDeVaga::getEntrada);
+            case 2 -> comparador = Comparator.comparing(UsoDeVaga::valorPago);
+            default -> throw new AppExcecao("Opção de ordenação inválida.");
+
+        }
+
         System.out.println("Total de usos de todos os veículos do cliente: " + cliente.totalDeUsos());
         System.out.println("Arrecadação total do cliente: " + cliente.arrecadadoTotal());
 
-        List<UsoDeVaga> historico = cliente.historico(de, ate);
+        List<UsoDeVaga> historico = cliente.historico(de, ate, comparador);
 
         System.out.println("Histórico de usos de vaga: ");
 
-        historico.forEach(usoDeVaga -> System.out.println("\t" + usoDeVaga));
+        historico.forEach(usoDeVaga -> System.out.println("\t - " + usoDeVaga));
 
     }
 

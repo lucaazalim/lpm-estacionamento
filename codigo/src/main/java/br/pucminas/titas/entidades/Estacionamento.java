@@ -27,6 +27,10 @@ public class Estacionamento implements Serializable {
 
     }
 
+    public List<Vaga> getVagas() {
+        return Collections.unmodifiableList(this.vagas);
+    }
+
     /**
      * Cadastra um cliente no estacionamento.
      *

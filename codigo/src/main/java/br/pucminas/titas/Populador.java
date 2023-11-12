@@ -9,6 +9,7 @@ import br.pucminas.titas.enums.TipoPlano;
 import br.pucminas.titas.excecoes.EstacionamentoLotadoException;
 import br.pucminas.titas.excecoes.VeiculoJaEstacionadoException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,6 +34,38 @@ public class Populador {
             Veiculo veiculo1 = new Veiculo("ABC123", cliente1);
             Veiculo veiculo2 = new Veiculo("DEF456", cliente2);
 
+            veiculo1.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(0),
+                    veiculo1,
+                    Servico.LAVAGEM,
+                    LocalDateTime.of(2023, 1, 1, 10, 0, 0),
+                    LocalDateTime.of(2023, 1, 1, 12, 0, 0)
+            ));
+
+            veiculo1.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(1),
+                    veiculo1,
+                    Servico.POLIMENTO,
+                    LocalDateTime.of(2023, 1, 3, 9, 0, 0),
+                    LocalDateTime.of(2023, 1, 3, 17, 0, 0)
+            ));
+
+            veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(2),
+                    veiculo1,
+                    null,
+                    LocalDateTime.of(2023, 2, 1, 7, 0, 0),
+                    LocalDateTime.of(2023, 2, 1, 18, 0, 0)
+            ));
+
+            veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(3),
+                    veiculo1,
+                    Servico.MANOBRISTA,
+                    LocalDateTime.of(2023, 3, 3, 17, 0, 0),
+                    LocalDateTime.of(2023, 3, 3, 18, 0, 0)
+            ));
+
             cliente1.cadastrarVeiculo(veiculo1);
             cliente2.cadastrarVeiculo(veiculo2);
 
@@ -51,6 +84,38 @@ public class Populador {
             Veiculo veiculo1 = new Veiculo("ABC456", cliente1);
             Veiculo veiculo2 = new Veiculo("DEF123", cliente2);
 
+            veiculo1.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(0),
+                    veiculo1,
+                    Servico.POLIMENTO,
+                    LocalDateTime.of(2023, 1, 1, 10, 0, 0),
+                    LocalDateTime.of(2023, 2, 1, 12, 0, 0)
+            ));
+
+            veiculo1.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(1),
+                    veiculo1,
+                    null,
+                    LocalDateTime.of(2023, 1, 3, 6, 0, 0),
+                    LocalDateTime.of(2023, 1, 3, 7, 0, 0)
+            ));
+
+            veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(2),
+                    veiculo1,
+                    null,
+                    LocalDateTime.of(2023, 2, 1, 7, 0, 0),
+                    LocalDateTime.of(2023, 2, 1, 18, 0, 0)
+            ));
+
+            veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(3),
+                    veiculo1,
+                    Servico.MANOBRISTA,
+                    LocalDateTime.of(2023, 3, 3, 17, 0, 0),
+                    LocalDateTime.of(2023, 3, 3, 18, 0, 0)
+            ));
+
             cliente1.cadastrarVeiculo(veiculo1);
             cliente2.cadastrarVeiculo(veiculo2);
 
@@ -68,6 +133,38 @@ public class Populador {
 
             Veiculo veiculo1 = new Veiculo("GHI123", cliente1);
             Veiculo veiculo2 = new Veiculo("JKL456", cliente2);
+
+            veiculo1.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(0),
+                    veiculo1,
+                    Servico.MANOBRISTA,
+                    LocalDateTime.of(2023, 5, 1, 9, 0, 0),
+                    LocalDateTime.of(2023, 5, 1, 10, 0, 0)
+            ));
+
+            veiculo1.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(1),
+                    veiculo1,
+                    null,
+                    LocalDateTime.of(2023, 3, 27, 1, 0, 0),
+                    LocalDateTime.of(2023, 3, 27, 3, 0, 0)
+            ));
+
+            veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(2),
+                    veiculo1,
+                    Servico.LAVAGEM,
+                    LocalDateTime.of(2023, 3, 10, 5, 0, 0),
+                    LocalDateTime.of(2023, 3, 10, 7, 0, 0)
+            ));
+
+            veiculo2.cadastrarUsoDeVaga(new UsoDeVaga(
+                    estacionamento.getVagas().get(3),
+                    veiculo1,
+                    Servico.MANOBRISTA,
+                    LocalDateTime.of(2023, 1, 1, 10, 0, 0),
+                    LocalDateTime.of(2023, 1, 1, 14, 0, 0)
+            ));
 
             cliente1.cadastrarVeiculo(veiculo1);
             cliente2.cadastrarVeiculo(veiculo2);

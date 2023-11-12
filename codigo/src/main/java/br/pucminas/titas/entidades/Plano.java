@@ -47,10 +47,10 @@ public abstract class Plano implements Serializable {
 
     public static class Turnista extends Horista {
 
-        private Turno turno;
+        private final Turno turno;
 
         public Turnista(Turno turno) {
-            super("Turnista (" + turno + ")");
+            super("Turnista " + turno);
             this.turno = turno;
         }
 

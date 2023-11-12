@@ -33,7 +33,7 @@ public class Vaga implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.id + " " + (this.disponivel() ? "(Disponível)" : "(Ocupada)");
+		return this.id;
 	}
 
 }

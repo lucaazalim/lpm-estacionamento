@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Cliente implements Serializable {
 
@@ -100,19 +101,24 @@ public class Cliente implements Serializable {
     /**
      * Recupera o histórico de uso de vaga do cliente em todos os seus veículos.
      *
-     * @param de data inicial de entrada
+     * @param de  data inicial de entrada
      * @param ate data final de entrada
      * @return O histórico de uso de vaga do cliente em todos os seus veículos.
      */
-    public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
+    public List<UsoDeVaga> historico(LocalDate de, LocalDate ate, Comparator<UsoDeVaga> comparador) {
 
         Objects.requireNonNull(de);
         Objects.requireNonNull(ate);
 
-        return this.veiculos.values().stream()
-                .map(veiculo -> veiculo.historico(de, ate))
-                .flatMap(List::stream)
-                .toList();
+        Stream<UsoDeVaga> stream = this.veiculos.values().stream()
+                .map(veiculo -> veiculo.historico(de, ate, null))
+                .flatMap(List::stream);
+
+        if (comparador != null) {
+            stream = stream.sorted(comparador);
+        }
+
+        return stream.toList();
 
     }
 

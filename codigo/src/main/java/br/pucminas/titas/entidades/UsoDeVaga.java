@@ -33,6 +33,10 @@ public class UsoDeVaga implements Serializable {
 
 	}
 
+	public LocalDateTime getEntrada() {
+		return this.entrada;
+	}
+
 	/**
 	 * Tenta liberar a vaga
 	 *
@@ -121,6 +125,6 @@ public class UsoDeVaga implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.vaga + " - " + this.veiculo + " - " + this.servico + " - " + this.entrada + " - " + this.saida;
+		return this.vaga + " - " + this.veiculo + " - " + this.servico + " - " + this.entrada + " - " + this.saida + " - R$ " + this.valorPago();
 	}
 }

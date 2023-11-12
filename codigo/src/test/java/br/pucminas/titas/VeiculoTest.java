@@ -1,6 +1,7 @@
 package br.pucminas.titas;
 
 import br.pucminas.titas.entidades.Cliente;
+import br.pucminas.titas.entidades.UsoDeVaga;
 import br.pucminas.titas.entidades.Vaga;
 import br.pucminas.titas.entidades.Veiculo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Comparator;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VeiculoTest {
@@ -89,7 +91,7 @@ public class VeiculoTest {
     @Order(6)
     public void testHistorico() {
 
-        assertEquals(1, veiculo.historico(LocalDate.MIN, LocalDate.MAX).size());
+        assertEquals(1, veiculo.historico(LocalDate.MIN, LocalDate.MAX, null).size());
 
     }
 

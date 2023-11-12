@@ -61,7 +61,7 @@ public class ClienteTest {
     @Test
     public void testHistorico() {
 
-        assertEquals(0, cliente.historico(LocalDate.MIN, LocalDate.MAX).size());
+        assertEquals(0, cliente.historico(LocalDate.MIN, LocalDate.MAX, null).size());
 
     }
 

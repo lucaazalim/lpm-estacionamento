@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Veiculo implements Serializable {
 
@@ -35,6 +36,10 @@ public class Veiculo implements Serializable {
         return this.cliente;
     }
 
+    public void cadastrarUsoDeVaga(UsoDeVaga usoDeVaga) {
+        this.usosDeVaga.add(usoDeVaga);
+    }
+
     /**
      * Estaciona o veículo na vaga informada.
      *
@@ -49,7 +54,7 @@ public class Veiculo implements Serializable {
         }
 
         UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this, servico);
-        this.usosDeVaga.add(usoDeVaga);
+        this.cadastrarUsoDeVaga(usoDeVaga);
 
         vaga.setDisponivel(false);
 
@@ -122,9 +127,10 @@ public class Veiculo implements Serializable {
      *
      * @param de  data inicial de entrada
      * @param ate data final de entrada
+     * @param comparador comparador para ordenar o relatório.
      * @return histórico de usos de vaga deste veículo.
      */
-    public List<UsoDeVaga> historico(LocalDate de, LocalDate ate) {
+    public List<UsoDeVaga> historico(LocalDate de, LocalDate ate, Comparator<UsoDeVaga> comparador) {
 
         Objects.requireNonNull(de);
         Objects.requireNonNull(ate);
@@ -132,9 +138,14 @@ public class Veiculo implements Serializable {
         LocalDateTime deDateTime = de.atStartOfDay();
         LocalDateTime ateDateTime = ate.atTime(LocalTime.MIDNIGHT);
 
-        return this.usosDeVaga.stream()
-                .filter(usoDeVaga -> usoDeVaga.entrouEntre(deDateTime, ateDateTime))
-                .toList();
+        Stream<UsoDeVaga> stream = this.usosDeVaga.stream()
+                .filter(usoDeVaga -> usoDeVaga.entrouEntre(deDateTime, ateDateTime));
+
+        if (comparador != null) {
+            stream = stream.sorted(comparador);
+        }
+
+        return stream.toList();
 
     }
 
