@@ -95,7 +95,7 @@ public class Cliente implements Serializable {
      *
      * @return O montante total arrecadado por todos os veículos.
      */
-    public double arrecadadoTotal() {
+    public double arrecadacaoTotal() {
         return this.veiculos.values().stream()
                 .mapToDouble(Veiculo::totalArrecadado)
                 .sum();
@@ -107,7 +107,7 @@ public class Cliente implements Serializable {
      * @param anoMes Ano e mês a serem consultados.
      * @return O montante total arrecadado no mês especificado.
      */
-    public double arrecadadoNoMes(YearMonth anoMes) {
+    public double arrecadacaoNoMes(YearMonth anoMes) {
         return this.veiculos.values().stream()
                 .mapToDouble(veiculo -> veiculo.arrecadadoNoMes(anoMes))
                 .sum();

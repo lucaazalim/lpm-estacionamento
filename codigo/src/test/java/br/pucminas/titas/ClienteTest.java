@@ -47,14 +47,14 @@ public class ClienteTest {
     @Test
     public void testArrecadadoTotal() {
 
-        assertEquals(0, cliente.arrecadadoTotal());
+        assertEquals(0, cliente.arrecadacaoTotal());
 
     }
 
     @Test
     public void testArrecadadoNoMes() {
 
-        assertEquals(0, cliente.arrecadadoNoMes(YearMonth.of(2023, 1)));
+        assertEquals(0, cliente.arrecadacaoNoMes(YearMonth.of(2023, 1)));
 
     }
 

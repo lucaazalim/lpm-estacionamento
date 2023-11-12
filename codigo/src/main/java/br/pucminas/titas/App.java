@@ -367,7 +367,7 @@ public class App {
         }
 
         System.out.println("Total de usos de todos os veículos do cliente: " + cliente.totalDeUsos());
-        System.out.println("Arrecadação total do cliente: " + cliente.arrecadadoTotal());
+        System.out.println("Arrecadação total do cliente: " + cliente.arrecadacaoTotal());
 
         List<UsoDeVaga> historico = cliente.historico(de, ate, comparador);
 
@@ -379,7 +379,7 @@ public class App {
 
     public static void consultarOutrasInformacoes() {
 
-        System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.mediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA));
+        System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.quantidadeMediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA));
         System.out.println("Arrecadação média gerada pelos clientes horistas no mês corrente: R$ " + estacionamento.arrecadacaoMediaPorCliente(YearMonth.now(), TipoPlano.HORISTA));
 
     }

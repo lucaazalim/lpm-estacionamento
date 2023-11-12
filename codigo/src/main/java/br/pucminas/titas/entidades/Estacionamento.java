@@ -115,7 +115,7 @@ public class Estacionamento implements Serializable {
     public double totalArrecadado() {
         return this.clientes.values()
                 .stream()
-                .mapToDouble(Cliente::arrecadadoTotal)
+                .mapToDouble(Cliente::arrecadacaoTotal)
                 .sum();
     }
 
@@ -128,7 +128,7 @@ public class Estacionamento implements Serializable {
     public double totalArrecadadoNoMes(YearMonth anoMes) {
         return this.clientes.values()
                 .stream()
-                .mapToDouble(cliente -> cliente.arrecadadoNoMes(anoMes))
+                .mapToDouble(cliente -> cliente.arrecadacaoNoMes(anoMes))
                 .sum();
     }
 
@@ -140,7 +140,7 @@ public class Estacionamento implements Serializable {
     public double valorMedioPorUso() {
         return clientes.values()
                 .stream()
-                .mapToDouble(Cliente::arrecadadoTotal)
+                .mapToDouble(Cliente::arrecadacaoTotal)
                 .average().orElse(0);
     }
 
@@ -154,7 +154,7 @@ public class Estacionamento implements Serializable {
     public List<Cliente> topClientes(YearMonth anoMes, int limite) {
         return this.clientes.values()
                 .stream()
-                .sorted((cliente1, cliente2) -> Double.compare(cliente2.arrecadadoNoMes(anoMes), cliente1.arrecadadoNoMes(anoMes)))
+                .sorted((cliente1, cliente2) -> Double.compare(cliente2.arrecadacaoNoMes(anoMes), cliente1.arrecadacaoNoMes(anoMes)))
                 .limit(limite)
                 .toList();
 
@@ -168,7 +168,7 @@ public class Estacionamento implements Serializable {
      * @param tipoPlano tipo de plano a ser consultado.
      * @return o total de usos do estacionamento no mês informado de clientes do plano informado.
      */
-    public double mediaDeUsos(YearMonth anoMes, TipoPlano tipoPlano) {
+    public double quantidadeMediaDeUsos(YearMonth anoMes, TipoPlano tipoPlano) {
         return this.clientes.values()
                 .stream()
                 .filter(cliente -> cliente.getPlano().equals(tipoPlano.get()))
@@ -188,7 +188,7 @@ public class Estacionamento implements Serializable {
         return this.clientes.values()
                 .stream()
                 .filter(cliente -> cliente.getPlano().equals(tipoPlano.get()))
-                .mapToDouble(cliente -> cliente.arrecadadoNoMes(anoMes))
+                .mapToDouble(cliente -> cliente.arrecadacaoNoMes(anoMes))
                 .average().orElse(0);
     }
 
