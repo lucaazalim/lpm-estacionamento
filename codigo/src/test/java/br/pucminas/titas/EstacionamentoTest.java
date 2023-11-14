@@ -16,10 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class EstacionamentoTest {
 
     private Estacionamento estacionamento;
+    private Cliente cliente;
+    private Veiculo veiculo;
 
     @BeforeEach
     void setUp() {
         estacionamento = new Estacionamento("Xulambs Parking", 10, 10);
+        cliente = new Cliente(1, "Guilherme");
+        veiculo = new Veiculo("PUZ5654", cliente);
     }
 
     @Test
@@ -33,13 +37,12 @@ public class EstacionamentoTest {
     }
     @Test
     void testEstacionar() throws EstacionamentoLotadoException, VeiculoJaEstacionadoException {
-        Cliente cliente = new Cliente(2, "Guilherme");
-        Veiculo veiculo = new Veiculo("PUZ5654", cliente);
-        assertDoesNotThrow(() -> estacionamento.estacionar(veiculo, Servico.LAVAGEM),"Afere se estacionar não lança exceção.");
+        assertDoesNotThrow(() -> estacionamento.estacionar(veiculo,Servico.LAVAGEM),"Afere se estacionar não lança exceção.");
     }
     @Test
     void testGetVagas() {
         assertNotNull(estacionamento.getVagas(),"Afere se método não retorna nulo.");
     }
+
 
 }
