@@ -46,7 +46,7 @@ public class Veiculo implements Serializable {
     /**
      * Estaciona o veículo na vaga informada.
      *
-     * @param vaga    Vaga onde o veículo será estacionado
+     * @param vaga Vaga onde o veículo será estacionado
      * @param servico Serviço a ser realizado ou null, caso nenhum serviço vá ser realizado.
      * @throws VeiculoJaEstacionadoException caso o veículo já esteja estacionado.
      */
