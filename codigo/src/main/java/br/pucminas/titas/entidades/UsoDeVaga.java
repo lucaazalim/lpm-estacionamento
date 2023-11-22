@@ -74,9 +74,9 @@ public class UsoDeVaga implements Serializable {
 	}
 
 	/**
-	 * Calcula o valor total a ser pago baseado na diferença entre o tempo de entrada e de saida,
-	 * os serviços contratados a o preço por fração
-	 * @return retorna o valor total a ser pago
+	 * Calcula o valor total a ser pago pelo cliente.
+	 *
+	 * @return valor total a ser pago pelo cliente.
 	 */
 	public double valorPago() {
 
