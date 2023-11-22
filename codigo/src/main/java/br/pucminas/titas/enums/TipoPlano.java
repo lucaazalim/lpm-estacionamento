@@ -15,7 +15,7 @@ public enum TipoPlano {
 
     private Plano plano;
 
-    private TipoPlano(Plano plano) {
+    TipoPlano(Plano plano) {
         this.plano = plano;
     }
 
