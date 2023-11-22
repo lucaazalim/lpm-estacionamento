@@ -95,9 +95,9 @@ public class UsoDeVaga implements Serializable {
 	}
 
 	/**
-	 * Confere se o tempo mínimo for passado
-	 * @param saida horário da saída
-	 * @return
+	 * Confere se o cliente pode sair.
+	 *
+	 * @return true se o cliente pode sair, false caso contrário.
 	 */
 	public boolean podeSair() {
 
