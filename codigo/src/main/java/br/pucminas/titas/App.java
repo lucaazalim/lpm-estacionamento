@@ -15,9 +15,7 @@ import java.util.*;
 public class App {
 
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final DateTimeFormatter FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy");
-    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    private static final DateTimeFormatter FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy"), FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final List<Estacionamento> ESTACIONAMENTOS = new ArrayList<>();
 
     private static Estacionamento estacionamento;
@@ -52,6 +50,11 @@ public class App {
 
     }
 
+    /**
+     * Exibe o menu principal.
+     *
+     * @throws IOException Se ocorrer um erro ao ler do teclado
+     */
     public static void menu() throws IOException {
 
         System.out.println("Escolha uma das opções: ");
@@ -81,6 +84,12 @@ public class App {
 
     }
 
+    /**
+     * Gerencia um estacionamento.
+     *
+     * @throws IOException Se ocorrer um erro ao ler do teclado
+     * @throws AppExcecao Se ocorrer um erro ao executar uma operação
+     */
     public static void gerenciarEstacionamento() throws IOException, AppExcecao {
 
         if (estacionamento == null) {
@@ -150,6 +159,9 @@ public class App {
 
     }
 
+    /**
+     * Exibe uma mensagem para o usuário pressionar ENTER para voltar ao menu.
+     */
     public static void pressioneEnterParaVoltar() {
 
         System.out.println();
@@ -162,6 +174,9 @@ public class App {
 
     }
 
+    /**
+     * Exibe a arrecadação total de cada estacionamento em ordem decrescente.
+     */
     public static void consultarTotalArrecadadoPorTodosOsEstacionamentos() {
 
         System.out.println("Arrecadação total de cada estacionamento em ordem decrescente: ");
@@ -214,6 +229,11 @@ public class App {
 
     }
 
+    /**
+     * Altera o plano de um cliente
+     *
+     * @throws AppExcecao Se o cliente informado não for encontrado
+     */
     public static void alterarPlanoCliente() throws AppExcecao {
 
         Cliente cliente = lerCliente();
@@ -340,7 +360,7 @@ public class App {
     }
 
     /**
-     * Mostra o histórico do cliente
+     * Mostra o histórico de um cliente
      */
     public static void consultarHistoricoCliente() throws AppExcecao {
 
@@ -377,6 +397,9 @@ public class App {
 
     }
 
+    /**
+     * Mostra outras informações do estacionamento
+     */
     public static void consultarOutrasInformacoes() {
 
         System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.quantidadeMediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA.getPlano()));
@@ -384,6 +407,12 @@ public class App {
 
     }
 
+    /**
+     * Lê um cliente do teclado.
+     *
+     * @return O cliente lido
+     * @throws AppExcecao Se o cliente informado não for encontrado
+     */
     private static Cliente lerCliente() throws AppExcecao {
 
         System.out.println("Informe o ID ou nome do cliente: ");
@@ -408,6 +437,12 @@ public class App {
 
     }
 
+    /**
+     * Lê um número do teclado.
+     *
+     * @return O número lido
+     * @throws AppExcecao Se o número informado for inválido
+     */
     private static Integer lerNumero() throws AppExcecao {
         try {
             return Integer.parseInt(SCANNER.nextLine());
@@ -416,6 +451,12 @@ public class App {
         }
     }
 
+    /**
+     * Lê um ano e mês do teclado.
+     *
+     * @return O ano e mês lidos
+     * @throws AppExcecao Se o ano e mês informados forem inválidos
+     */
     private static YearMonth lerAnoMes() throws AppExcecao {
 
         System.out.println("Informe o mês e ano desejados (MM/AAAA): ");
@@ -428,6 +469,12 @@ public class App {
 
     }
 
+    /**
+     * Lê uma data do teclado.
+     *
+     * @return A data lida
+     * @throws AppExcecao Se a data informada for inválida
+     */
     private static LocalDate lerData() throws AppExcecao {
 
         try {
@@ -438,6 +485,15 @@ public class App {
 
     }
 
+    /**
+     * Lê um enum do teclado.
+     *
+     * @param enumClass  Classe do enum
+     * @param opcaoNenhum Se deve ser adicionada a opção "Nenhum"
+     * @return O enum selecionado
+     * @param <T> Tipo do enum
+     * @throws AppExcecao Se a opção informada for inválida
+     */
     private static <T extends Enum<T>> T lerEnum(Class<T> enumClass, boolean opcaoNenhum) throws AppExcecao {
 
         System.out.println("Informe a opção desejada: ");
