@@ -221,7 +221,7 @@ public class App {
 
         assert tipoPlano != null;
 
-        Plano plano = tipoPlano.get();
+        Plano plano = tipoPlano.getPlano();
         cliente.setPlano(plano);
 
         System.out.println("O plano do cliente '" + cliente.getNome() + "' foi alterado para '" + plano + "'.");
@@ -379,8 +379,8 @@ public class App {
 
     public static void consultarOutrasInformacoes() {
 
-        System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.quantidadeMediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA));
-        System.out.println("Arrecadação média gerada pelos clientes horistas no mês corrente: R$ " + estacionamento.arrecadacaoMediaPorCliente(YearMonth.now(), TipoPlano.HORISTA));
+        System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.quantidadeMediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA.getPlano()));
+        System.out.println("Arrecadação média gerada pelos clientes horistas no mês corrente: R$ " + estacionamento.arrecadacaoMediaPorCliente(YearMonth.now(), TipoPlano.HORISTA.getPlano()));
 
     }
 

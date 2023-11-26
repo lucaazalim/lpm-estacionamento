@@ -19,12 +19,12 @@ public enum TipoPlano {
         this.plano = plano;
     }
 
-    public Plano get() {
+    public Plano getPlano() {
         return this.plano;
     }
 
     @Override
     public String toString() {
-        return this.get().toString();
+        return this.getPlano().toString();
     }
 }

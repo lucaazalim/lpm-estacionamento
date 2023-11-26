@@ -165,13 +165,13 @@ public class Estacionamento implements Serializable {
      * em um mês específico de clientes de um plano específico.
      *
      * @param anoMes ano e mês a serem consultados.
-     * @param tipoPlano tipo de plano a ser consultado.
+     * @param plano plano a ser consultado.
      * @return o total de usos do estacionamento no mês informado de clientes do plano informado.
      */
-    public double quantidadeMediaDeUsos(YearMonth anoMes, TipoPlano tipoPlano) {
+    public double quantidadeMediaDeUsos(YearMonth anoMes, Plano plano) {
         return this.clientes.values()
                 .stream()
-                .filter(cliente -> cliente.getPlano().equals(tipoPlano.get()))
+                .filter(cliente -> cliente.getPlano().equals(plano))
                 .mapToInt(cliente -> cliente.totalDeUsos(anoMes))
                 .average().orElse(0);
     }
@@ -181,13 +181,13 @@ public class Estacionamento implements Serializable {
      * em um mês específico de clientes de um plano específico.
      *
      * @param anoMes ano e mês a serem consultados.
-     * @param tipoPlano tipo de plano a ser consultado.
+     * @param plano tipo de plano a ser consultado.
      * @return o total de arrecadação do estacionamento no mês informado de clientes do plano informado.
      */
-    public double arrecadacaoMediaPorCliente(YearMonth anoMes, TipoPlano tipoPlano) {
+    public double arrecadacaoMediaPorCliente(YearMonth anoMes, Plano plano) {
         return this.clientes.values()
                 .stream()
-                .filter(cliente -> cliente.getPlano().equals(tipoPlano.get()))
+                .filter(cliente -> cliente.getPlano().equals(plano))
                 .mapToDouble(cliente -> cliente.arrecadacaoNoMes(anoMes))
                 .average().orElse(0);
     }

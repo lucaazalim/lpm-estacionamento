@@ -17,6 +17,13 @@ public abstract class Plano implements Serializable {
         this.nome = nome;
     }
 
+    /**
+     * Calcula o valor a ser pago pelo cliente.
+     *
+     * @param entrada data e hora de entrada do veículo
+     * @param saida  data e hora de saída do veículo
+     * @return valor a ser pago pelo cliente
+     */
     public abstract double calcularValor(LocalDateTime entrada, LocalDateTime saida);
 
     @Override

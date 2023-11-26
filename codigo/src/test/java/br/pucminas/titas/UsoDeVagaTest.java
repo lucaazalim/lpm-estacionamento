@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import br.pucminas.titas.enums.Servico;
 import br.pucminas.titas.enums.TipoPlano;
 import br.pucminas.titas.excecoes.ServicoNaoTerminadoException;
-import br.pucminas.titas.excecoes.VeiculoJaEstacionadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,15 +71,15 @@ public class UsoDeVagaTest {
 
         assertEquals(50, usoDeVaga.valorPago(), "Testando valor pago por um horista.");
 
-        cliente.setPlano(TipoPlano.TURNISTA_MANHA.get());
+        cliente.setPlano(TipoPlano.TURNISTA_MANHA.getPlano());
 
         assertEquals(0, usoDeVaga.valorPago(), "Testando valor pago por um turnista (manhã).");
 
-        cliente.setPlano(TipoPlano.TURNISTA_NOITE.get());
+        cliente.setPlano(TipoPlano.TURNISTA_NOITE.getPlano());
 
         assertEquals(50, usoDeVaga.valorPago(), "Testando valor pago por um turnista (noite).");
 
-        cliente.setPlano(TipoPlano.MENSALISTA.get());
+        cliente.setPlano(TipoPlano.MENSALISTA.getPlano());
 
         assertEquals(0, usoDeVaga.valorPago(), "Testando valor pago por um mensalista.");
 

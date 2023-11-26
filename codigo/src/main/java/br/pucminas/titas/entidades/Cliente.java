@@ -27,7 +27,7 @@ public class Cliente implements Serializable {
     public Cliente(Integer id, String nome) {
         this.id = id;
         this.nome = nome;
-        this.plano = TipoPlano.HORISTA.get();
+        this.plano = TipoPlano.HORISTA.getPlano();
         this.veiculos = new HashMap<>();
     }
 
