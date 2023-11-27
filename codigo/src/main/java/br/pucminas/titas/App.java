@@ -126,6 +126,7 @@ public class App {
         System.out.println("\t8. Consultar top clientes");
         System.out.println("\t9. Consultar histórico de um cliente");
         System.out.println("\t10. Outras informações do estacionamento");
+        System.out.println("\t11. Abrir mapa");
 
         try {
 
@@ -147,6 +148,7 @@ public class App {
                 case 8 -> consultarTopClientes();
                 case 9 -> consultarHistoricoCliente();
                 case 10 -> consultarOutrasInformacoes();
+                case 11 -> abrirMapa();
                 default -> System.out.println("A opção informada é inválida.");
             }
 
@@ -405,6 +407,11 @@ public class App {
         System.out.println("Quantas vezes, em média, os clientes mensalistas utilizaram o estacionamento no mês corrente: " + estacionamento.quantidadeMediaDeUsos(YearMonth.now(), TipoPlano.MENSALISTA.getPlano()));
         System.out.println("Arrecadação média gerada pelos clientes horistas no mês corrente: R$ " + estacionamento.arrecadacaoMediaPorCliente(YearMonth.now(), TipoPlano.HORISTA.getPlano()));
 
+    }
+
+    public static void abrirMapa() {
+        Mapa mapa = new Mapa(estacionamento);
+        mapa.setVisible(true);
     }
 
     /**

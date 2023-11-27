@@ -14,12 +14,15 @@ import java.util.*;
 public class Estacionamento implements Serializable {
 
     private final String nome;
+    private final int colunas, linhas;
     private Map<Integer, Cliente> clientes;
     private List<Vaga> vagas;
 
     public Estacionamento(String nome, int colunas, int linhas) {
 
         this.nome = nome;
+        this.colunas = colunas;
+        this.linhas = linhas;
         this.clientes = new LinkedHashMap<>();
         this.vagas = new ArrayList<>();
 
@@ -29,6 +32,18 @@ public class Estacionamento implements Serializable {
             }
         }
 
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public int getColunas() {
+        return this.colunas;
+    }
+
+    public int getLinhas() {
+        return this.linhas;
     }
 
     /**
@@ -43,6 +58,12 @@ public class Estacionamento implements Serializable {
      */
     public List<Vaga> getVagas() {
         return Collections.unmodifiableList(this.vagas);
+    }
+
+    public Vaga procurarVaga(int linha, int coluna) {
+        return this.vagas.stream()
+                .filter(vaga -> vaga.getLinha() == linha && vaga.getColuna() == coluna)
+                .findFirst().orElse(null);
     }
 
     /**

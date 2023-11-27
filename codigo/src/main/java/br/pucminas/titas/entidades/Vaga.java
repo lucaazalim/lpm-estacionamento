@@ -1,14 +1,22 @@
 package br.pucminas.titas.entidades;
 
+import br.pucminas.titas.observador.Observador;
+import br.pucminas.titas.observador.Sujeito;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Representa uma vaga do estacionamento.
  */
-public class Vaga implements Serializable {
+public class Vaga implements Serializable, Sujeito {
 
+	private final int coluna, linha;
 	private final String id;
-	private boolean disponivel;
+	private UsoDeVaga usoDeVaga;
+
+	private List<Observador> observadores = new ArrayList<>();
 
 	/**
 	 * Cria uma nova vaga com os dados informados.
@@ -17,8 +25,17 @@ public class Vaga implements Serializable {
 	 * @param linha Linha da vaga
 	 */
 	public Vaga(int coluna, int linha) {
+		this.coluna = coluna;
+		this.linha = linha;
 		this.id = ((char) ('A' + coluna)) + String.format("%02d", linha + 1);
-		this.disponivel = true;
+	}
+
+	public int getColuna() {
+		return this.coluna;
+	}
+
+	public int getLinha() {
+		return this.linha;
 	}
 
 	/**
@@ -27,16 +44,16 @@ public class Vaga implements Serializable {
 	 * @return true se a vaga estiver disponível e false caso contrário.
 	 */
 	public boolean disponivel() {
-		return this.disponivel;
+		return this.usoDeVaga == null;
 	}
 
-	/**
-	 * Altera o estado de disponibilidade da vaga.
-	 *
-	 * @param disponivel true para disponível e false para indisponível.
-	 */
-	public void setDisponivel(boolean disponivel) {
-		this.disponivel = disponivel;
+	public UsoDeVaga getUsoDeVaga() {
+		return this.usoDeVaga;
+	}
+
+	public void estacionar(UsoDeVaga usoDeVaga) {
+		this.usoDeVaga = usoDeVaga;
+		this.notificarTodos();
 	}
 
 	@Override
@@ -53,6 +70,16 @@ public class Vaga implements Serializable {
 	@Override
 	public String toString() {
 		return this.id;
+	}
+
+	@Override
+	public void observar(Observador observador) {
+		this.observadores.add(observador);
+	}
+
+	@Override
+	public void notificarTodos() {
+		this.observadores.forEach(Observador::notificar);
 	}
 
 }

@@ -36,8 +36,20 @@ public class UsoDeVaga implements Serializable {
 
 	}
 
+	public Veiculo getVeiculo() {
+		return this.veiculo;
+	}
+
+	public Servico getServico() {
+		return this.servico;
+	}
+
 	public LocalDateTime getEntrada() {
 		return this.entrada;
+	}
+
+	public LocalDateTime getSaida() {
+		return this.saida;
 	}
 
 	/**
@@ -58,7 +70,7 @@ public class UsoDeVaga implements Serializable {
 		}
 
 		this.saida = LocalDateTime.now();
-		this.vaga.setDisponivel(true);
+		this.vaga.estacionar(this);
 
 		return this.valorPago();
 

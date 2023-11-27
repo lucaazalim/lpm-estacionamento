@@ -59,7 +59,7 @@ public class Veiculo implements Serializable {
         UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, this, servico);
         this.cadastrarUsoDeVaga(usoDeVaga);
 
-        vaga.setDisponivel(false);
+        vaga.estacionar(usoDeVaga);
 
     }
 
