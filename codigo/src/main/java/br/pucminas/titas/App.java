@@ -429,7 +429,7 @@ public class App {
             cliente = estacionamento.getClientes().get(id);
         } catch (NumberFormatException e) {
             cliente = estacionamento.getClientes().values().stream()
-                    .filter(c -> c.getNome().equals(idOuNome))
+                    .filter(c -> c.getNome().equalsIgnoreCase(idOuNome))
                     .findFirst().orElse(null);
         }
 
@@ -512,8 +512,12 @@ public class App {
 
         int opcao = lerNumero();
 
-        if (opcao == 0 && opcaoNenhum) {
+        if(opcao == 0 && opcaoNenhum) {
             return null;
+        }
+
+        if (opcao < 0 || opcao > enumClass.getEnumConstants().length) {
+            throw new AppExcecao("A opção informada é inválida.");
         }
 
         return enumClass.getEnumConstants()[opcao - 1];
