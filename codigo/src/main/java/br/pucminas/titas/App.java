@@ -390,7 +390,7 @@ public class App {
 
         System.out.println("Histórico de usos de vaga: ");
 
-        historico.forEach(usoDeVaga -> System.out.println("\t - " + usoDeVaga));
+        historico.forEach(usoDeVaga -> System.out.println("- " + usoDeVaga));
 
     }
 
