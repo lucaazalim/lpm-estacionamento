@@ -1,5 +1,5 @@
 # Data File
-codigo/estacionamentos.dat
+*.dat
 
 .DS_Store
 .idea
