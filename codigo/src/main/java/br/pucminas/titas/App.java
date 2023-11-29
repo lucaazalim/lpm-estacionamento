@@ -41,7 +41,7 @@ public class App {
                 Serializador.salvar(ESTACIONAMENTOS);
                 System.out.println("Dados salvos com sucesso.");
             } catch (IOException e) {
-                System.err.println("Ocorreu um erro ao salvar os dados.");
+                System.out.println("Ocorreu um erro ao salvar os dados.");
             }
 
         }));
@@ -76,7 +76,7 @@ public class App {
             }
 
         } catch (AppExcecao e) {
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         pressioneEnterParaVoltar();
@@ -88,7 +88,7 @@ public class App {
      * Gerencia um estacionamento.
      *
      * @throws IOException Se ocorrer um erro ao ler do teclado
-     * @throws AppExcecao Se ocorrer um erro ao executar uma operação
+     * @throws AppExcecao  Se ocorrer um erro ao executar uma operação
      */
     public static void gerenciarEstacionamento() throws IOException, AppExcecao {
 
@@ -153,7 +153,7 @@ public class App {
             }
 
         } catch (AppExcecao e) {
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         pressioneEnterParaVoltar();
@@ -169,10 +169,7 @@ public class App {
         System.out.println();
         System.out.println("Pressione ENTER para voltar ao menu...");
 
-        try {
-            System.in.read();
-        } catch (IOException ignored) {
-        }
+        SCANNER.nextLine();
 
     }
 
@@ -389,7 +386,7 @@ public class App {
         }
 
         System.out.println("Total de usos de todos os veículos do cliente: " + cliente.totalDeUsos());
-        System.out.println("Arrecadação total do cliente: " + cliente.arrecadacaoTotal());
+        System.out.println("Arrecadação total do cliente: R$ " + cliente.arrecadacaoTotal());
 
         List<UsoDeVaga> historico = cliente.historico(de, ate, comparador);
 
@@ -495,10 +492,10 @@ public class App {
     /**
      * Lê um enum do teclado.
      *
-     * @param enumClass  Classe do enum
+     * @param enumClass   Classe do enum
      * @param opcaoNenhum Se deve ser adicionada a opção "Nenhum"
+     * @param <T>         Tipo do enum
      * @return O enum selecionado
-     * @param <T> Tipo do enum
      * @throws AppExcecao Se a opção informada for inválida
      */
     private static <T extends Enum<T>> T lerEnum(Class<T> enumClass, boolean opcaoNenhum) throws AppExcecao {
