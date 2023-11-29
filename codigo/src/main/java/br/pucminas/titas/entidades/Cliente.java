@@ -53,7 +53,7 @@ public class Cliente implements Serializable {
      * @param veiculo O veículo a ser adicionado.
      */
     public void cadastrarVeiculo(Veiculo veiculo) {
-        this.veiculos.putIfAbsent(veiculo.getPlaca(), veiculo);
+        this.veiculos.putIfAbsent(veiculo.getPlaca().toUpperCase(), veiculo);
     }
 
     /**
@@ -64,7 +64,7 @@ public class Cliente implements Serializable {
      */
     public Veiculo procurarVeiculo(String placa) {
         Objects.requireNonNull(placa);
-        return this.veiculos.get(placa);
+        return this.veiculos.get(placa.toUpperCase());
     }
 
     /**
