@@ -140,6 +140,6 @@ public class UsoDeVaga implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.vaga + " - " + this.veiculo + " - " + this.servico + " - " + this.entrada + " - " + this.saida + " - R$ " + this.valorPago();
+		return "Local estacionado: " + this.vaga + "\n- Placa do veículo: " + this.veiculo + "\n- Serviço: " + (this.servico != null ? this.servico : "Nenhum") + "\n- Entrada: " + this.entrada + "\n- Saída: " + this.saida + "\n- Valor pago: R$ " + this.valorPago();
 	}
 }
