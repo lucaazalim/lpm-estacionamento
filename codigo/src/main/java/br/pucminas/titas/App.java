@@ -6,16 +6,20 @@ import br.pucminas.titas.enums.TipoPlano;
 import br.pucminas.titas.excecoes.*;
 
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.*;
 
 public class App {
 
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final DateTimeFormatter FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy"), FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter
+            FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy"),
+            FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy").withResolverStyle(ResolverStyle.STRICT);
     private static final List<Estacionamento> ESTACIONAMENTOS = new ArrayList<>();
 
     private static Estacionamento estacionamento;
@@ -371,6 +375,10 @@ public class App {
         System.out.println("Informe a data final do histórico: ");
         LocalDate ate = lerData();
 
+        if(de.isAfter(ate)) {
+            throw new AppExcecao("A data inicial deve ser anterior à data final.");
+        }
+
         System.out.println("Como você deseja ordenar o relatório?");
         System.out.println("\t1. Data de entrada");
         System.out.println("\t2. Valor pago");
@@ -483,7 +491,7 @@ public class App {
 
         try {
             return LocalDate.parse(SCANNER.nextLine(), FORMATO_DATA);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeException e) {
             throw new AppExcecao("A data informada é inválida.");
         }
 
