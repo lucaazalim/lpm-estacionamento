@@ -114,6 +114,18 @@ public class Cliente implements Serializable {
     }
 
     /**
+     * Calcula o valor médio de cada utilização do cliente.
+     *
+     * @return o valor médio por uso
+     */
+    public double valorMedioPorUso() {
+        return this.veiculos.values().stream()
+                .mapToDouble(Veiculo::valorMedioPorUso)
+                .average()
+                .orElse(0.0);
+    }
+
+    /**
      * Recupera o histórico de uso de vaga do cliente em todos os seus veículos.
      *
      * @param de  data inicial de entrada

@@ -156,12 +156,12 @@ public class Estacionamento implements Serializable {
     /**
      * Calcula o valor médio de cada utilização do estacionamento.
      *
-     * @return media, o valor médio por uso
+     * @return o valor médio por uso
      */
     public double valorMedioPorUso() {
         return clientes.values()
                 .stream()
-                .mapToDouble(Cliente::arrecadacaoTotal)
+                .mapToDouble(Cliente::valorMedioPorUso)
                 .average().orElse(0);
     }
 

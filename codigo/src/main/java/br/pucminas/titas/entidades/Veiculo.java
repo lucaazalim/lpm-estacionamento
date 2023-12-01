@@ -94,9 +94,7 @@ public class Veiculo implements Serializable {
      * @return total arrecadado com o veículo.
      */
     public double totalArrecadado() {
-
         return this.usosDeVaga.stream().mapToDouble(UsoDeVaga::valorPago).sum();
-
     }
 
     /**
@@ -106,12 +104,10 @@ public class Veiculo implements Serializable {
      * @return total arrecadado com o veículo no mês informado.
      */
     public double arrecadadoNoMes(YearMonth anoMes) {
-
         return this.usosDeVaga.stream()
                 .filter(usoDeVaga -> usoDeVaga.entrouEntre(anoMes.atDay(1).atStartOfDay(), anoMes.atEndOfMonth().atTime(LocalTime.MIDNIGHT)))
                 .mapToDouble(UsoDeVaga::valorPago)
                 .sum();
-
     }
 
     /**
@@ -137,6 +133,18 @@ public class Veiculo implements Serializable {
                         anoMes.atDay(1).atStartOfDay(), anoMes.atEndOfMonth().atTime(LocalTime.MIDNIGHT)
                 ))
                 .count();
+    }
+
+    /**
+     * Calcula o valor médio de cada utilização do veículo.
+     *
+     * @return o valor médio por uso
+     */
+    public double valorMedioPorUso() {
+        return this.usosDeVaga.stream()
+                .mapToDouble(UsoDeVaga::valorPago)
+                .average()
+                .orElse(0.0);
     }
 
     /**
