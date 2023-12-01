@@ -159,9 +159,11 @@ public class Estacionamento implements Serializable {
      * @return o valor médio por uso
      */
     public double valorMedioPorUso() {
-        return clientes.values()
+        return this.clientes.values()
                 .stream()
-                .mapToDouble(Cliente::valorMedioPorUso)
+                .flatMap(cliente -> cliente.getVeiculos().values().stream())
+                .flatMap(veiculo -> veiculo.getUsosDeVaga().stream())
+                .mapToDouble(UsoDeVaga::valorPago)
                 .average().orElse(0);
     }
 

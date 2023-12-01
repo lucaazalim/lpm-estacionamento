@@ -47,6 +47,10 @@ public class Cliente implements Serializable {
         this.plano = plano;
     }
 
+    public Map<String, Veiculo> getVeiculos() {
+        return Collections.unmodifiableMap(this.veiculos);
+    }
+
     /**
      * Adiciona um veículo à coleção do cliente.
      *
@@ -111,18 +115,6 @@ public class Cliente implements Serializable {
         return this.veiculos.values().stream()
                 .mapToDouble(veiculo -> veiculo.arrecadadoNoMes(anoMes))
                 .sum();
-    }
-
-    /**
-     * Calcula o valor médio de cada utilização do cliente.
-     *
-     * @return o valor médio por uso
-     */
-    public double valorMedioPorUso() {
-        return this.veiculos.values().stream()
-                .mapToDouble(Veiculo::valorMedioPorUso)
-                .average()
-                .orElse(0.0);
     }
 
     /**

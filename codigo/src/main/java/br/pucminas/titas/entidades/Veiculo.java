@@ -39,6 +39,10 @@ public class Veiculo implements Serializable {
         return this.cliente;
     }
 
+    public List<UsoDeVaga> getUsosDeVaga() {
+        return Collections.unmodifiableList(this.usosDeVaga);
+    }
+
     public void cadastrarUsoDeVaga(UsoDeVaga usoDeVaga) {
         this.usosDeVaga.add(usoDeVaga);
     }
@@ -133,18 +137,6 @@ public class Veiculo implements Serializable {
                         anoMes.atDay(1).atStartOfDay(), anoMes.atEndOfMonth().atTime(LocalTime.MIDNIGHT)
                 ))
                 .count();
-    }
-
-    /**
-     * Calcula o valor médio de cada utilização do veículo.
-     *
-     * @return o valor médio por uso
-     */
-    public double valorMedioPorUso() {
-        return this.usosDeVaga.stream()
-                .mapToDouble(UsoDeVaga::valorPago)
-                .average()
-                .orElse(0.0);
     }
 
     /**
