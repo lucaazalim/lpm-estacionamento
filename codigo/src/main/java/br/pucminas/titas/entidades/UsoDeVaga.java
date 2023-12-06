@@ -19,10 +19,24 @@ public class UsoDeVaga implements Serializable {
 	private Servico servico;
 	private LocalDateTime entrada, saida;
 
+	/**
+	 * Construtor base utilizado para criar um UsoDeVaga novo
+	 * @param vaga onde o veículo está/será estacionado
+	 * @param veiculo veículo a ser estacionado
+	 * @param servico serviço solicitado pelo cliente
+	 */
 	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico) {
 		this(vaga, veiculo, servico, LocalDateTime.now(), null);
 	}
 
+	/**
+	 * Contrutor para criação de UsoDeVaga antigos ou com saída e entrada definidos
+	 * @param vaga onde o veículo está/será estacionado
+	 * @param veiculo veículo a ser estacionado
+	 * @param servico serviço solicitado pelo cliente
+	 * @param entrada data da entrada do veículo
+	 * @param saida data da saída do veículo
+	 */
 	public UsoDeVaga(Vaga vaga, Veiculo veiculo, Servico servico, LocalDateTime entrada, LocalDateTime saida) {
 
 		Objects.requireNonNull(vaga);
@@ -34,20 +48,38 @@ public class UsoDeVaga implements Serializable {
 		this.entrada = entrada;
 		this.saida = saida;
 
+        this.vaga.estacionar(this);
+
 	}
 
+	/**
+	 * Retorna o veículo que está utilizando a vaga
+	 * @return veículo
+	 */
 	public Veiculo getVeiculo() {
 		return this.veiculo;
 	}
 
+	/**
+	 * Retorna o serviço solicitado
+	 * @return serviço
+	 */
 	public Servico getServico() {
 		return this.servico;
 	}
 
+	/**
+	 * Retorna a data de entrada do veículo
+	 * @return data de entrada
+	 */
 	public LocalDateTime getEntrada() {
 		return this.entrada;
 	}
 
+	/**
+	 * Retorna a data de saída do veículo
+	 * @return data de saída
+	 */
 	public LocalDateTime getSaida() {
 		return this.saida;
 	}
@@ -70,7 +102,7 @@ public class UsoDeVaga implements Serializable {
 		}
 
 		this.saida = LocalDateTime.now();
-		this.vaga.estacionar(this);
+		this.vaga.estacionar(null);
 
 		return this.valorPago();
 
@@ -140,6 +172,14 @@ public class UsoDeVaga implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Local estacionado: " + this.vaga + "\n- Placa do veículo: " + this.veiculo + "\n- Serviço: " + (this.servico != null ? this.servico : "Nenhum") + "\n- Entrada: " + this.entrada + "\n- Saída: " + this.saida + "\n- Valor pago: R$ " + this.valorPago();
+		return "Local estacionado: " + this.vaga + "\n- Placa do veículo: " + this.veiculo + "\n- Serviço: " + (this.servico != null ? this.servico : "Nenhum") + "\n- Entrada: " + this.entrada + "\n- Saída: " + this.saida + "\n- Valor pago: R$" + this.valorPago();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof UsoDeVaga usoDeVaga) {
+			return vaga.equals(usoDeVaga.vaga) && veiculo.equals(usoDeVaga.veiculo) && servico == usoDeVaga.servico;
+		}
+		return false;
 	}
 }

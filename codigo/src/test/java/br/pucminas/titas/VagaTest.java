@@ -32,4 +32,14 @@ public class VagaTest {
 
     }
 
+    @Test
+    public void testEqual() {
+        Vaga newVaga = new Vaga(0, 0);
+        assertTrue(vaga.equals(newVaga), "Testa o equals de vaga");
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("A01", vaga.toString(), "Testa o toString de Vaga");
+    }
 }
