@@ -123,4 +123,11 @@ public class UsoDeVagaTest {
 
     }
 
+    @Test
+    public void testEquals() {
+        UsoDeVaga usoDeVaga = new UsoDeVaga(vaga, veiculo, Servico.LAVAGEM);
+        UsoDeVaga compareUsoDeVaga = new UsoDeVaga(vaga, veiculo, Servico.LAVAGEM);
+
+        assertTrue(usoDeVaga.equals(compareUsoDeVaga), "Testa o equal de UsoDeVaga");
+    }
 }

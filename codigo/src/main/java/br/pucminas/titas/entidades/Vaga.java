@@ -30,10 +30,18 @@ public class Vaga implements Serializable, Sujeito {
 		this.id = ((char) ('A' + coluna)) + String.format("%02d", linha + 1);
 	}
 
+	/**
+	 * Retorna a coluna da vaga
+	 * @return coluna
+	 */
 	public int getColuna() {
 		return this.coluna;
 	}
 
+	/**
+	 * Retorna a linha da vaga
+	 * @return linha
+	 */
 	public int getLinha() {
 		return this.linha;
 	}
@@ -47,10 +55,18 @@ public class Vaga implements Serializable, Sujeito {
 		return this.usoDeVaga == null;
 	}
 
+	/**
+	 * Retorna 
+	 * @return
+	 */
 	public UsoDeVaga getUsoDeVaga() {
 		return this.usoDeVaga;
 	}
 
+	/**
+	 * Estaciona um veículo e notifica o observer
+	 * @param usoDeVaga 
+	 */
 	public void estacionar(UsoDeVaga usoDeVaga) {
 		this.usoDeVaga = usoDeVaga;
 		this.notificarTodos();
