@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"br.pucminas.titas"},{"l":"br.pucminas.titas.entidades"},{"l":"br.pucminas.titas.enums"},{"l":"br.pucminas.titas.excecoes"}];updateSearchResults();
