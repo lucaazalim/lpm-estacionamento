@@ -1,7 +1,6 @@
 package br.pucminas.titas;
 
 import br.pucminas.titas.entidades.Cliente;
-import br.pucminas.titas.entidades.UsoDeVaga;
 import br.pucminas.titas.entidades.Vaga;
 import br.pucminas.titas.entidades.Veiculo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,10 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import br.pucminas.titas.excecoes.VeiculoJaEstacionadoException;
 import br.pucminas.titas.excecoes.VeiculoNaoEstaEstacionadoException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Comparator;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VeiculoTest {

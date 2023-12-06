@@ -3,6 +3,7 @@ package br.pucminas.titas;
 import br.pucminas.titas.entidades.Cliente;
 import br.pucminas.titas.entidades.Veiculo;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
