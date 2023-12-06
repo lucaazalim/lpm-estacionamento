@@ -19,7 +19,7 @@ public class App {
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final DateTimeFormatter
             FORMATO_ANO_MES = DateTimeFormatter.ofPattern("MM/yyyy"),
-            FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy").withResolverStyle(ResolverStyle.STRICT);
+            FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy").withResolverStyle(ResolverStyle.SMART);
     private static final List<Estacionamento> ESTACIONAMENTOS = new ArrayList<>();
 
     private static Estacionamento estacionamento;
