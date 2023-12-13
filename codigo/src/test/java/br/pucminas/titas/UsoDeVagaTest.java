@@ -73,7 +73,7 @@ public class UsoDeVagaTest {
 
         cliente.setPlano(TipoPlano.TURNISTA_MANHA.getPlano());
 
-        assertEquals(0, usoDeVaga.valorPago(), "Testando valor pago por um turnista (manhã).");
+        assertEquals(50, usoDeVaga.valorPago(), "Testando valor pago por um turnista (manhã).");
 
         cliente.setPlano(TipoPlano.TURNISTA_NOITE.getPlano());
 
@@ -81,7 +81,7 @@ public class UsoDeVagaTest {
 
         cliente.setPlano(TipoPlano.MENSALISTA.getPlano());
 
-        assertEquals(0, usoDeVaga.valorPago(), "Testando valor pago por um mensalista.");
+        assertEquals(50, usoDeVaga.valorPago(), "Testando valor pago por um mensalista.");
 
     }
 

@@ -16,6 +16,7 @@ public class UsoDeVaga implements Serializable {
 
 	private Vaga vaga;
 	private Veiculo veiculo;
+	private Plano plano;
 	private Servico servico;
 	private LocalDateTime entrada, saida;
 
@@ -44,6 +45,7 @@ public class UsoDeVaga implements Serializable {
 
 		this.vaga = vaga;
 		this.veiculo = veiculo;
+		this.plano = veiculo.getCliente().getPlano();
 		this.servico = servico;
 		this.entrada = entrada;
 		this.saida = saida;
@@ -128,7 +130,7 @@ public class UsoDeVaga implements Serializable {
 			return 0;
 		}
 
-		double valorPago = this.veiculo.getCliente().getPlano().calcularValor(this.entrada, this.saida);
+		double valorPago = this.plano.calcularValor(this.entrada, this.saida);
 
 		if(this.servico != null) {
 			valorPago += servico.getPreco();
